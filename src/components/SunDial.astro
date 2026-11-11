@@ -176,6 +176,13 @@ const { label, reset } = Astro.props;
       const f = (v) => ((v /= 255) <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
       return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]);
     };
+    const ratio = (a, b) => {
+      const x = lum(a) + 0.05;
+      const y = lum(b) + 0.05;
+      return x > y ? x / y : y / x;
+    };
+    const DAY = [244, 241, 234];
+    const NIGHT = [18, 19, 24];
     const sky = (m) => {
       for (let i = 1; i < SKY.length; i++) {
         if (m <= SKY[i][0]) {
@@ -188,15 +195,24 @@ const { label, reset } = Astro.props;
     };
 
     const paint = (m) => {
-      const paper = sky(m);
+      const raw = sky(m);
       // Ink flips where black and white text are equally readable on the ground.
-      const light = lum(paper) > 0.18;
+      const light = lum(raw) > 0.18;
       const ink = light ? [26, 26, 24] : [236, 235, 230];
-      const accent = light ? [21, 93, 252] : [81, 162, 255];
+      // Dusk and dawn pass through greys no ink reads on. Pull the ground toward
+      // day or night until body text reaches 7:1, then set muted text at 4.5:1 or better.
+      let paper = raw;
+      for (let t = 0.05; ratio(ink, paper) < 7 && t <= 1; t += 0.05) paper = mix(raw, light ? DAY : NIGHT, t);
+      let soft = 0.31;
+      while (soft > 0 && ratio(mix(ink, paper, soft), paper) < 4.5) soft -= 0.02;
+      // Underlines and the focus ring need 3:1; near dusk the blue leans toward the ink to keep it.
+      const blue = light ? [21, 93, 252] : [81, 162, 255];
+      let accent = blue;
+      for (let t = 0.1; ratio(accent, paper) < 3 && t <= 1; t += 0.1) accent = mix(blue, ink, t);
       const set = (name, c) => root.style.setProperty(name, css(c));
       set('--color-paper', paper);
       set('--color-ink', ink);
-      set('--color-muted', mix(ink, paper, 0.31));
+      set('--color-muted', mix(ink, paper, Math.max(0, soft)));
       set('--color-rule', mix(paper, ink, 0.15));
       set('--color-accent', accent);
       set('--color-accent-soft', mix(paper, accent, 0.18));
@@ -294,8 +310,7 @@ const { label, reset } = Astro.props;
     } catch {}
     const minutes = () => (chosen === null ? nowMinutes() : chosen);
 
-    const render = () => {
-      const m = minutes();
+    const draw = (m) => {
       // Noon at the top, 6pm on the right, midnight at the bottom.
       const a = ((m - 720) / 1440) * Math.PI * 2;
       sun.setAttribute('cx', 50 + 40 * Math.sin(a));
@@ -307,7 +322,24 @@ const { label, reset } = Astro.props;
       // The shaded half of the earth faces away from the sun. On a dark page the
       // shading colour is the light one, so it turns to face the sun instead.
       earth.setAttribute('transform', `rotate(${(a * 180) / Math.PI + (light ? 90 : 270)} 50 50)`);
-      lede(m);
+    };
+    const render = () => {
+      draw(minutes());
+      lede(minutes());
+    };
+    // On the first page of a visit the day runs from 8am to now: the sun and the
+    // colours move, the lede already shows the current time. Touching the dial stops it.
+    let sweeping = 0;
+    const sweep = () => {
+      const span = (nowMinutes() - 480 + 1440) % 1440;
+      const start = performance.now();
+      const step = () => {
+        const t = Math.min(1, (performance.now() - start) / 1400);
+        if (t === 1) return void ((sweeping = 0), render());
+        draw(Math.round(480 + span * (1 - (1 - t) ** 3)) % 1440);
+        sweeping = setTimeout(step, 16);
+      };
+      step();
     };
     const choose = (m) => {
       chosen = m === null ? null : ((Math.round(m) % 1440) + 1440) % 1440;
@@ -315,6 +347,8 @@ const { label, reset } = Astro.props;
         if (chosen === null) sessionStorage.removeItem('sun-dial');
         else sessionStorage.setItem('sun-dial', chosen);
       } catch {}
+      clearTimeout(sweeping);
+      sweeping = 0;
       render();
     };
 
@@ -339,11 +373,17 @@ const { label, reset } = Astro.props;
     document.getElementById('sun-dial-reset').addEventListener('click', () => choose(null));
 
     dial.hidden = false;
-    render();
-    // The lede is further down the page than this script; render again once it exists.
-    document.addEventListener('DOMContentLoaded', render);
+    let first = false;
+    try {
+      first = !sessionStorage.getItem('sun-dial-swept');
+      sessionStorage.setItem('sun-dial-swept', '1');
+    } catch {}
+    if (first && chosen === null && !still.matches) sweep();
+    else render();
+    // The lede is further down the page than this script; fill it once it exists.
+    document.addEventListener('DOMContentLoaded', () => (sweeping ? lede(minutes()) : render()));
     const tick = () => {
-      if (chosen === null) render();
+      if (chosen === null && !sweeping) render();
       setTimeout(tick, 60000 - (Date.now() % 60000) + 50);
     };
     setTimeout(tick, 60000 - (Date.now() % 60000) + 50);
