@@ -106,6 +106,7 @@ Mechanical gates (`astro check`, lint-copy, verify-build) run before any screens
 | `--color-ink` | Body / structure |
 | `--color-muted` | Secondary text |
 | `--color-rule` | Hairlines |
+| `--color-sun` | The sun on the dial only; amber, a sibling of the accent with one job |
 | `--color-accent` (+ optional siblings) | Dominant accent from the CLI picker; add harmonious siblings later |
 | `--font-sans` / `--font-mono` | Brand faces (JetBrains Mono is a seed, not destiny) |
 

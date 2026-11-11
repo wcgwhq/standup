@@ -3,6 +3,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8" />
+    <title data-slot="name"></title>
     <link rel="stylesheet" href="../node_modules/@fontsource/jetbrains-mono/400.css" />
     <link rel="stylesheet" href="../node_modules/@fontsource/jetbrains-mono/700.css" />
     <style>
@@ -40,24 +41,24 @@
         background: var(--accent);
       }
 
-      h1,
+      /* The wordmark: "up" stands one x-height above "stand". */
+      h1 {
+        margin-top: auto;
+        font-size: 96px;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      h1 span {
+        vertical-align: 0.54em;
+      }
+
       p {
         overflow: hidden;
         display: -webkit-box;
         -webkit-box-orient: vertical;
-      }
-
-      h1 {
-        margin-top: auto;
-        font-size: 80px;
-        line-height: 1.05;
-        letter-spacing: -0.02em;
-        -webkit-line-clamp: 2;
-      }
-
-      p {
         margin-top: 28px;
-        max-width: 36ch;
+        max-width: 48ch;
         font-size: 30px;
         line-height: 1.4;
         color: color-mix(in oklab, var(--ink) 72%, var(--paper));
@@ -67,7 +68,7 @@
   </head>
   <body>
     <div class="rule"></div>
-    <h1 data-slot="name"></h1>
+    <h1>stand<span>up</span></h1>
     <p data-slot="description"></p>
   </body>
 </html>

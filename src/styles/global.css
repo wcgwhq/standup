@@ -26,6 +26,8 @@
   --color-rule: #d4cfc3;
   --color-accent: #155dfc;
   --color-accent-soft: #dbeafe;
+  /* The sun on the dial (src/components/SunDial.astro). Not used for text. */
+  --color-sun: #d98a00;
 }
 
 @layer base {
@@ -52,6 +54,7 @@
       --color-rule: #34322d;
       --color-accent: #51a2ff;
       --color-accent-soft: #162456;
+      --color-sun: #ffc04d;
     }
   }
 

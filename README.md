@@ -1,6 +1,6 @@
 # Standup
 
-Standup reads your git commits and agent sessions and writes your end-of-day update, so you stop piecing the day together from memory.
+Standup reads your git commits and your agents' sessions and writes the end-of-day update you can no longer write from memory.
 
 ## Run
 

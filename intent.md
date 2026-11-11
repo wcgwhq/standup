@@ -4,11 +4,12 @@ Product scope. Update it when scope changes. Agents: do not invent product scope
 
 ## One sentence
 
-> Standup reads your git commits and agent sessions and writes your end-of-day update, so you stop piecing the day together from memory.
+> Standup reads your git commits and your agents' sessions and writes the end-of-day update you can no longer write from memory.
 
 ## Audience
 
 - Primary: people who have to say what they worked on and find it hard to pull together, because a day of agent sessions, branches and repos is too much to hold in your head. Team members who feel they must justify their day, and the team leads who ask.
+- Most of them work across several projects at once, often split into work, consulting or side gigs, and personal. The report has to keep those apart.
 - Secondary: solo developers who cannot remember by evening what they did in the morning. For them it is a catch-up with yourself.
 
 ## One job

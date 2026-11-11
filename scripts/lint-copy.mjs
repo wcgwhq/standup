@@ -18,7 +18,6 @@ const RULES = [
   ],
   [/—/, 'an em dash (use a period, comma, colon, or parentheses)'],
   [/!(?!\[)/, 'an exclamation mark'],
-  [/\bclients?\b/i, '"client": say "the people asking" or name them'],
   [/\b(lorem|ipsum|TODO|TBD)\b/, 'placeholder text'],
 ];
 

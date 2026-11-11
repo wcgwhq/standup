@@ -2,7 +2,7 @@
 
 You are working on **Standup**, a standalone Astro site. This directory is the project root.
 
-**One sentence:** Standup reads your git commits and agent sessions and writes your end-of-day update, so you stop piecing the day together from memory.
+**One sentence:** Standup reads your git commits and your agents' sessions and writes the end-of-day update you can no longer write from memory.
 
 Read `design.md` next, then `intent.md`, then `docs/`. Do not invent features outside `intent.md`.
 

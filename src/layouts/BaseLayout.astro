@@ -1,5 +1,6 @@
 ---
 import '@/styles/global.css';
+import SunDial from '@/components/SunDial.astro';
 import { absolute, canonicalUrl, jsonLd, organizationId, websiteId, type GraphNode } from '@/lib/seo';
 import { copy, defaultLocale, locales, meta, pagePath, siteNameFor, versions } from '@/i18n';
 import { darkMode, published, siteName } from '../../site.config.mjs';
@@ -156,6 +157,7 @@ const fullGraph: GraphNode[] = [
     >
       {ui.skipToContent}
     </a>
+    <SunDial label={ui.dialLabel} reset={ui.dialReset} />
     <slot />
     {translations.length > 0 && (
       <footer class="mx-auto w-full max-w-xl px-6 pb-10">

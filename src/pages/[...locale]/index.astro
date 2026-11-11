@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { copy, localePath, localeStaticPaths, siteNameFor } from '@/i18n';
-import { siteName } from '../../../site.config.mjs';
 import install from '@/data/install.json';
 import report from '@/data/sample-report.json';
 
@@ -14,7 +13,19 @@ interface Props {
 const { locale } = Astro.props;
 const ui = copy(locale);
 
+// One lede per part of the day; SunDial.astro picks by the time on the dial.
+const ledes = {
+  morning: ui.ledeMorning,
+  midmorning: ui.ledeMidmorning,
+  afternoon: ui.ledeAfternoon,
+  evening: ui.ledeEvening,
+  night: ui.ledeNight,
+};
+
 const sections = [
+  { title: ui.askTitle, body: ui.askBody },
+  { title: ui.agentsTitle, body: ui.agentsBody },
+  { title: ui.projectsTitle, body: ui.projectsBody },
   { title: ui.readsTitle, body: ui.readsBody },
   { title: ui.weekTitle, body: ui.weekBody },
   { title: ui.numbersTitle, body: ui.numbersBody },
@@ -24,11 +35,18 @@ const sections = [
 <BaseLayout locale={locale} title={siteNameFor(locale)} description={ui.description}>
   <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16 sm:py-24">
     <header class="motion-rise space-y-5">
-      <p class="text-4xl font-bold tracking-tight sm:text-5xl">
-        <bdi>{siteName}</bdi>
+      {/* The wordmark: "up" stands one x-height above "stand". */}
+      <p class="text-4xl leading-none font-bold tracking-[-0.04em] sm:text-5xl">
+        <bdi>stand<span class="align-[0.54em]">up</span></bdi>
       </p>
       <h1 class="text-2xl text-balance sm:text-3xl">{ui.headline}</h1>
-      <p class="max-w-prose text-pretty text-[var(--color-muted)]">{ui.lede}</p>
+      <p
+        id="lede"
+        class="max-w-prose text-pretty text-[var(--color-muted)]"
+        data-ledes={JSON.stringify(ledes)}
+      >
+        {ledes.evening.replace('{time}', '6:21pm')}
+      </p>
     </header>
 
     <section class="motion-rise mt-10" style="animation-delay: 80ms" aria-labelledby="install-label">
@@ -50,6 +68,7 @@ const sections = [
         </code>
       </p>
       <p class="mt-2 text-sm text-[var(--color-muted)]">{ui.installNote}</p>
+      <p class="mt-2 text-sm text-[var(--color-muted)]">{ui.installOther}</p>
     </section>
 
     <figure class="receipt mt-14">

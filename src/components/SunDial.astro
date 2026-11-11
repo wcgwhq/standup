@@ -1,0 +1,261 @@
+---
+/**
+ * The sun dial: a sun orbiting a small earth, fixed in the top corner.
+ * It sets the page's time of day. Dragging the sun (or the slider, for keys
+ * and screen readers) changes the clock in the lede, which lede is shown, and
+ * the colours of the whole page from night through dawn, day and dusk.
+ * Left alone it follows the visitor's real clock. Pressing the earth returns to it.
+ * Without JavaScript the dial stays hidden and the page keeps its system colours.
+ */
+interface Props {
+  label: string;
+  reset: string;
+}
+const { label, reset } = Astro.props;
+---
+
+<div id="sun-dial" class="sun-dial" hidden>
+  <svg viewBox="0 0 100 100" aria-hidden="true">
+    <circle class="sun-dial-orbit" cx="50" cy="50" r="40"></circle>
+    <g id="sun-dial-earth">
+      <circle class="sun-dial-earth" cx="50" cy="50" r="15"></circle>
+      <path class="sun-dial-night" d="M50 35 A15 15 0 0 1 50 65 Z"></path>
+    </g>
+    <circle id="sun-dial-sun" class="sun-dial-sun" cx="50" cy="10" r="8"></circle>
+  </svg>
+  <input
+    id="sun-dial-range"
+    class="sun-dial-range"
+    type="range"
+    min="0"
+    max="1439"
+    step="15"
+    aria-label={label}
+  />
+  <button id="sun-dial-reset" class="sun-dial-reset" type="button" aria-label={reset} title={reset}></button>
+  <output id="sun-dial-time" class="sun-dial-time" for="sun-dial-range"></output>
+</div>
+
+<style is:global>
+  .sun-dial {
+    position: absolute;
+    top: calc(1rem + env(safe-area-inset-top));
+    right: calc(1rem + env(safe-area-inset-right));
+    z-index: 40;
+    width: 4.5rem;
+    touch-action: none;
+    user-select: none;
+  }
+  @media (min-width: 48rem) {
+    .sun-dial {
+      position: fixed;
+    }
+  }
+  .sun-dial svg {
+    display: block;
+    width: 100%;
+    cursor: grab;
+  }
+  .sun-dial.is-dragging svg {
+    cursor: grabbing;
+  }
+  .sun-dial-orbit {
+    fill: none;
+    stroke: var(--color-rule);
+    stroke-width: 1.5;
+    stroke-dasharray: 2 4;
+  }
+  .sun-dial-earth {
+    fill: var(--color-paper);
+    stroke: var(--color-ink);
+    stroke-width: 2;
+  }
+  .sun-dial-night {
+    fill: var(--color-ink);
+  }
+  .sun-dial-sun {
+    fill: var(--color-sun);
+  }
+  /* The real control: a range input over the dial, invisible but focusable. */
+  .sun-dial-range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 4.5rem;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .sun-dial:has(.sun-dial-range:focus-visible) svg {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 50%;
+  }
+  /* The earth is the "back to now" button: 44px target in the middle. */
+  .sun-dial-reset {
+    position: absolute;
+    top: 0.875rem;
+    left: 0.875rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+  }
+  .sun-dial-time {
+    display: block;
+    margin-top: 0.25rem;
+    text-align: center;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted);
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const root = document.documentElement;
+    const dial = document.getElementById('sun-dial');
+    const range = document.getElementById('sun-dial-range');
+    const sun = document.getElementById('sun-dial-sun');
+    const earth = document.getElementById('sun-dial-earth');
+    const out = document.getElementById('sun-dial-time');
+    const svg = dial.querySelector('svg');
+
+    // Page ground through the day: [minute, [r, g, b]]. Everything else derives from it.
+    const SKY = [
+      [0, [18, 19, 24]],
+      [300, [23, 22, 20]],
+      [390, [58, 44, 50]],
+      [450, [243, 228, 212]],
+      [600, [244, 241, 234]],
+      [960, [244, 241, 234]],
+      [1110, [241, 221, 197]],
+      [1200, [44, 37, 50]],
+      [1290, [23, 22, 20]],
+      [1440, [18, 19, 24]],
+    ];
+    const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+    const css = (c) => `rgb(${c[0]} ${c[1]} ${c[2]})`;
+    const lum = (c) => {
+      const f = (v) => ((v /= 255) <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+      return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]);
+    };
+    const sky = (m) => {
+      for (let i = 1; i < SKY.length; i++) {
+        if (m <= SKY[i][0]) {
+          const [m0, c0] = SKY[i - 1];
+          const [m1, c1] = SKY[i];
+          return mix(c0, c1, (m - m0) / (m1 - m0));
+        }
+      }
+      return SKY[0][1];
+    };
+
+    const paint = (m) => {
+      const paper = sky(m);
+      // Ink flips where black and white text are equally readable on the ground.
+      const light = lum(paper) > 0.18;
+      const ink = light ? [26, 26, 24] : [236, 235, 230];
+      const accent = light ? [21, 93, 252] : [81, 162, 255];
+      const set = (name, c) => root.style.setProperty(name, css(c));
+      set('--color-paper', paper);
+      set('--color-ink', ink);
+      set('--color-muted', mix(ink, paper, 0.31));
+      set('--color-rule', mix(paper, ink, 0.15));
+      set('--color-accent', accent);
+      set('--color-accent-soft', mix(paper, accent, 0.18));
+      set('--color-sun', light ? [217, 138, 0] : [255, 192, 77]);
+      root.style.colorScheme = light ? 'light' : 'dark';
+      return light;
+    };
+
+    const clock = (m) => {
+      const h = Math.floor(m / 60);
+      return `${h % 12 || 12}:${String(m % 60).padStart(2, '0')}${h < 12 ? 'am' : 'pm'}`;
+    };
+    const part = (h) =>
+      h >= 5 && h < 9
+        ? 'morning'
+        : h >= 9 && h < 12
+          ? 'midmorning'
+          : h >= 12 && h < 17
+            ? 'afternoon'
+            : h >= 17 && h < 21
+              ? 'evening'
+              : 'night';
+    const lede = (m) => {
+      const el = document.getElementById('lede');
+      if (!el || !el.dataset.ledes) return;
+      const ledes = JSON.parse(el.dataset.ledes);
+      el.textContent = ledes[part(Math.floor(m / 60))].replace('{time}', clock(m));
+    };
+
+    const nowMinutes = () => {
+      const d = new Date();
+      return d.getHours() * 60 + d.getMinutes();
+    };
+    // null = follow the real clock. A number = the visitor moved the sun.
+    let chosen = null;
+    try {
+      const saved = sessionStorage.getItem('sun-dial');
+      if (saved !== null) chosen = Number(saved);
+    } catch {}
+    const minutes = () => (chosen === null ? nowMinutes() : chosen);
+
+    const render = () => {
+      const m = minutes();
+      // Noon at the top, 6pm on the right, midnight at the bottom.
+      const a = ((m - 720) / 1440) * Math.PI * 2;
+      sun.setAttribute('cx', 50 + 40 * Math.sin(a));
+      sun.setAttribute('cy', 50 - 40 * Math.cos(a));
+      range.value = m;
+      range.setAttribute('aria-valuetext', clock(m));
+      out.textContent = clock(m);
+      const light = paint(m);
+      // The shaded half of the earth faces away from the sun. On a dark page the
+      // shading colour is the light one, so it turns to face the sun instead.
+      earth.setAttribute('transform', `rotate(${(a * 180) / Math.PI + (light ? 90 : 270)} 50 50)`);
+      lede(m);
+    };
+    const choose = (m) => {
+      chosen = m === null ? null : ((Math.round(m) % 1440) + 1440) % 1440;
+      try {
+        if (chosen === null) sessionStorage.removeItem('sun-dial');
+        else sessionStorage.setItem('sun-dial', chosen);
+      } catch {}
+      render();
+    };
+
+    const fromPointer = (e) => {
+      const r = svg.getBoundingClientRect();
+      const x = e.clientX - (r.left + r.width / 2);
+      const y = e.clientY - (r.top + r.height / 2);
+      choose((Math.atan2(x, -y) / (Math.PI * 2)) * 1440 + 720);
+    };
+    svg.addEventListener('pointerdown', (e) => {
+      svg.setPointerCapture(e.pointerId);
+      dial.classList.add('is-dragging');
+      fromPointer(e);
+    });
+    svg.addEventListener('pointermove', (e) => {
+      if (dial.classList.contains('is-dragging')) fromPointer(e);
+    });
+    const release = () => dial.classList.remove('is-dragging');
+    svg.addEventListener('pointerup', release);
+    svg.addEventListener('pointercancel', release);
+    range.addEventListener('input', () => choose(Number(range.value)));
+    document.getElementById('sun-dial-reset').addEventListener('click', () => choose(null));
+
+    dial.hidden = false;
+    render();
+    // The lede is further down the page than this script; render again once it exists.
+    document.addEventListener('DOMContentLoaded', render);
+    const tick = () => {
+      if (chosen === null) render();
+      setTimeout(tick, 60000 - (Date.now() % 60000) + 50);
+    };
+    setTimeout(tick, 60000 - (Date.now() % 60000) + 50);
+  })();
+</script>
