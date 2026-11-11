@@ -1,149 +1,184 @@
 ---
 /**
- * The sun dial: a sun orbiting a small earth, fixed in the top corner
- * (bottom centre on a phone).
- * It sets the page's time of day. Dragging the sun (or the slider, for keys
- * and screen readers) changes the clock in the lede, which lede is shown, and
- * the colours of the whole page from night through dawn, day and dusk.
- * Left alone it follows the visitor's real clock. Pressing the earth returns to it.
+ * The sun dial: half an ellipse over a horizon, fixed at the bottom centre.
+ * The arc is the whole day: midnight at the left end, noon at the top, 11:59pm at
+ * the right end. A sun rides it by day and a moon by night. Dragging it (or the slider, for keys
+ * and screen readers) sets the page's time of day: the clock in the lede, which
+ * lede is shown, and the colours of the whole page from night through dawn, day and dusk.
+ * Left alone it follows the visitor's real clock. "Now" returns to it.
  * Without JavaScript the dial stays hidden and the page keeps its system colours.
  */
 interface Props {
   label: string;
   reset: string;
+  now: string;
 }
-const { label, reset } = Astro.props;
+const { label, reset, now } = Astro.props;
 ---
 
 <div id="sun-dial" class="sun-dial" hidden>
-  <svg viewBox="0 0 100 100" aria-hidden="true">
-    <circle class="sun-dial-orbit" cx="50" cy="50" r="40"></circle>
-    <g id="sun-dial-earth">
-      <circle class="sun-dial-earth" cx="50" cy="50" r="15"></circle>
-      <path class="sun-dial-night" d="M50 35 A15 15 0 0 1 50 65 Z"></path>
+  <svg viewBox="0 0 200 76" aria-hidden="true">
+    <defs>
+      <clipPath id="sun-dial-sky">
+        <rect x="0" y="0" width="200" height="68"></rect>
+      </clipPath>
+      <clipPath id="sun-dial-past">
+        <rect id="sun-dial-past-rect" x="0" y="0" width="0" height="68"></rect>
+      </clipPath>
+      <mask id="sun-dial-crescent">
+        <rect x="-10" y="-10" width="20" height="20" fill="#fff"></rect>
+        <circle cx="4" cy="-3" r="6.5" fill="#000"></circle>
+      </mask>
+    </defs>
+    <path class="sun-dial-arc" d="M14 68 A86 54 0 0 1 186 68"></path>
+    <path class="sun-dial-trail" d="M14 68 A86 54 0 0 1 186 68" clip-path="url(#sun-dial-past)"></path>
+    <path class="sun-dial-ticks" d="M57 68v4M100 68v6M143 68v4"></path>
+    <g clip-path="url(#sun-dial-sky)">
+      <g id="sun-dial-body">
+        <g class="sun-dial-shape">
+          <circle class="sun-dial-sun" r="8"></circle>
+          <circle class="sun-dial-moon" r="7.5" mask="url(#sun-dial-crescent)"></circle>
+        </g>
+      </g>
     </g>
-    <circle id="sun-dial-sun" class="sun-dial-sun" cx="50" cy="10" r="8"></circle>
+    <path class="sun-dial-horizon" d="M4 68H196"></path>
   </svg>
   <input
     id="sun-dial-range"
     class="sun-dial-range"
     type="range"
     min="0"
-    max="1439"
-    step="15"
+    max="1435"
+    step="5"
     aria-label={label}
   />
-  <button id="sun-dial-reset" class="sun-dial-reset" type="button" aria-label={reset} title={reset}></button>
-  <output id="sun-dial-time" class="sun-dial-time" for="sun-dial-range"></output>
+  <div class="sun-dial-row">
+    <output id="sun-dial-time" class="sun-dial-time" for="sun-dial-range"></output>
+    <button id="sun-dial-reset" class="sun-dial-reset" type="button" aria-label={reset} hidden>
+      {now}
+    </button>
+  </div>
 </div>
 
 <style is:global>
   .sun-dial {
-    position: absolute;
-    top: calc(1rem + env(safe-area-inset-top));
-    right: calc(1rem + env(safe-area-inset-right));
+    --dial: 11rem;
+    position: fixed;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    left: 50%;
+    translate: -50% 0;
     z-index: 40;
-    --dial: 4.5rem;
     width: var(--dial);
+    box-sizing: content-box;
+    padding: 0.5rem 0.75rem 0;
+    border: 1px solid var(--color-rule);
+    border-radius: 6.5rem 6.5rem 1rem 1rem / 4.75rem 4.75rem 1rem 1rem;
+    background: var(--color-paper);
     touch-action: none;
     user-select: none;
+    view-transition-name: sun-dial;
   }
-  @media (min-width: 48rem) {
-    .sun-dial {
-      position: fixed;
-    }
-  }
-  /* On a phone the dial sits at the bottom centre, under the thumb, and stays there while the page scrolls. */
-  @media (max-width: 47.99rem) {
-    .sun-dial {
-      --pad: 0.5rem;
-      position: fixed;
-      top: auto;
-      right: auto;
-      bottom: calc(0.75rem + env(safe-area-inset-bottom));
-      left: 50%;
-      translate: -50% 0;
-      box-sizing: content-box;
-      padding: var(--pad) var(--pad) 0.25rem;
-      border: 1px solid var(--color-rule);
-      border-radius: 3.5rem 3.5rem 1.25rem 1.25rem;
-      background: var(--color-paper);
-    }
-    :root:has(.sun-dial:not([hidden])) main {
-      padding-bottom: calc(9.5rem + env(safe-area-inset-bottom));
-    }
+  /* The page ends above the dial, so the footer is never under it. */
+  :root:has(.sun-dial:not([hidden])) main {
+    padding-bottom: calc(10.5rem + env(safe-area-inset-bottom));
   }
   .sun-dial svg {
     display: block;
     width: 100%;
+    overflow: visible;
     cursor: grab;
   }
   .sun-dial.is-dragging svg {
     cursor: grabbing;
   }
-  /* Under a thumb the dial is 80px and takes touches 12px past its edge. */
   @media (pointer: coarse) {
     .sun-dial {
-      --dial: 5rem;
-    }
-    .sun-dial svg {
-      box-sizing: content-box;
-      margin: -0.75rem;
-      padding: 0.75rem;
+      --dial: 12.5rem;
     }
   }
-  .sun-dial-orbit {
+  .sun-dial-arc,
+  .sun-dial-trail,
+  .sun-dial-ticks,
+  .sun-dial-horizon {
     fill: none;
     stroke: var(--color-rule);
     stroke-width: 1.5;
-    stroke-dasharray: 2 4;
+    stroke-linecap: round;
   }
-  .sun-dial-earth {
-    fill: var(--color-paper);
+  .sun-dial-arc {
+    stroke-dasharray: 1 5;
+  }
+  /* The part of the day (or night) already behind you is drawn solid. */
+  .sun-dial-trail,
+  .sun-dial-horizon {
     stroke: var(--color-ink);
-    stroke-width: 2;
-  }
-  .sun-dial-night {
-    fill: var(--color-ink);
   }
   .sun-dial-sun {
     fill: var(--color-sun);
   }
-  /* The real control: a range input over the dial, invisible but focusable. */
+  .sun-dial-moon {
+    fill: var(--color-ink);
+  }
+  .sun-dial[data-sky='day'] .sun-dial-moon,
+  .sun-dial[data-sky='night'] .sun-dial-sun {
+    display: none;
+  }
+  /* Picked up, the sun grows a little. */
+  .sun-dial-shape {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: scale 150ms ease-out;
+  }
+  .sun-dial.is-dragging .sun-dial-shape {
+    scale: 1.25;
+  }
+  /* The real control: a range input over the arc, invisible but focusable. */
   .sun-dial-range {
     position: absolute;
-    top: var(--pad, 0px);
-    left: var(--pad, 0px);
+    inset: 0.5rem 0.75rem auto;
     width: var(--dial);
-    height: var(--dial);
+    height: 4rem;
     margin: 0;
     opacity: 0;
     pointer-events: none;
   }
-  .sun-dial:has(.sun-dial-range:focus-visible) svg {
+  .sun-dial:has(.sun-dial-range:focus-visible) {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
-    border-radius: 50%;
   }
-  /* The earth is the "back to now" button: 44px target in the middle. */
-  .sun-dial-reset {
-    position: absolute;
-    top: calc(var(--pad, 0px) + (var(--dial) - 2.75rem) / 2);
-    left: calc(var(--pad, 0px) + (var(--dial) - 2.75rem) / 2);
-    width: 2.75rem;
-    height: 2.75rem;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-    cursor: pointer;
+  .sun-dial-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    height: 2rem;
   }
   .sun-dial-time {
-    display: block;
-    margin-top: 0.25rem;
-    text-align: center;
-    font-size: 0.75rem;
+    grid-column: 2;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
     font-variant-numeric: tabular-nums;
+  }
+  .sun-dial-reset {
+    grid-column: 3;
+    justify-self: start;
+    align-self: stretch;
+    min-width: 2.75rem;
+    padding: 0 0.5rem;
+    border: 0;
+    background: transparent;
     color: var(--color-muted);
+    font-size: 0.8125rem;
+    text-decoration: underline var(--color-accent);
+    text-underline-offset: 0.18em;
+    cursor: pointer;
+  }
+  .sun-dial-reset:hover {
+    text-decoration-thickness: 2px;
+  }
+  @media (pointer: coarse) {
+    .sun-dial-row {
+      height: 2.75rem;
+    }
   }
 </style>
 
@@ -152,22 +187,27 @@ const { label, reset } = Astro.props;
     const root = document.documentElement;
     const dial = document.getElementById('sun-dial');
     const range = document.getElementById('sun-dial-range');
-    const sun = document.getElementById('sun-dial-sun');
-    const earth = document.getElementById('sun-dial-earth');
+    const body = document.getElementById('sun-dial-body');
+    const past = document.getElementById('sun-dial-past-rect');
     const out = document.getElementById('sun-dial-time');
+    const reset = document.getElementById('sun-dial-reset');
     const svg = dial.querySelector('svg');
 
     // Page ground through the day: [minute, [r, g, b]]. Everything else derives from it.
+    // Night is blue-black, the hour before sunrise is plum, sunrise is rose, the day is
+    // paper, the hour before sunset is gold, then rose, plum and back to blue.
     const SKY = [
       [0, [18, 19, 24]],
-      [300, [23, 22, 20]],
-      [390, [58, 44, 50]],
-      [450, [243, 228, 212]],
+      [300, [22, 23, 34]],
+      [375, [62, 44, 60]],
+      [420, [242, 216, 204]],
+      [480, [245, 230, 210]],
       [600, [244, 241, 234]],
       [960, [244, 241, 234]],
-      [1110, [241, 221, 197]],
-      [1200, [44, 37, 50]],
-      [1290, [23, 22, 20]],
+      [1080, [243, 224, 194]],
+      [1140, [238, 204, 180]],
+      [1200, [58, 40, 62]],
+      [1275, [26, 28, 46]],
       [1440, [18, 19, 24]],
     ];
     const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
@@ -218,7 +258,6 @@ const { label, reset } = Astro.props;
       set('--color-accent-soft', mix(paper, accent, 0.18));
       set('--color-sun', light ? [217, 138, 0] : [255, 192, 77]);
       root.style.colorScheme = light ? 'light' : 'dark';
-      return light;
     };
 
     const clock = (m) => {
@@ -310,67 +349,87 @@ const { label, reset } = Astro.props;
     } catch {}
     const minutes = () => (chosen === null ? nowMinutes() : chosen);
 
+    // The whole day is on the arc: midnight at the left end (x = 14), noon at the
+    // top, 11:59pm at the right end (x = 186). The sun is up from 6am to 6pm; the
+    // moon has the rest.
+    const LEFT = 14;
+    const SPAN = 172;
+    const bodyX = (m) => LEFT + (SPAN * m) / 1440;
+    // The minute on the dial right now. It trails `minutes()` while the dial travels.
+    let showing = null;
     const draw = (m) => {
-      // Noon at the top, 6pm on the right, midnight at the bottom.
-      const a = ((m - 720) / 1440) * Math.PI * 2;
-      sun.setAttribute('cx', 50 + 40 * Math.sin(a));
-      sun.setAttribute('cy', 50 - 40 * Math.cos(a));
+      showing = m;
+      const x = bodyX(m);
+      const y = 68 - 54 * Math.sqrt(Math.max(0, 1 - ((x - 100) / 86) ** 2));
+      body.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
+      past.setAttribute('width', x.toFixed(1));
+      dial.dataset.sky = m >= 360 && m < 1080 ? 'day' : 'night';
       range.value = m;
       range.setAttribute('aria-valuetext', clock(m));
       out.textContent = clock(m);
-      const light = paint(m);
-      // The shaded half of the earth faces away from the sun. On a dark page the
-      // shading colour is the light one, so it turns to face the sun instead.
-      earth.setAttribute('transform', `rotate(${(a * 180) / Math.PI + (light ? 90 : 270)} 50 50)`);
+      // The clock in the lede runs with the dial, so the page tells one time.
+      if (slots) slots[1].textContent = clock(m);
+      paint(m);
     };
-    const render = () => {
-      draw(minutes());
-      lede(minutes());
-    };
-    // On the first page of a visit the day runs from 8am to now: the sun and the
-    // colours move, the lede already shows the current time. Touching the dial stops it.
-    let sweeping = 0;
-    const sweep = () => {
-      const span = (nowMinutes() - 480 + 1440) % 1440;
+    // A jump is travelled, not cut: the sun runs along the arc and the colours follow.
+    let travelling = 0;
+    const travel = (from, to, ms) => {
+      clearTimeout(travelling);
       const start = performance.now();
       const step = () => {
-        const t = Math.min(1, (performance.now() - start) / 1400);
-        if (t === 1) return void ((sweeping = 0), render());
-        draw(Math.round(480 + span * (1 - (1 - t) ** 3)) % 1440);
-        sweeping = setTimeout(step, 16);
+        const t = Math.min(1, (performance.now() - start) / ms);
+        // Ease in and out, so it leaves and arrives gently.
+        const e = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
+        draw(Math.round(from + (to - from) * e));
+        travelling = t < 1 ? setTimeout(step, 16) : 0;
       };
       step();
     };
-    const choose = (m) => {
-      chosen = m === null ? null : ((Math.round(m) % 1440) + 1440) % 1440;
+    const show = (animate) => {
+      const m = minutes();
+      reset.hidden = chosen === null;
+      lede(m);
+      if (animate && showing !== null && showing !== m && !still.matches) return travel(showing, m, 700);
+      clearTimeout(travelling);
+      travelling = 0;
+      draw(m);
+    };
+    const choose = (m, animate) => {
+      chosen = m === null ? null : Math.min(1435, Math.max(0, Math.round(m / 5) * 5));
       try {
         if (chosen === null) sessionStorage.removeItem('sun-dial');
         else sessionStorage.setItem('sun-dial', chosen);
       } catch {}
-      clearTimeout(sweeping);
-      sweeping = 0;
-      render();
+      show(animate);
     };
 
-    const fromPointer = (e) => {
+    // The sun sits under the finger: where you press or drag along the arc is the time.
+    let dragging = false;
+    const fromPointer = (e, animate) => {
       const r = svg.getBoundingClientRect();
-      const x = e.clientX - (r.left + r.width / 2);
-      const y = e.clientY - (r.top + r.height / 2);
-      choose((Math.atan2(x, -y) / (Math.PI * 2)) * 1440 + 720);
+      const x = ((e.clientX - r.left) / r.width) * 200;
+      choose(((x - LEFT) / SPAN) * 1440, animate);
     };
     svg.addEventListener('pointerdown', (e) => {
+      const r = svg.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width) * 200;
+      dragging = true;
       svg.setPointerCapture(e.pointerId);
       dial.classList.add('is-dragging');
-      fromPointer(e);
+      // Pressing the sun picks it up. Pressing elsewhere on the arc sends it there.
+      if (Math.abs(x - bodyX(showing ?? minutes())) > 12) fromPointer(e, true);
     });
     svg.addEventListener('pointermove', (e) => {
-      if (dial.classList.contains('is-dragging')) fromPointer(e);
+      if (dragging) fromPointer(e, false);
     });
-    const release = () => dial.classList.remove('is-dragging');
+    const release = () => {
+      dragging = false;
+      dial.classList.remove('is-dragging');
+    };
     svg.addEventListener('pointerup', release);
     svg.addEventListener('pointercancel', release);
-    range.addEventListener('input', () => choose(Number(range.value)));
-    document.getElementById('sun-dial-reset').addEventListener('click', () => choose(null));
+    range.addEventListener('input', () => choose(Number(range.value), false));
+    reset.addEventListener('click', () => choose(null, true));
 
     dial.hidden = false;
     let first = false;
@@ -378,12 +437,28 @@ const { label, reset } = Astro.props;
       first = !sessionStorage.getItem('sun-dial-swept');
       sessionStorage.setItem('sun-dial-swept', '1');
     } catch {}
-    if (first && chosen === null && !still.matches) sweep();
-    else render();
+    // On the first page of a visit the day runs from 8am to now (from midnight, before
+    // 8am). The page opens at the starting hour, waits half a second, then the
+    // sun, the colours and the clock in the lede move together. Touching the dial stops it.
+    reset.hidden = chosen === null;
+    let opening = 0;
+    if (first && chosen === null && !still.matches) {
+      const from = nowMinutes() < 480 ? 0 : 480;
+      draw(from);
+      opening = setTimeout(() => {
+        opening = 0;
+        if (chosen === null && !dragging) travel(from, nowMinutes(), 2000);
+      }, 500);
+    } else draw(minutes());
     // The lede is further down the page than this script; fill it once it exists.
-    document.addEventListener('DOMContentLoaded', () => (sweeping ? lede(minutes()) : render()));
+    document.addEventListener('DOMContentLoaded', () => {
+      lede(minutes());
+      if (opening && slots) slots[1].textContent = clock(showing);
+    });
+    // After the first paint, colour changes ease (global.css: .sky-moves).
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('sky-moves')));
     const tick = () => {
-      if (chosen === null && !sweeping) render();
+      if (chosen === null && !travelling && !opening && !dragging) show(true);
       setTimeout(tick, 60000 - (Date.now() % 60000) + 50);
     };
     setTimeout(tick, 60000 - (Date.now() % 60000) + 50);

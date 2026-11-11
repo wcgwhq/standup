@@ -32,7 +32,55 @@
   --color-sun: #d98a00;
 }
 
+/*
+  The colour tokens are registered as colours so the sun dial can ease them:
+  once the dial has painted (.sky-moves), a change of time fades instead of cutting.
+*/
+@property --color-paper {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f4f1ea;
+}
+@property --color-ink {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1a1a18;
+}
+@property --color-muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #5c5a52;
+}
+@property --color-rule {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #d4cfc3;
+}
+@property --color-accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #155dfc;
+}
+@property --color-accent-soft {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #dbeafe;
+}
+@property --color-sun {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #d98a00;
+}
+
 @layer base {
+  :root.sky-moves {
+    transition-property:
+      --color-paper, --color-ink, --color-muted, --color-rule, --color-accent, --color-accent-soft,
+      --color-sun;
+    transition-duration: 240ms;
+    transition-timing-function: ease-out;
+  }
+
   html {
     color-scheme: light;
     background: var(--color-paper);
@@ -156,5 +204,23 @@
   .motion-rise,
   .motion-rule {
     animation: none;
+  }
+}
+
+/* Below the first screen a block rises as it scrolls in. Browsers without scroll timelines show it at rest. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .motion-enter {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 7rem;
+    }
+  }
+}
+
+/* Going to another page of the site cross-fades; the sun dial stays where it is. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
   }
 }

@@ -1,46 +1,400 @@
 {
-  "_note": "Radu's own eod-review run for 2026-11-11 (--unit work, read at 17:45). Real commits and real token counts, shown on the homepage at his request. The update lines follow his style file.",
-  "title": "EOD Wed 2026-11-11",
-  "update": [
+  "_note": "Radu's own runs on 2026-11-11 at 23:50 with plugin 0.4.0: eod-review for the day, eow-review for the week and for the month (--unit work). Real commits and real token counts, shown on the homepage at his request. Each update follows his style file and is also written in the five built-in voices, turned up at his request. The Standup lines are partly from memory: the plugin folder is not a git repository, and the day's footer says so.",
+  "periods": [
     {
-      "title": "Standup Site",
-      "status": "✅",
-      "text": "scaffolded, homepage written, sun dial and wordmark in"
+      "id": "day",
+      "title": "EOD Wed 2026-11-11",
+      "update": [
+        {
+          "title": "Standup Site",
+          "status": "✅",
+          "text": {
+            "plain": "scaffolded, homepage written, sun dial and wordmark in, live on pages.dev",
+            "pirate": "Arr, she was bare timber at dawn and by dusk she had a homepage, a wordmark and a sun dial, for no navigator trusts a clock. She sails on pages.dev",
+            "genz": "woke up, no site. went to bed, site. homepage, wordmark, a whole sun dial for some reason. live on pages.dev. she ate and left no crumbs",
+            "corporate": "delighted to announce that a homepage, a wordmark and a sun dial have reached general availability on pages.dev. The sun dial was not on the roadmap. It is now the roadmap",
+            "oneliner": "built a sun dial for a website about saving time. It took all day",
+            "observational": "I made a website today. Homepage, wordmark, fine. And a sun dial. Nobody asked for a sun dial. It is a page for people who lost track of time, and I gave them something to play with"
+          }
+        },
+        {
+          "title": "Switchboard Quota (E-080)",
+          "status": "🔁",
+          "text": {
+            "plain": "rc-quota merged, eight review findings fixed",
+            "pirate": "boarded the rc-quota at midnight and took her whole, then found eight leaks below the waterline and plugged every one before the rum ran out",
+            "genz": "merged rc-quota at midnight like a normal person. review said eight things were wrong. eight. fixed them all. we do not talk about it",
+            "corporate": "completed the strategic acquisition of rc-quota, then proactively addressed eight opportunities for improvement that our own review was kind enough to surface",
+            "oneliner": "merged rc-quota, then fixed eight things the review found in it. I use the word merged loosely",
+            "observational": "merged rc-quota. Done. Finished. Then the review found eight things. Eight. You do not find eight things in something that is finished. You find eight things at a crime scene"
+          }
+        },
+        {
+          "title": "Standup Plugin",
+          "status": "✅",
+          "text": {
+            "plain": "writing voices, month reports, a setup check, token counts no longer counted twice",
+            "pirate": "taught the ship's log to talk like me, to count a whole month, and to stop counting every doubloon twice, which the quartermaster had been enjoying",
+            "genz": "gave it voices, month reports, a setup check. also found out it was counting every token twice. the bill was fake. we were never that broke 💀",
+            "corporate": "expanded our voice portfolio, launched monthly reporting, and restated prior token figures downward by a material amount. We remain confident in the remaining numbers",
+            "oneliner": "taught it five comedy voices and found it had been counting every token twice. Only one of those was the joke",
+            "observational": "so the tool that tells you what your agents cost was counting everything twice. Twice. The one thing it does. I found out the same day I taught it to talk like a pirate, so, priorities"
+          }
+        },
+        {
+          "title": "Cât Vine Pensia",
+          "status": "🚧",
+          "text": {
+            "plain": "site scaffolded, design prototypes and two art rounds",
+            "pirate": "laid the keel of a new vessel, with prototypes on deck and two rounds of art in the hold. Not a plank of it is in the log, so officially she does not exist",
+            "genz": "scaffolded the site, did prototypes, two whole art rounds. commits: zero. it lives in my heart and in a folder",
+            "corporate": "site scaffolded, with design prototypes and two art rounds in the pipeline. Commit timing will be shared when we have more to share",
+            "oneliner": "a pension site: scaffolded, prototyped, two rounds of art, nothing committed. Like a pension",
+            "observational": "it is a site about when your pension comes. I did the scaffold, the prototypes, two rounds of art. Did I commit any of it? No. I am saving it for later. Which, to be fair, is the whole idea of a pension"
+          }
+        },
+        {
+          "title": "wcgw.fun and Pipeline",
+          "status": "🚧",
+          "text": {
+            "plain": "new homepage section, pipeline plan and skills drafted",
+            "pirate": "a new section on the homepage and a plan and skills for the pipeline, all of it buried on an island I forgot to mark on the chart",
+            "genz": "new homepage section, pipeline plan, skills. also zero commits. the site is literally called what could go wrong",
+            "corporate": "a new homepage section and a pipeline plan are in late-stage development, pending commitment from key stakeholders, who are me",
+            "oneliner": "new homepage section, pipeline plan, skills drafted. Committed to nothing, which is on brand for a site called What Could Go Wrong",
+            "observational": "the site is called What Could Go Wrong. I wrote a new section, a plan, some skills, and committed none of it. So we may be about to find out"
+          }
+        },
+        {
+          "title": "wcgw Starter",
+          "status": "✅",
+          "text": {
+            "plain": "copywriting skill and a pre-commit copy review for new sites",
+            "pirate": "a copywriting skill came aboard, and now no word leaves port without the bosun reading it twice and scowling",
+            "genz": "added a copywriting skill and a copy review before every commit. the robot proofreads me now. humbling. no notes",
+            "corporate": "delivered a copywriting skill and instituted a mandatory copy review before every commit, in line with our values, which are also under review",
+            "oneliner": "copywriting skill and a pre-commit copy review for new sites",
+            "observational": "I built a thing that reviews your copy before it lets you commit. A robot that asks, are you sure about that sentence. It is right more often than I would like"
+          }
+        }
+      ],
+      "footer": "Three projects have work on disk and no commit yet. The plugin is not in git, so its line is from memory.",
+      "commits": {
+        "total": "11",
+        "repos": [
+          {
+            "name": "standup-site",
+            "count": "6"
+          },
+          {
+            "name": "switchboard",
+            "count": "4"
+          },
+          {
+            "name": "wcgw-starter",
+            "count": "1"
+          }
+        ]
+      },
+      "uncommitted": [
+        {
+          "name": "cat-vine-pensia",
+          "count": "30 files"
+        },
+        {
+          "name": "wcgw-fun",
+          "count": "16 files"
+        },
+        {
+          "name": "wcgw-pipeline",
+          "count": "5 files"
+        }
+      ],
+      "tokens": {
+        "output": "1.54M",
+        "fresh": "6.29M",
+        "cache": "345.43M",
+        "total": "353.27M"
+      },
+      "models": [
+        {
+          "model": "opus",
+          "output": "1.24M",
+          "cost": "$658"
+        },
+        {
+          "model": "fable",
+          "output": "299k",
+          "cost": "$164"
+        }
+      ],
+      "cost": "≈ $822"
     },
     {
-      "title": "Switchboard Quota (E-080)",
-      "status": "🔁",
-      "text": "rc-quota merged, eight review findings fixed"
+      "id": "week",
+      "title": "Week of Mon 2026-11-09 → Sun 2026-11-15, so far",
+      "update": [
+        {
+          "title": "Switchboard (E-077 to E-080)",
+          "status": "✅",
+          "text": {
+            "plain": "four plans shipped in three days, 112 commits, most of them review fixes",
+            "pirate": "four prizes taken in three days, E-077 to E-080, and 112 entries in the log, most of them the crew patching holes we shot in our own hull",
+            "genz": "shipped four plans in three days. 112 commits. most of them are fixing what the review found. the review is undefeated",
+            "corporate": "delivered four plans in three days across 112 commits, the majority of which reflect our deep and ongoing commitment to fixing what we had just delivered",
+            "oneliner": "shipped four plans in three days with 112 commits. Most were fixes. The plans were shorter",
+            "observational": "112 commits in three days. Sounds productive. Most of them are fixes for review findings. So it was less a week of work and more a week of being told"
+          }
+        },
+        {
+          "title": "Microfoam Index",
+          "status": "✅",
+          "text": {
+            "plain": "Bucharest on the front page with the sector map, a filter rail on the cafés page",
+            "pirate": "Bucharest be on the front page now, with a chart of her sectors, and the coffee houses have a rail of filters to port",
+            "genz": "put bucharest on the front page with a sector map. cafés page got a filter rail. it is a site about flat white prices and it is thriving",
+            "corporate": "elevated Bucharest to the front page alongside a sector map and equipped the cafés page with a filter rail, strengthening our position in the flat white vertical",
+            "oneliner": "put Bucharest on the front page with a map of its sectors. It is an index of coffee prices. The map is so you know where to be upset",
+            "observational": "there is now a map of Bucharest, by sector, showing what a flat white costs. I made that. On a Monday. A Monday with 104 commits in it"
+          }
+        },
+        {
+          "title": "Standup",
+          "status": "✅",
+          "text": {
+            "plain": "site live on pages.dev, plugin gained voices, month reports and a setup check",
+            "pirate": "the Standup be afloat on pages.dev, and her log now speaks in five tongues and counts by the month",
+            "genz": "site is live on pages.dev. plugin got voices and month reports. yes this update is written by the thing it is about. very meta. moving on",
+            "corporate": "launched the site on pages.dev and expanded the plugin with voices and monthly reporting. This report was produced by the product it describes, at no additional headcount",
+            "oneliner": "built a tool that writes my status update. This is the status update. It says I built a tool",
+            "observational": "I built a thing that writes this update. So right now a tool is telling you that I built the tool. Nobody in this sentence did any work"
+          }
+        },
+        {
+          "title": "wcgw Starter",
+          "status": "✅",
+          "text": {
+            "plain": "CLI with languages and local URLs, a GitHub repo step, a copywriting skill",
+            "pirate": "the starter kit now asks yer name, speaks many tongues, makes ye a GitHub repo and reads yer copy before ye shame the fleet",
+            "genz": "starter has a CLI now. languages, local urls, makes the github repo for you, proofreads your copy. it does everything but the site",
+            "corporate": "the starter now offers a CLI with languages, local URLs, repository creation and a copywriting skill, reducing time to first website to roughly one meeting",
+            "oneliner": "the starter now scaffolds a site in several languages. I have nothing to say in any of them yet",
+            "observational": "the starter asks for your name first now. Then a folder. Then it makes the repo, then it reviews your copy. At some point you do have to make the website"
+          }
+        },
+        {
+          "title": "Cât Vine Pensia, wcgw.fun, wcgw Pipeline",
+          "status": "🚧",
+          "text": {
+            "plain": "about 1,300 agent turns between them, no commit yet",
+            "pirate": "three ships built in secret, some 1,300 turns of the capstan between them, and not one line in the log. If we sink, nobody will know we sailed",
+            "genz": "1,300 agent turns across three projects. commits: none. vibes: immaculate. evidence: none",
+            "corporate": "three initiatives representing approximately 1,300 agent turns remain pre-commit. We view this as upside",
+            "oneliner": "about 1,300 agent turns on three projects and no commits. Schrödinger's work week",
+            "observational": "three projects, 1,300 agent turns, zero commits. If my laptop falls in a lake, this week did not happen"
+          }
+        }
+      ],
+      "footer": "Three days into the week. Three projects are still only on disk.",
+      "commits": {
+        "total": "137",
+        "repos": [
+          {
+            "name": "switchboard",
+            "count": "112"
+          },
+          {
+            "name": "microfoam-index",
+            "count": "14"
+          },
+          {
+            "name": "standup-site",
+            "count": "6"
+          },
+          {
+            "name": "wcgw-starter",
+            "count": "5"
+          }
+        ]
+      },
+      "uncommitted": [
+        {
+          "name": "cat-vine-pensia",
+          "count": "30 files"
+        },
+        {
+          "name": "wcgw-fun",
+          "count": "16 files"
+        },
+        {
+          "name": "wcgw-pipeline",
+          "count": "5 files"
+        }
+      ],
+      "tokens": {
+        "output": "5.88M",
+        "fresh": "37.83M",
+        "cache": "1.62B",
+        "total": "1.66B"
+      },
+      "models": [
+        {
+          "model": "opus",
+          "output": "4.81M",
+          "cost": "$2,876"
+        },
+        {
+          "model": "fable",
+          "output": "456k",
+          "cost": "$314"
+        },
+        {
+          "model": "gpt",
+          "output": "487k",
+          "cost": "$39"
+        },
+        {
+          "model": "sonnet",
+          "output": "126k",
+          "cost": "$38"
+        }
+      ],
+      "cost": "≈ $3,268"
     },
     {
-      "title": "Switchboard Records",
-      "status": "✅",
-      "text": "E-077 to E-080 marked shipped"
-    },
-    {
-      "title": "wcgw Starter",
-      "status": "✅",
-      "text": "copywriting skill and a pre-commit copy review for new sites"
+      "id": "month",
+      "title": "November 2026, so far",
+      "update": [
+        {
+          "title": "Switchboard",
+          "status": "✅",
+          "text": {
+            "plain": "four plans shipped (E-077 to E-080), 112 of the month's 184 commits",
+            "pirate": "four prizes taken, E-077 to E-080, and 112 of the month's 184 log entries be hers alone. The other ships have filed a complaint",
+            "genz": "four plans shipped. 112 of 184 commits this month are switchboard. she is the main character and the rest are extras",
+            "corporate": "four plans delivered, representing 112 of 184 commits, or 61% of total output. We are monitoring our concentration risk",
+            "oneliner": "112 of this month's 184 commits are one project. The others are what I call a portfolio",
+            "observational": "184 commits this month, and 112 of them are Switchboard. That is not a month. That is one project and some hobbies"
+          }
+        },
+        {
+          "title": "Microfoam Index",
+          "status": "✅",
+          "text": {
+            "plain": "editorial nr. 1 published, print stickers through five rounds, Bucharest on the front page",
+            "pirate": "the first editorial be published, the stickers went five rounds with the printer and won, and Bucharest flies on the front page",
+            "genz": "published editorial nr. 1. redid the stickers five times. put bucharest on the front page. the stickers have a sheep on them. no further questions",
+            "corporate": "published our inaugural editorial, completed five rounds of sticker refinement, and elevated Bucharest to the front page. The sheep remains a key brand asset",
+            "oneliner": "published one editorial and five rounds of stickers. I know which one took longer",
+            "observational": "five rounds on the stickers. Five. There is a sheep on one. The URL had to fit under the sheep. That is a real line from my commit log"
+          }
+        },
+        {
+          "title": "wcgw Starter",
+          "status": "✅",
+          "text": {
+            "plain": "from first commit to a CLI with languages, an accent picker and a copy review",
+            "pirate": "from first plank to full rig in one moon: a CLI, many tongues, a choice of colours and a bosun who reads yer copy",
+            "genz": "went from initial commit to a full CLI with languages, an accent picker and a copy review. glow up of the month",
+            "corporate": "progressed from initial commit to a full CLI with languages, an accent picker and copy review: a 1,400% increase in commits, from a base of one",
+            "oneliner": "the starter went from one commit to fifteen. It starts websites. Finishing them is a separate product",
+            "observational": "it is a kit that starts websites. Starting was never the problem. Look at the last line of this update"
+          }
+        },
+        {
+          "title": "Standup",
+          "status": "✅",
+          "text": {
+            "plain": "site and plugin built on the 11th",
+            "pirate": "the Standup and her log, built stem to stern on the 11th, in a single tide",
+            "genz": "built the site and the plugin on the 11th. one day. do not ask what the other ten were for",
+            "corporate": "site and plugin delivered on the 11th, in a single business day, which we do not intend to set as a precedent",
+            "oneliner": "built a tool to remember what I did this month. On the 11th. The first ten days are hearsay",
+            "observational": "I built the thing that remembers my month on the 11th. So for the first ten days it is reading about a man it never met"
+          }
+        },
+        {
+          "title": "Cât Vine Pensia, wcgw Pipeline",
+          "status": "🚧",
+          "text": {
+            "plain": "started, nothing committed",
+            "pirate": "two more hulls on the slip and not a line in the log. We call it stealth",
+            "genz": "started. not committed. we are in our private era",
+            "corporate": "two initiatives are in a pre-commit phase and tracking to plan, in the sense that there is a plan",
+            "oneliner": "started two more projects and committed neither. Everyone needs a hobby they can deny",
+            "observational": "two more projects. Started. Nothing committed. You will have noticed a theme"
+          }
+        }
+      ],
+      "footer": "Eleven days of thirty. Two projects are still only on disk.",
+      "commits": {
+        "total": "184",
+        "repos": [
+          {
+            "name": "switchboard",
+            "count": "112"
+          },
+          {
+            "name": "microfoam-index",
+            "count": "49"
+          },
+          {
+            "name": "wcgw-starter",
+            "count": "15"
+          },
+          {
+            "name": "standup-site",
+            "count": "6"
+          },
+          {
+            "name": "sloptable-tools",
+            "count": "1"
+          },
+          {
+            "name": "wcgw-fun",
+            "count": "1"
+          }
+        ]
+      },
+      "uncommitted": [
+        {
+          "name": "cat-vine-pensia",
+          "count": "30 files"
+        },
+        {
+          "name": "wcgw-pipeline",
+          "count": "5 files"
+        }
+      ],
+      "tokens": {
+        "output": "8.38M",
+        "fresh": "45.96M",
+        "cache": "1.92B",
+        "total": "1.97B"
+      },
+      "models": [
+        {
+          "model": "opus",
+          "output": "7.31M",
+          "cost": "$3,762"
+        },
+        {
+          "model": "fable",
+          "output": "456k",
+          "cost": "$314"
+        },
+        {
+          "model": "gpt",
+          "output": "487k",
+          "cost": "$39"
+        },
+        {
+          "model": "sonnet",
+          "output": "126k",
+          "cost": "$38"
+        }
+      ],
+      "cost": "≈ $4,154"
     }
-  ],
-  "footer": "Standup site is on a branch, not deployed.",
-  "commits": {
-    "total": "8",
-    "repos": [
-      { "name": "switchboard", "count": "4" },
-      { "name": "standup-site", "count": "2" },
-      { "name": "wcgw-starter", "count": "2" }
-    ]
-  },
-  "tokens": {
-    "output": "3.98M",
-    "fresh": "13.98M",
-    "cache": "787.16M",
-    "total": "805.12M"
-  },
-  "models": [
-    { "model": "opus", "output": "3.30M", "cost": "$1,523" },
-    { "model": "fable", "output": "680k", "cost": "$375" }
-  ],
-  "cost": "≈ $1,899"
+  ]
 }
