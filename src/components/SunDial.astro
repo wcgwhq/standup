@@ -1,6 +1,7 @@
 ---
 /**
- * The sun dial: a sun orbiting a small earth, fixed in the top corner.
+ * The sun dial: a sun orbiting a small earth, fixed in the top corner
+ * (bottom centre on a phone).
  * It sets the page's time of day. Dragging the sun (or the slider, for keys
  * and screen readers) changes the clock in the lede, which lede is shown, and
  * the colours of the whole page from night through dawn, day and dusk.
@@ -52,6 +53,26 @@ const { label, reset } = Astro.props;
       position: fixed;
     }
   }
+  /* On a phone the dial sits at the bottom centre, under the thumb, and stays there while the page scrolls. */
+  @media (max-width: 47.99rem) {
+    .sun-dial {
+      --pad: 0.5rem;
+      position: fixed;
+      top: auto;
+      right: auto;
+      bottom: calc(0.75rem + env(safe-area-inset-bottom));
+      left: 50%;
+      translate: -50% 0;
+      box-sizing: content-box;
+      padding: var(--pad) var(--pad) 0.25rem;
+      border: 1px solid var(--color-rule);
+      border-radius: 3.5rem 3.5rem 1.25rem 1.25rem;
+      background: var(--color-paper);
+    }
+    :root:has(.sun-dial:not([hidden])) main {
+      padding-bottom: calc(9.5rem + env(safe-area-inset-bottom));
+    }
+  }
   .sun-dial svg {
     display: block;
     width: 100%;
@@ -60,10 +81,10 @@ const { label, reset } = Astro.props;
   .sun-dial.is-dragging svg {
     cursor: grabbing;
   }
-  /* Under a thumb the dial is 96px and takes touches 12px past its edge. */
+  /* Under a thumb the dial is 80px and takes touches 12px past its edge. */
   @media (pointer: coarse) {
     .sun-dial {
-      --dial: 6rem;
+      --dial: 5rem;
     }
     .sun-dial svg {
       box-sizing: content-box;
@@ -91,8 +112,9 @@ const { label, reset } = Astro.props;
   /* The real control: a range input over the dial, invisible but focusable. */
   .sun-dial-range {
     position: absolute;
-    inset: 0;
-    width: 100%;
+    top: var(--pad, 0px);
+    left: var(--pad, 0px);
+    width: var(--dial);
     height: var(--dial);
     margin: 0;
     opacity: 0;
@@ -106,8 +128,8 @@ const { label, reset } = Astro.props;
   /* The earth is the "back to now" button: 44px target in the middle. */
   .sun-dial-reset {
     position: absolute;
-    top: calc((var(--dial) - 2.75rem) / 2);
-    left: calc((var(--dial) - 2.75rem) / 2);
+    top: calc(var(--pad, 0px) + (var(--dial) - 2.75rem) / 2);
+    left: calc(var(--pad, 0px) + (var(--dial) - 2.75rem) / 2);
     width: 2.75rem;
     height: 2.75rem;
     border: 0;
