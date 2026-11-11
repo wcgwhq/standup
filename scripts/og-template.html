@@ -4,8 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <title data-slot="name"></title>
-    <link rel="stylesheet" href="../node_modules/@fontsource/jetbrains-mono/400.css" />
-    <link rel="stylesheet" href="../node_modules/@fontsource/jetbrains-mono/700.css" />
+    <link rel="stylesheet" href="../node_modules/@fontsource-variable/bricolage-grotesque/opsz.css" />
     <style>
       :root {
         --paper: #f4f1ea;
@@ -27,10 +26,10 @@
         align-items: flex-start;
         background: var(--paper);
         color: var(--ink);
-        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-family: 'Bricolage Grotesque Variable', sans-serif;
       }
 
-      /* Same reason as global.css: no Arabic, Hebrew, Devanagari or CJK in JetBrains Mono. */
+      /* Same reason as global.css: no Arabic, Hebrew, Devanagari or CJK in Bricolage Grotesque. */
       [data-font='system'] body {
         font-family: system-ui, sans-serif;
       }
@@ -46,11 +45,11 @@
         margin-top: auto;
         font-size: 96px;
         line-height: 1;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.02em;
       }
 
       h1 span {
-        vertical-align: 0.54em;
+        vertical-align: 0.52em;
       }
 
       p {

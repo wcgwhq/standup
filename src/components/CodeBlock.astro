@@ -1,0 +1,150 @@
+---
+/**
+ * A box of text to copy: a command or a prompt, with a copy button.
+ * `shell` marks up a command: the command itself in bold, flags muted,
+ * <placeholders> in italics, and the `mark` token on a soft chip.
+ * Colour never carries the highlight alone, because the sun dial moves every colour.
+ * A command sits beside its button from 640px; a prompt always sits above it.
+ * Without JavaScript the button stays hidden and one click still selects the text.
+ * A phone cannot run the command, so `send` adds a button there that opens the
+ * share sheet: Reminders, Notes, mail or AirDrop carry it to the computer.
+ */
+interface Props {
+  code: string;
+  /** id of the heading that names this block. */
+  labelledby: string;
+  copy: string;
+  copied: string;
+  shell?: boolean;
+  mark?: string;
+  /** Label for the phone-only button that opens the share sheet. */
+  send?: string;
+}
+const { code, labelledby, copy, copied, shell = false, mark, send } = Astro.props;
+
+const kind = (token: string, index: number) =>
+  index === 0
+    ? 'cmd'
+    : token === mark
+      ? 'mark'
+      : token.startsWith('--')
+        ? 'flag'
+        : token.includes('<')
+          ? 'var'
+          : '';
+---
+
+<div
+  class:list={[
+    'code-block flex flex-col border border-[var(--color-rule)]',
+    shell && 'sm:flex-row sm:items-start',
+  ]}
+>
+  <p
+    class:list={['min-w-0 flex-1 px-4 py-3 text-sm select-all', shell && 'font-mono']}
+    tabindex="0"
+    aria-labelledby={labelledby}
+  >
+    {shell ? (
+      <code>
+        {code.split(' ').map((token, index) => (
+          <>
+            {index > 0 && ' '}
+            <span class="whitespace-nowrap" data-tok={kind(token, index) || undefined}>
+              {token}
+            </span>
+          </>
+        ))}
+      </code>
+    ) : (
+      // A flag stays whole: "--marketplace" never breaks after its dashes.
+      code
+        .split(/(--\S+)/)
+        .map((piece) => (piece.startsWith('--') ? <span class="whitespace-nowrap">{piece}</span> : piece))
+    )}
+  </p>
+  <div class="flex shrink-0 flex-wrap justify-end self-end">
+    {send && (
+      <button
+        type="button"
+        class="code-send px-4 py-3 text-sm underline decoration-[var(--color-accent)] underline-offset-[0.18em]"
+        data-share={code}
+        hidden
+      >
+        {send}
+      </button>
+    )}
+    <button
+      type="button"
+      class="code-copy px-4 py-3 text-sm underline decoration-[var(--color-accent)] underline-offset-[0.18em]"
+      data-copy={code}
+      data-copied={copied}
+      hidden
+    >
+      {copy}
+    </button>
+  </div>
+  <span class="sr-only" role="status"></span>
+</div>
+
+<style>
+  [data-tok='cmd'] {
+    font-weight: 700;
+  }
+  [data-tok='flag'] {
+    color: var(--color-muted);
+  }
+  [data-tok='var'] {
+    font-style: italic;
+    text-decoration: underline dotted var(--color-accent);
+    text-underline-offset: 0.25em;
+  }
+  [data-tok='mark'] {
+    background: var(--color-accent-soft);
+    box-shadow: 0 0 0 0.2em var(--color-accent-soft);
+  }
+  .code-copy,
+  .code-send {
+    cursor: pointer;
+  }
+  .code-copy:hover,
+  .code-send:hover {
+    text-decoration-thickness: 2px;
+  }
+</style>
+
+<script>
+  for (const button of document.querySelectorAll<HTMLButtonElement>('.code-copy')) {
+    if (!navigator.clipboard) continue;
+    const label = button.textContent;
+    const status = button.closest('.code-block')?.querySelector('[role="status"]');
+    let timer = 0;
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? '');
+      } catch {
+        return;
+      }
+      button.textContent = button.dataset.copied ?? label;
+      if (status) status.textContent = button.dataset.copied ?? '';
+      clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        button.textContent = label;
+        if (status) status.textContent = '';
+      }, 2000);
+    });
+  }
+
+  // Touch devices that can share get the send button. Cancelling the sheet is not an error.
+  if ('share' in navigator && matchMedia('(pointer: coarse)').matches) {
+    for (const button of document.querySelectorAll<HTMLButtonElement>('.code-send')) {
+      button.hidden = false;
+      button.addEventListener('click', () => {
+        navigator
+          .share({ title: document.title, text: button.dataset.share, url: location.href })
+          .catch(() => {});
+      });
+    }
+  }
+</script>

@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { copy, localePath, localeStaticPaths, siteNameFor } from '@/i18n';
+import CodeBlock from '@/components/CodeBlock.astro';
+import { siteName } from '../../../site.config.mjs';
 import install from '@/data/install.json';
 import report from '@/data/sample-report.json';
 
@@ -22,6 +24,23 @@ const ledes = {
   night: ui.ledeNight,
 };
 
+const site = Astro.site!;
+const llms = new URL('/llms.txt', site).href;
+const agentPrompt = ui.agentPrompt.replace('{llms}', llms).replace('{command}', install.command);
+
+// What the plugin is, for crawlers and agents: free, MIT, runs on the visitor's machine.
+const software = {
+  '@type': 'SoftwareApplication',
+  '@id': new URL('/#software', site).href,
+  name: siteName,
+  description: ui.description,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'macOS, Linux',
+  softwareRequirements: 'Python 3.9 or later, git',
+  license: 'https://opensource.org/licenses/MIT',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+
 const sections = [
   { title: ui.askTitle, body: ui.askBody },
   { title: ui.agentsTitle, body: ui.agentsBody },
@@ -32,12 +51,14 @@ const sections = [
 ];
 ---
 
-<BaseLayout locale={locale} title={siteNameFor(locale)} description={ui.description}>
+<BaseLayout locale={locale} title={siteNameFor(locale)} description={ui.description} graph={[software]}>
   <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16 sm:py-24">
     <header class="motion-rise space-y-5">
       {/* The wordmark: "up" stands one x-height above "stand". */}
       <p class="text-4xl leading-none font-bold tracking-[-0.04em] sm:text-5xl">
-        <bdi>stand<span class="align-[0.54em]">up</span></bdi>
+        <bdi>
+          stand<span class="align-[0.52em]">up</span>
+        </bdi>
       </p>
       <h1 class="text-2xl text-balance sm:text-3xl">{ui.headline}</h1>
       <p
@@ -53,66 +74,169 @@ const sections = [
       <h2 id="install-label" class="text-sm font-medium">
         {ui.installLabel}
       </h2>
-      <p
-        class="mt-2 overflow-x-auto border border-[var(--color-rule)] px-4 py-3 text-sm select-all"
-        tabindex="0"
-        aria-labelledby="install-label"
-      >
-        <code>
-          {install.command.split(' ').map((token, index) => (
-            <>
-              {index > 0 && ' '}
-              <span class="whitespace-nowrap">{token}</span>
-            </>
-          ))}
-        </code>
-      </p>
+      <div class="mt-2">
+        <CodeBlock
+          code={install.command}
+          labelledby="install-label"
+          copy={ui.copyCommand}
+          copied={ui.copied}
+          send={ui.sendLater}
+          shell
+          mark="standup"
+        />
+      </div>
       <p class="mt-2 text-sm text-[var(--color-muted)]">{ui.installNote}</p>
       <p class="mt-2 text-sm text-[var(--color-muted)]">{ui.installOther}</p>
+
+      <h2 id="agent-label" class="mt-8 text-sm font-medium">
+        {ui.agentPromptLabel}
+      </h2>
+      <div class="mt-2">
+        <CodeBlock code={agentPrompt} labelledby="agent-label" copy={ui.copyPrompt} copied={ui.copied} />
+      </div>
+      <p class="mt-2 flex flex-wrap gap-x-5 text-sm">
+        <a class="inline-block py-3" href="/llms.txt">
+          {ui.llmsLink}
+        </a>
+        <a class="inline-block py-3" href={localePath(locale, '/') + 'index.md'}>
+          {ui.markdownLink}
+        </a>
+      </p>
     </section>
 
-    <figure class="receipt mt-14">
-      <figcaption class="text-sm text-[var(--color-muted)]">{ui.receiptCaption}</figcaption>
-      <div class="mt-2 border-y border-dashed border-[var(--color-rule)] py-5 text-sm tabular-nums">
-        <p class="font-bold">{report.date}</p>
+    <section class="examples mt-14" aria-labelledby="example-title">
+      <h2 id="example-title" class="text-lg text-balance">
+        {ui.exampleTitle}
+      </h2>
 
-        <table class="mt-5 w-full">
-          <caption class="text-start font-medium">{ui.receiptShipped}</caption>
-          <tbody>
-            {report.shipped.map((item) => (
-              <tr>
-                <td class="py-0.5 ps-4">{item}</td>
-                <td class="py-0.5 text-end" aria-hidden="true">
-                  ✓
-                </td>
-              </tr>
+      <figure class="mt-6">
+        <figcaption class="text-sm text-[var(--color-muted)]">{ui.updateCaption}</figcaption>
+        <div class="mt-2 border border-[var(--color-rule)] px-4 py-4 text-sm">
+          <p class="font-bold">
+            <mark>{report.title}</mark>
+            <sup>1</sup>
+          </p>
+          <ul class="mt-2 space-y-1.5">
+            {report.update.map((item, index) => (
+              <li class="flex gap-2">
+                <span aria-hidden="true">•</span>
+                <span>
+                  <span class="font-medium">{index === 0 ? <mark>{item.title}</mark> : item.title}</span>
+                  {index === 0 && <sup>2</sup>}{' '}
+                  {index === 1 ? (
+                    <>
+                      <mark>{item.status}</mark>
+                      <sup>3</sup>
+                    </>
+                  ) : (
+                    item.status
+                  )}{' '}
+                  → {item.text}
+                </span>
+              </li>
             ))}
-          </tbody>
-        </table>
+          </ul>
+          <p class="mt-3">
+            <mark>{report.footer}</mark>
+            <sup>4</sup>
+          </p>
+        </div>
+        <ol class="notes mt-3 space-y-1 text-sm text-[var(--color-muted)]">
+          <li>{ui.noteDate}</li>
+          <li>{ui.noteLines}</li>
+          <li>{ui.noteStatus}</li>
+          <li>{ui.noteFooter}</li>
+        </ol>
+      </figure>
 
-        <table class="mt-5 w-full">
-          <caption class="text-start font-medium">{ui.receiptAgents}</caption>
-          <tbody>
-            {report.agents.map((agent) => (
+      <figure class="mt-10">
+        <figcaption class="text-sm text-[var(--color-muted)]">{ui.receiptCaption}</figcaption>
+        <div class="mt-2 border-y border-dashed border-[var(--color-rule)] py-5 font-mono text-sm tabular-nums">
+          <p class="font-bold">{report.title}</p>
+
+          <table class="mt-5 w-full">
+            <caption class="text-start font-medium">
+              <mark>{ui.receiptCommits}</mark>
+              <sup>5</sup>
+            </caption>
+            <tbody>
+              {report.commits.repos.map((repo) => (
+                <tr>
+                  <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                    {repo.name}
+                  </th>
+                  <td class="py-0.5 text-end">{repo.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <table class="mt-5 w-full">
+            <caption class="text-start font-medium">{ui.receiptTokens}</caption>
+            <tbody>
               <tr>
                 <th scope="row" class="py-0.5 ps-4 text-start font-normal">
-                  {agent.model}
+                  <mark>{ui.receiptOutput}</mark>
+                  <sup>6</sup>
                 </th>
-                <td class="py-0.5 text-end text-[var(--color-muted)]">
-                  {agent.output} {ui.receiptOutput}
-                </td>
-                <td class="w-16 py-0.5 text-end">{agent.cost}</td>
+                <td class="py-0.5 text-end">{report.tokens.output}</td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+              <tr>
+                <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                  <mark>{ui.receiptFresh}</mark>
+                  <sup>6</sup>
+                </th>
+                <td class="py-0.5 text-end">{report.tokens.fresh}</td>
+              </tr>
+              <tr>
+                <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                  <mark>{ui.receiptCache}</mark>
+                  <sup>7</sup>
+                </th>
+                <td class="py-0.5 text-end">{report.tokens.cache}</td>
+              </tr>
+              <tr>
+                <th scope="row" class="py-0.5 ps-4 text-start font-normal text-[var(--color-muted)]">
+                  {ui.receiptAll}
+                </th>
+                <td class="py-0.5 text-end text-[var(--color-muted)]">{report.tokens.total}</td>
+              </tr>
+            </tbody>
+          </table>
 
-        <p class="mt-5 flex justify-between gap-4 border-t border-dashed border-[var(--color-rule)] pt-4">
-          <span class="text-[var(--color-muted)]">{ui.receiptTotal}</span>
-          <span class="font-bold">{report.cost}</span>
-        </p>
-      </div>
-    </figure>
+          <table class="mt-5 w-full">
+            <caption class="text-start font-medium">{ui.receiptModels}</caption>
+            <tbody>
+              {report.models.map((row) => (
+                <tr>
+                  <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                    {row.model}
+                  </th>
+                  <td class="py-0.5 text-end text-[var(--color-muted)]">
+                    {row.output} {ui.receiptOutput}
+                  </td>
+                  <td class="w-20 py-0.5 text-end">{row.cost}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <p class="mt-5 flex justify-between gap-4 border-t border-dashed border-[var(--color-rule)] pt-4">
+            <span class="text-[var(--color-muted)]">{ui.receiptTotal}</span>
+            <span class="font-bold whitespace-nowrap">
+              <mark>{report.cost}</mark>
+              <sup>8</sup>
+            </span>
+          </p>
+        </div>
+        <ol start="5" class="notes mt-3 space-y-1 text-sm text-[var(--color-muted)]">
+          <li>{ui.noteRepos}</li>
+          <li>{ui.noteWork}</li>
+          <li>{ui.noteCache}</li>
+          <li>{ui.noteCost}</li>
+        </ol>
+      </figure>
+    </section>
 
     {sections.map((section) => (
       <section class="mt-14 space-y-2">
@@ -131,3 +255,25 @@ const sections = [
     </footer>
   </main>
 </BaseLayout>
+
+<style>
+  /* A highlight is a soft chip plus a number. The number carries it when the sun dial moves the colours. */
+  .examples mark {
+    background: var(--color-accent-soft);
+    box-shadow: 0 0 0 0.15em var(--color-accent-soft);
+    color: inherit;
+  }
+  .examples sup {
+    margin-inline-start: 0.3em;
+    font-size: 0.7em;
+    font-weight: 700;
+  }
+  .notes {
+    list-style: decimal;
+    padding-inline-start: 1.5em;
+  }
+  .notes li::marker {
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+</style>

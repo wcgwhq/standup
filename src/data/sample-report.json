@@ -1,23 +1,46 @@
 {
-  "_note": "Illustrative example for the homepage receipt. Not real usage data. Shown under the caption 'Example report'.",
-  "date": "Tue 10 Nov 2026",
-  "shipped": ["Checkout retry flow", "Invoice PDF export", "Flaky test quarantine"],
-  "agents": [
+  "_note": "Radu's own eod-review run for 2026-11-11 (--unit work, read at 17:45). Real commits and real token counts, shown on the homepage at his request. The update lines follow his style file.",
+  "title": "EOD Wed 2026-11-11",
+  "update": [
     {
-      "model": "Claude Code",
-      "output": "412k",
-      "cost": "$31"
+      "title": "Standup Site",
+      "status": "✅",
+      "text": "scaffolded, homepage written, sun dial and wordmark in"
     },
     {
-      "model": "Codex",
-      "output": "88k",
-      "cost": "$5"
+      "title": "Switchboard Quota (E-080)",
+      "status": "🔁",
+      "text": "rc-quota merged, eight review findings fixed"
     },
     {
-      "model": "Grok",
-      "output": "31k",
-      "cost": "$2"
+      "title": "Switchboard Records",
+      "status": "✅",
+      "text": "E-077 to E-080 marked shipped"
+    },
+    {
+      "title": "wcgw Starter",
+      "status": "✅",
+      "text": "copywriting skill and a pre-commit copy review for new sites"
     }
   ],
-  "cost": "≈ $38"
+  "footer": "Standup site is on a branch, not deployed.",
+  "commits": {
+    "total": "8",
+    "repos": [
+      { "name": "switchboard", "count": "4" },
+      { "name": "standup-site", "count": "2" },
+      { "name": "wcgw-starter", "count": "2" }
+    ]
+  },
+  "tokens": {
+    "output": "3.98M",
+    "fresh": "13.98M",
+    "cache": "787.16M",
+    "total": "805.12M"
+  },
+  "models": [
+    { "model": "opus", "output": "3.30M", "cost": "$1,523" },
+    { "model": "fable", "output": "680k", "cost": "$375" }
+  ],
+  "cost": "≈ $1,899"
 }

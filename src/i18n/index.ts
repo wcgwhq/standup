@@ -10,7 +10,7 @@ type Catalog = {
     hreflang: string;
     ogLocale: string;
     dir: 'ltr' | 'rtl';
-    /** 'system' for scripts JetBrains Mono lacks (Arabic, Hebrew, Devanagari, CJK). */
+    /** 'system' for scripts Bricolage Grotesque lacks (Arabic, Hebrew, Devanagari, CJK). */
     font: 'mono' | 'system';
   };
   description: string;

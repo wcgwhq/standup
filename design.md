@@ -67,7 +67,7 @@ The agent that implemented the UI does not rubber-stamp PASS. Run `/design-quali
 ### Creative north star
 **North star:** _A printed receipt for your day._
 
-One narrow column on paper, set in one monospace face. Hairline and dashed rules do the structure. Numbers are tabular and right-aligned, like line items and a total. The accent marks links and focus only.
+One narrow column on paper. Prose is set in Bricolage Grotesque; the command and the receipt are set in JetBrains Mono. Hairline and dashed rules do the structure. Numbers are tabular and right-aligned, like line items and a total. The accent marks links and focus only.
 
 Pick one sentence for this site's atmosphere (examples: "founder's field guide", "one price on newsprint", "red pen on a manifesto"). Everything serves that sentence. Quiet surface, loud content. (Gate G14.)
 
@@ -108,7 +108,7 @@ Mechanical gates (`astro check`, lint-copy, verify-build) run before any screens
 | `--color-rule` | Hairlines |
 | `--color-sun` | The sun on the dial only; amber, a sibling of the accent with one job |
 | `--color-accent` (+ optional siblings) | Dominant accent from the CLI picker; add harmonious siblings later |
-| `--font-sans` / `--font-mono` | Brand faces (JetBrains Mono is a seed, not destiny) |
+| `--font-sans` / `--font-mono` | Bricolage Grotesque for prose, JetBrains Mono for commands and the receipt |
 
 ## Interaction split
 

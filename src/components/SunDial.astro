@@ -59,6 +59,14 @@ const { label, reset } = Astro.props;
   .sun-dial.is-dragging svg {
     cursor: grabbing;
   }
+  /* Under a thumb the dial takes touches 12px past its edge; it looks the same. */
+  @media (pointer: coarse) {
+    .sun-dial svg {
+      box-sizing: content-box;
+      margin: -0.75rem;
+      padding: 0.75rem;
+    }
+  }
   .sun-dial-orbit {
     fill: none;
     stroke: var(--color-rule);
@@ -185,11 +193,67 @@ const { label, reset } = Astro.props;
             : h >= 17 && h < 21
               ? 'evening'
               : 'night';
+    // The lede is three nodes: the words before the time, the time, and the rest.
+    // Within one part of the day only the time changes. Across parts the rest is
+    // reprinted: a short band of scrambled letters runs through it, new text behind
+    // it and old text ahead, the way a receipt printer overwrites a line.
+    const GLYPHS = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const still = matchMedia('(prefers-reduced-motion: reduce)');
+    let slots = null;
+    let shown = null;
+    let timer = 0;
+    const reprint = (el, to) => {
+      clearTimeout(timer);
+      const from = el.textContent;
+      const length = Math.max(from.length, to.length);
+      const start = performance.now();
+      const frame = () => {
+        const t = Math.min(1, (performance.now() - start) / 500);
+        if (t === 1) return void (el.textContent = to);
+        const cut = Math.floor(t * length);
+        const band = (to.slice(cut, cut + 8) || from.slice(cut, cut + 8)).replace(
+          /\S/g,
+          () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)],
+        );
+        el.textContent = to.slice(0, cut) + band + from.slice(cut + 8);
+        timer = setTimeout(frame, 30);
+      };
+      frame();
+    };
+    // Ledes differ in length. The paragraph glides to its new height while the
+    // reprint runs, so the page below it slides and does not jump.
+    let settle = 0;
+    const glide = (el, from, to) => {
+      clearTimeout(settle);
+      el.style.cssText = `height:${from}px;overflow:clip`;
+      el.offsetHeight;
+      el.style.cssText = `height:${to}px;overflow:clip;transition:height 500ms ease`;
+      settle = setTimeout(() => (el.style.cssText = ''), 520);
+    };
     const lede = (m) => {
       const el = document.getElementById('lede');
       if (!el || !el.dataset.ledes) return;
-      const ledes = JSON.parse(el.dataset.ledes);
-      el.textContent = ledes[part(Math.floor(m / 60))].replace('{time}', clock(m));
+      if (!slots) {
+        slots = [document.createTextNode(''), document.createElement('span'), document.createElement('span')];
+        el.replaceChildren(...slots);
+      }
+      const key = part(Math.floor(m / 60));
+      const [before, after = ''] = JSON.parse(el.dataset.ledes)[key].split('{time}');
+      slots[0].data = before;
+      slots[1].textContent = clock(m);
+      if (key === shown) return;
+      if (shown === null || still.matches) slots[2].textContent = after;
+      else {
+        const from = el.getBoundingClientRect().height;
+        const old = slots[2].textContent;
+        el.style.cssText = '';
+        slots[2].textContent = after;
+        const to = el.getBoundingClientRect().height;
+        slots[2].textContent = old;
+        glide(el, from, to);
+        reprint(slots[2], after);
+      }
+      shown = key;
     };
 
     const nowMinutes = () => {

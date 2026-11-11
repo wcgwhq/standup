@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/bricolage-grotesque/opsz.css';
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/500.css';
 @import '@fontsource/jetbrains-mono/700.css';
@@ -17,7 +18,8 @@
 }
 
 @theme {
-  --font-sans: 'JetBrains Mono', ui-monospace, monospace;
+  /* Bricolage Grotesque for everything read as prose. JetBrains Mono for commands and the receipt. */
+  --font-sans: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
   --color-paper: #f4f1ea;
@@ -59,8 +61,8 @@
   }
 
   /*
-    JetBrains Mono has no Arabic, Hebrew, Devanagari or CJK glyphs. With it first in the stack,
-    browsers fill those scripts from a monospace fallback that breaks Arabic joining.
+    Bricolage Grotesque has no Arabic, Hebrew, Devanagari or CJK glyphs, so those scripts
+    use the system face from the first letter instead of a per-glyph fallback.
     A language file sets "font": "system" for these.
   */
   [data-font='system'] {

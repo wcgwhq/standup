@@ -17,6 +17,8 @@ Product scope. Update it when scope changes. Agents: do not invent product scope
 The homepage exists to make visitors do **one** thing:
 
 - Copy the install command for the Claude Code plugin.
+- Or copy the prompt that has their own agent read the site and install it. Same job, second door.
+- On a phone, where the command cannot run, send it to their computer through the share sheet.
 
 ## Success looks like
 
