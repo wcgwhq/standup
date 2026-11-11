@@ -1,0 +1,114 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { copy, localePath, localeStaticPaths, siteNameFor } from '@/i18n';
+import { siteName } from '../../../site.config.mjs';
+import install from '@/data/install.json';
+import report from '@/data/sample-report.json';
+
+export const getStaticPaths = localeStaticPaths;
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const ui = copy(locale);
+
+const sections = [
+  { title: ui.readsTitle, body: ui.readsBody },
+  { title: ui.weekTitle, body: ui.weekBody },
+  { title: ui.numbersTitle, body: ui.numbersBody },
+];
+---
+
+<BaseLayout locale={locale} title={siteNameFor(locale)} description={ui.description}>
+  <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16 sm:py-24">
+    <header class="motion-rise space-y-5">
+      <p class="text-4xl font-bold tracking-tight sm:text-5xl">
+        <bdi>{siteName}</bdi>
+      </p>
+      <h1 class="text-2xl text-balance sm:text-3xl">{ui.headline}</h1>
+      <p class="max-w-prose text-pretty text-[var(--color-muted)]">{ui.lede}</p>
+    </header>
+
+    <section class="motion-rise mt-10" style="animation-delay: 80ms" aria-labelledby="install-label">
+      <h2 id="install-label" class="text-sm font-medium">
+        {ui.installLabel}
+      </h2>
+      <p
+        class="mt-2 overflow-x-auto border border-[var(--color-rule)] px-4 py-3 text-sm select-all"
+        tabindex="0"
+        aria-labelledby="install-label"
+      >
+        <code>
+          {install.command.split(' ').map((token, index) => (
+            <>
+              {index > 0 && ' '}
+              <span class="whitespace-nowrap">{token}</span>
+            </>
+          ))}
+        </code>
+      </p>
+      <p class="mt-2 text-sm text-[var(--color-muted)]">{ui.installNote}</p>
+    </section>
+
+    <figure class="receipt mt-14">
+      <figcaption class="text-sm text-[var(--color-muted)]">{ui.receiptCaption}</figcaption>
+      <div class="mt-2 border-y border-dashed border-[var(--color-rule)] py-5 text-sm tabular-nums">
+        <p class="font-bold">{report.date}</p>
+
+        <table class="mt-5 w-full">
+          <caption class="text-start font-medium">{ui.receiptShipped}</caption>
+          <tbody>
+            {report.shipped.map((item) => (
+              <tr>
+                <td class="py-0.5 ps-4">{item}</td>
+                <td class="py-0.5 text-end" aria-hidden="true">
+                  ✓
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <table class="mt-5 w-full">
+          <caption class="text-start font-medium">{ui.receiptAgents}</caption>
+          <tbody>
+            {report.agents.map((agent) => (
+              <tr>
+                <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                  {agent.model}
+                </th>
+                <td class="py-0.5 text-end text-[var(--color-muted)]">
+                  {agent.output} {ui.receiptOutput}
+                </td>
+                <td class="w-16 py-0.5 text-end">{agent.cost}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p class="mt-5 flex justify-between gap-4 border-t border-dashed border-[var(--color-rule)] pt-4">
+          <span class="text-[var(--color-muted)]">{ui.receiptTotal}</span>
+          <span class="font-bold">{report.cost}</span>
+        </p>
+      </div>
+    </figure>
+
+    {sections.map((section) => (
+      <section class="mt-14 space-y-2">
+        <h2 class="text-lg text-balance">{section.title}</h2>
+        <p class="max-w-prose text-pretty text-[var(--color-muted)]">{section.body}</p>
+      </section>
+    ))}
+
+    <footer class="mt-16 space-y-3 border-t border-[var(--color-rule)] pt-6 text-sm">
+      <p class="text-[var(--color-muted)]">{ui.requirements}</p>
+      <nav>
+        <a class="inline-block py-3" href={localePath(locale, '/about/')}>
+          {ui.about}
+        </a>
+      </nav>
+    </footer>
+  </main>
+</BaseLayout>

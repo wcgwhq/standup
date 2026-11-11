@@ -1,0 +1,7 @@
+---
+// The default locale's 404, at /404.html. Also what `astro dev` serves for unknown URLs.
+import NotFound from './[...locale]/404.astro';
+import { defaultLocale } from '@/i18n';
+---
+
+<NotFound locale={defaultLocale} />

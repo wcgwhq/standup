@@ -1,0 +1,4 @@
+{
+  "_note": "Replace <owner>/<repo> when the plugin repository is public, then remove ui.installNote.",
+  "command": "/plugin install standup --marketplace <owner>/<repo>"
+}

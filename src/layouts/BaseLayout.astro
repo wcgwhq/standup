@@ -1,0 +1,183 @@
+---
+import '@/styles/global.css';
+import { absolute, canonicalUrl, jsonLd, organizationId, websiteId, type GraphNode } from '@/lib/seo';
+import { copy, defaultLocale, locales, meta, pagePath, siteNameFor, versions } from '@/i18n';
+import { darkMode, published, siteName } from '../../site.config.mjs';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Locale code from site.config.mjs. Pages in src/pages/[...locale]/ pass theirs. */
+  locale?: string;
+  noindex?: boolean;
+  /** Extra nodes for the page's single JSON-LD @graph. */
+  graph?: GraphNode[];
+  pageType?: 'WebPage' | 'AboutPage';
+  /** Path under /public for the share card (prefer PNG 1200×630). */
+  ogImage?: string;
+  ogAlt?: string;
+  dateModified?: string;
+}
+
+const {
+  title,
+  description,
+  locale = defaultLocale,
+  noindex = false,
+  graph = [],
+  pageType = 'WebPage',
+  ogImage = '/og-image.png',
+  ogAlt,
+  dateModified = published,
+} = Astro.props;
+
+if (!Astro.site) throw new Error('Set site in astro.config.mjs before building.');
+const site = Astro.site;
+const ui = copy(locale);
+const { hreflang, dir, ogLocale, font } = meta(locale);
+const canonical = canonicalUrl(Astro.url.pathname, site);
+const path = pagePath(new URL(canonical).pathname);
+const is404 = path === '/404/';
+const indexable = !noindex && !is404;
+const pageTitle = title.includes(siteName) ? title : `${title} · ${siteNameFor(locale)}`;
+const og = absolute(ogImage, site);
+
+// Every locale's version of this page (a 404 points each language at its home page).
+const translations = locales.length > 1 ? versions(is404 ? '/' : path) : [];
+const others = translations.filter((version) => version.locale !== locale);
+const linkTranslations = indexable && translations.length > 0;
+const defaultUrl = translations.find((version) => version.locale === defaultLocale)?.url;
+
+const fullGraph: GraphNode[] = [
+  {
+    '@type': 'WebSite',
+    '@id': websiteId(site),
+    name: siteName,
+    url: site.href,
+    inLanguage: translations.length ? translations.map((version) => version.hreflang) : hreflang,
+    publisher: { '@id': organizationId(site) },
+  },
+  {
+    '@type': 'Organization',
+    '@id': organizationId(site),
+    name: siteName,
+    url: site.href,
+    logo: {
+      '@type': 'ImageObject',
+      url: absolute('/icon-512.png', site),
+      width: 512,
+      height: 512,
+    },
+  },
+  {
+    '@type': pageType,
+    '@id': `${canonical}#webpage`,
+    url: canonical,
+    name: pageTitle,
+    description,
+    inLanguage: hreflang,
+    isPartOf: { '@id': websiteId(site) },
+    datePublished: published,
+    dateModified,
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      url: og,
+      width: 1200,
+      height: 630,
+    },
+    ...(linkTranslations &&
+      (locale === defaultLocale
+        ? { workTranslation: others.map((version) => ({ '@id': `${version.url}#webpage` })) }
+        : { translationOfWork: { '@id': `${defaultUrl}#webpage` } })),
+  },
+  ...graph,
+];
+---
+
+<!doctype html>
+<html lang={hreflang} dir={dir} data-font={font} data-theme={darkMode ? 'auto' : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="color-scheme" content={darkMode ? 'light dark' : 'light'} />
+    <meta
+      name="theme-color"
+      content="#155dfc"
+      media={darkMode ? '(prefers-color-scheme: light)' : undefined}
+    />
+    {darkMode && <meta name="theme-color" content="#51a2ff" media="(prefers-color-scheme: dark)" />}
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'} />
+    {!is404 && <link rel="canonical" href={canonical} />}
+    {linkTranslations &&
+      translations.map((version) => <link rel="alternate" hreflang={version.hreflang} href={version.url} />)}
+    {linkTranslations && <link rel="alternate" hreflang="x-default" href={defaultUrl} />}
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+    {indexable && (
+      <link rel="alternate" type="text/markdown" href={`${new URL(canonical).pathname}index.md`} />
+    )}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content={ogLocale} />
+    {others.map((version) => (
+      <meta property="og:locale:alternate" content={version.ogLocale} />
+    ))}
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    {!is404 && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={og} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogAlt ?? ui.ogAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={og} />
+    <meta name="twitter:image:alt" content={ogAlt ?? ui.ogAlt} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={jsonLd({ '@context': 'https://schema.org', '@graph': fullGraph })}
+    />
+  </head>
+  <body>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:bg-[var(--color-ink)] focus:px-3 focus:py-2 focus:text-sm focus:text-[var(--color-paper)]"
+    >
+      {ui.skipToContent}
+    </a>
+    <slot />
+    {translations.length > 0 && (
+      <footer class="mx-auto w-full max-w-xl px-6 pb-10">
+        <nav aria-label={ui.language}>
+          <ul class="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+            {translations.map((version) => (
+              <li>
+                <a
+                  href={version.path}
+                  hreflang={version.hreflang}
+                  lang={version.hreflang}
+                  data-font={version.font}
+                  aria-current={version.locale === locale ? 'page' : undefined}
+                  class="aria-[current=page]:no-underline"
+                >
+                  {version.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </footer>
+    )}
+  </body>
+</html>

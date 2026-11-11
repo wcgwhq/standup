@@ -1,0 +1,25 @@
+---
+// Builds /<code>/404.html for the other locales (see notFoundPages in astro.config.mjs).
+// The default locale's is src/pages/404.astro, which renders this page.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { copy, defaultLocale, localePath, localeStaticPaths } from '@/i18n';
+
+export const getStaticPaths = () => localeStaticPaths().filter(({ props }) => props.locale !== defaultLocale);
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const ui = copy(locale);
+---
+
+<BaseLayout locale={locale} title={ui.notFoundTitle} description={ui.notFoundBody} noindex>
+  <main id="main" class="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center gap-4 px-6 py-16">
+    <h1 class="text-3xl">{ui.notFoundTitle}</h1>
+    <p class="text-[var(--color-muted)]">{ui.notFoundBody}</p>
+    <p class="text-sm">
+      <a href={localePath(locale)}>{ui.backHome}</a>
+    </p>
+  </main>
+</BaseLayout>

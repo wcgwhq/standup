@@ -1,0 +1,46 @@
+{
+  "name": "standup-site",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "env -u CLAUDECODE -u AGENT -u AI_AGENT astro dev",
+    "domain": "node scripts/local-domain.mjs",
+    "build": "astro check && astro build && node scripts/markdown-pages.mjs && node scripts/lint-copy.mjs && node scripts/verify-build.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:copy": "node scripts/lint-copy.mjs",
+    "verify:build": "node scripts/verify-build.mjs",
+    "generate:og": "node scripts/generate-og.mjs",
+    "generate:icons": "node scripts/generate-icons.mjs",
+    "deploy": "bash scripts/deploy.sh",
+    "astro": "astro",
+    "prepare": "node scripts/copy-reviewed.mjs --install"
+  },
+  "dependencies": {
+    "@astrojs/react": "7.1.4",
+    "@astrojs/sitemap": "3.7.4",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@tailwindcss/vite": "4.3.4",
+    "astro": "7.4.7",
+    "clsx": "2.1.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "node-html-markdown": "2.0.0",
+    "prettier": "3.9.10",
+    "prettier-plugin-astro": "1.1.2",
+    "typescript": "5.9.3"
+  }
+}

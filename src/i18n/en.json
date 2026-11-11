@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "name": "English",
+    "english": "English",
+    "hreflang": "en",
+    "ogLocale": "en_US",
+    "dir": "ltr",
+    "font": "mono"
+  },
+  "description": "Standup reads your git commits and agent sessions and writes your end-of-day update, so you stop piecing the day together from memory.",
+  "ui": {
+    "skipToContent": "Skip to content",
+    "language": "Language",
+    "about": "About",
+    "aboutTitle": "About {site}",
+    "aboutDescription": "What {site} reads, what it writes and who made it.",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "This page does not exist. The rest of the site is still here.",
+    "backHome": "Back to {site}",
+    "ogAlt": "{site} share card",
+    "aboutBody": "{site} is a Claude Code plugin with two skills, eod-review for a day and eow-review for a week. Radu Ceuca built it to answer one question at the end of the day: what did I do.",
+    "headline": "Your standup, written from what you did today.",
+    "lede": "It reads today's git commits and your Claude Code, Codex and Grok sessions, then writes the update you would have pieced together from memory.",
+    "installLabel": "Install in Claude Code",
+    "installNote": "Not published yet. This command works once the repository is public. It reads files on your own disk and uploads nothing.",
+    "receiptCaption": "Example report",
+    "receiptShipped": "Shipped",
+    "receiptAgents": "Agents",
+    "receiptOutput": "output",
+    "receiptTotal": "Estimated at API list prices",
+    "readsTitle": "It reads the record of your day.",
+    "readsBody": "Commits from every branch of every repo you point it at become four to six things you can say out loud. Your agent sessions become the token count beside them.",
+    "weekTitle": "On Friday, ask for the week.",
+    "weekBody": "eow-review covers Monday to Sunday and shows the same commits day by day, so Monday's work is still there on Friday.",
+    "numbersTitle": "The cost is an estimate, and the report says so.",
+    "numbersBody": "Tokens are counted by folder, branch and day, so they include the work that led nowhere. Cost is worked out at API list prices. On a subscription you pay none of it per token.",
+    "requirements": "Needs Python 3.9 or later and git. Runs on macOS and Linux."
+  }
+}

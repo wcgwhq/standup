@@ -1,0 +1,28 @@
+# Smoke build on every push / PR. Deploy stays manual (`npm run deploy`) or a
+# follow-up workflow with Cloudflare secrets — keep this job secret-free.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SITE_URL: http://localhost:4321/
+      SITE_NAME: CI
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - run: npm run build

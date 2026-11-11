@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { copy, localePath, localeStaticPaths } from '@/i18n';
+
+export const getStaticPaths = localeStaticPaths;
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const ui = copy(locale);
+---
+
+<BaseLayout locale={locale} title={ui.aboutTitle} description={ui.aboutDescription} pageType="AboutPage">
+  <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16">
+    <p class="mb-3 text-sm">
+      <a class="inline-block py-3" href={localePath(locale)}>
+        {ui.backHome}
+      </a>
+    </p>
+    <article class="space-y-3">
+      <h1 class="text-3xl">{ui.aboutTitle}</h1>
+      <p class="max-w-prose text-pretty text-[var(--color-muted)]">{ui.aboutBody}</p>
+    </article>
+  </main>
+</BaseLayout>

@@ -1,0 +1,23 @@
+{
+  "_note": "Illustrative example for the homepage receipt. Not real usage data. Shown under the caption 'Example report'.",
+  "date": "Tue 10 Nov 2026",
+  "shipped": ["Checkout retry flow", "Invoice PDF export", "Flaky test quarantine"],
+  "agents": [
+    {
+      "model": "Claude Code",
+      "output": "412k",
+      "cost": "$31"
+    },
+    {
+      "model": "Codex",
+      "output": "88k",
+      "cost": "$5"
+    },
+    {
+      "model": "Grok",
+      "output": "31k",
+      "cost": "$2"
+    }
+  ],
+  "cost": "≈ $38"
+}

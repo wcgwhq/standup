@@ -1,0 +1,31 @@
+# build / deps
+node_modules/
+dist/
+.astro/
+node_modules/.vite/
+node_modules/.vite-build/
+
+# env
+.env
+.env.*
+!.env.example
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+
+# test / coverage
+coverage/
+
+# OS / editor junk (keep .vscode/ recommendations committed)
+.DS_Store
+*.log
+.idea/
+*.swp
+*.swo
+
+# misc local
+.cache/
+.impeccable/
+.vercel/
+.turbo/
