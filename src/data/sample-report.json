@@ -1,5 +1,5 @@
 {
-  "_note": "Radu's own runs on 2026-11-11 at 23:50 with plugin 0.4.0: eod-review for the day, eow-review for the week and for the month (--unit work). Real commits and real token counts, shown on the homepage at his request. Each update follows his style file and is also written in the five built-in voices, turned up at his request. The Standup lines are partly from memory: the plugin folder is not a git repository, and the day's footer says so.",
+  "_note": "Radu's own runs for 11 November 2026, read on 12 November with plugin 0.5.0: eod-review for the day, eow-review for 9 to 11 November and for 1 to 11 November (--unit work). Real commits and real token counts, shown on the homepage at his request. Cost is at Anthropic's list prices of 2026-11-03, one price per model; the Codex model has no price row and is shown as unpriced. Each update follows his style file and is also written in the five built-in voices, turned up at his request. The Standup lines are partly from memory: the plugin folder is not a git repository, and the day's footer says so.",
   "periods": [
     {
       "id": "day",
@@ -111,24 +111,24 @@
         }
       ],
       "tokens": {
-        "output": "1.54M",
-        "fresh": "6.29M",
-        "cache": "345.43M",
-        "total": "353.27M"
+        "output": "1.71M",
+        "fresh": "6.97M",
+        "cache": "386.99M",
+        "total": "395.67M"
       },
       "models": [
         {
-          "model": "opus",
-          "output": "1.24M",
-          "cost": "$658"
+          "model": "opus-5-5",
+          "output": "1.37M",
+          "cost": "$135"
         },
         {
-          "model": "fable",
-          "output": "299k",
-          "cost": "$164"
+          "model": "fable-5-2",
+          "output": "341k",
+          "cost": "$50"
         }
       ],
-      "cost": "≈ $822"
+      "cost": "≈ $185"
     },
     {
       "id": "week",
@@ -186,12 +186,12 @@
           "title": "Cât Vine Pensia, wcgw.fun, wcgw Pipeline",
           "status": "🚧",
           "text": {
-            "plain": "about 1,300 agent turns between them, no commit yet",
-            "pirate": "three ships built in secret, some 1,300 turns of the capstan between them, and not one line in the log. If we sink, nobody will know we sailed",
-            "genz": "1,300 agent turns across three projects. commits: none. vibes: immaculate. evidence: none",
-            "corporate": "three initiatives representing approximately 1,300 agent turns remain pre-commit. We view this as upside",
-            "oneliner": "about 1,300 agent turns on three projects and no commits. Schrödinger's work week",
-            "observational": "three projects, 1,300 agent turns, zero commits. If my laptop falls in a lake, this week did not happen"
+            "plain": "about 1,400 agent turns between them, no commit yet",
+            "pirate": "three ships built in secret, some 1,400 turns of the capstan between them, and not one line in the log. If we sink, nobody will know we sailed",
+            "genz": "1,400 agent turns across three projects. commits: none. vibes: immaculate. evidence: none",
+            "corporate": "three initiatives representing approximately 1,400 agent turns remain pre-commit. We view this as upside",
+            "oneliner": "about 1,400 agent turns on three projects and no commits. Schrödinger's work week",
+            "observational": "three projects, 1,400 agent turns, zero commits. If my laptop falls in a lake, this week did not happen"
           }
         }
       ],
@@ -227,39 +227,48 @@
           "count": "16 files"
         },
         {
+          "name": "pensiometru",
+          "count": "8 files"
+        },
+        {
           "name": "wcgw-pipeline",
           "count": "5 files"
         }
       ],
       "tokens": {
-        "output": "5.88M",
-        "fresh": "37.83M",
-        "cache": "1.62B",
-        "total": "1.66B"
+        "output": "6.01M",
+        "fresh": "38.07M",
+        "cache": "1.65B",
+        "total": "1.69B"
       },
       "models": [
         {
-          "model": "opus",
-          "output": "4.81M",
-          "cost": "$2,876"
+          "model": "opus-5-5",
+          "output": "4.92M",
+          "cost": "$518"
         },
         {
-          "model": "fable",
-          "output": "456k",
-          "cost": "$314"
+          "model": "fable-5-2",
+          "output": "463k",
+          "cost": "$85"
         },
         {
-          "model": "gpt",
-          "output": "487k",
-          "cost": "$39"
-        },
-        {
-          "model": "sonnet",
+          "model": "sonnet-5-5",
           "output": "126k",
-          "cost": "$38"
+          "cost": "$22"
+        },
+        {
+          "model": "fable-5-1",
+          "output": "14k",
+          "cost": "$9"
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "output": "483k",
+          "cost": "unpriced"
         }
       ],
-      "cost": "≈ $3,268"
+      "cost": "≈ $634"
     },
     {
       "id": "month",
@@ -362,39 +371,48 @@
           "count": "30 files"
         },
         {
+          "name": "pensiometru",
+          "count": "8 files"
+        },
+        {
           "name": "wcgw-pipeline",
           "count": "5 files"
         }
       ],
       "tokens": {
-        "output": "8.38M",
-        "fresh": "45.96M",
-        "cache": "1.92B",
-        "total": "1.97B"
+        "output": "8.50M",
+        "fresh": "46.18M",
+        "cache": "1.95B",
+        "total": "2.00B"
       },
       "models": [
         {
-          "model": "opus",
-          "output": "7.31M",
-          "cost": "$3,762"
+          "model": "opus-5-5",
+          "output": "7.42M",
+          "cost": "$694"
         },
         {
-          "model": "fable",
-          "output": "456k",
-          "cost": "$314"
+          "model": "fable-5-2",
+          "output": "463k",
+          "cost": "$85"
         },
         {
-          "model": "gpt",
-          "output": "487k",
-          "cost": "$39"
-        },
-        {
-          "model": "sonnet",
+          "model": "sonnet-5-5",
           "output": "126k",
-          "cost": "$38"
+          "cost": "$22"
+        },
+        {
+          "model": "fable-5-1",
+          "output": "14k",
+          "cost": "$9"
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "output": "483k",
+          "cost": "unpriced"
         }
       ],
-      "cost": "≈ $4,154"
+      "cost": "≈ $810"
     }
   ],
   "week_days": [
@@ -429,8 +447,8 @@
   ],
   "token_split": {
     "_note": "The day's raw token counts, for the bar in the cost section.",
-    "output": 1540719,
-    "fresh": 6293161,
-    "cache": 345431917
+    "output": 1714127,
+    "fresh": 6966215,
+    "cache": 386985507
   }
 }

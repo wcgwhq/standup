@@ -25,8 +25,8 @@
     "ledeAfternoon": "It’s {time}, half the day is gone and it went somewhere. A branch you do not remember creating has six commits on it. They look fine, which is somehow worse. Somebody wants a status by end of day. Standup goes through your work and your agents’ work and writes down what has shipped so far.",
     "ledeEvening": "It’s {time}, you have a dozen Claude Code sessions mid-flight, a handful of branches and no clear memory of the morning. How did we get here? Did we get anything done today? Manager asking for update. Client asking for status? You need to pick up your kid from acting classes in 1h. Standup goes through your work and your agents’ work and writes the summary for you.",
     "ledeNight": "It’s {time}, you should be asleep and two agents are still going. By morning you will not remember what you asked them for. Go to bed. Standup reads the night’s work when you wake up and tells you what they did while you slept.",
-    "installLabel": "Install in Claude Code",
-    "installNote": "Not published yet. This command works once the repository is public. It reads files on your own disk and uploads nothing.",
+    "installLabel": "Install it in your agent",
+    "installNote": "Not published yet. These commands work once the repository is public. It reads files on your own disk and uploads nothing.",
     "receiptCaption": "The numbers behind it, printed by the Alibi 3000",
     "receiptOutput": "output",
     "receiptTotal": "Estimated at API list prices",
@@ -41,7 +41,7 @@
     "agentsTitle": "It reads git and eight agents.",
     "projectsTitle": "Work, consulting and side projects stay apart.",
     "projectsBody": "Point it at the folder that holds all your repos and one report covers every project. Name your groups and each gets its own section, with its own commits and its own cost.",
-    "installOther": "Codex, Cursor, Gemini CLI and opencode run the same two skills from your skills folder.",
+    "installOther": "Then ask it for today's EOD.",
     "dialLabel": "Time of day",
     "dialReset": "Back to the current time",
     "copyCommand": "Copy command",
@@ -65,8 +65,8 @@
     "noteFooter": "The last line says where the work stands. Built is not the same as shipped.",
     "noteRepos": "Commits come from git, from every branch of every repo in one folder.",
     "noteWork": "Output and fresh input are what the models wrote and what they read for the first time.",
-    "noteCache": "98% of the tokens are cache reads, billed at about a tenth of the input price.",
-    "noteCost": "An estimate at API list prices. On a subscription you pay none of it per token.",
+    "noteCache": "98% of the tokens are cache reads, billed at a twentieth of the input price or less.",
+    "noteCost": "An estimate at Anthropic's list prices, one price per model. A model with no listed price is counted and marked unpriced. On a subscription you pay none of it per token.",
     "sendLater": "Send to your computer",
     "dialNow": "Now",
     "closeTitle": "Then close the laptop.",
@@ -97,7 +97,10 @@
     "stubToClient": "to your client",
     "stubToNobody": "to nobody",
     "weekCommits": "commits",
-    "splitLabel": "Where Wednesday's 353 million tokens went",
-    "printAgain": "Print it again"
+    "splitLabel": "Where Wednesday's 396 million tokens went",
+    "printAgain": "Print it again",
+    "agentLegend": "Agent",
+    "installCursor": "Then turn Standup on under Plugins in Cursor, and ask it for today's EOD.",
+    "installCopy": "This clones the repository and copies the two skills into the folder your agent reads. Then ask it for today's EOD."
   }
 }
