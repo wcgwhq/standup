@@ -276,8 +276,8 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                   d="M24 82l4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4"
                 ></path>
                 <rect class="printer-slot" x="20" y="82" width="280" height="14" rx="5"></rect>
-                <text class="printer-name" x="160" y="64" text-anchor="middle">
-                  standup
+                <text class="printer-name" x="160" y="63.5" text-anchor="middle">
+                  ALIBI 3000
                 </text>
               </svg>
               <div class="receipt-feed">
@@ -402,18 +402,24 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
       <h2 id="sources-title" class="text-lg text-balance">
         {ui.agentsTitle}
       </h2>
-      <ul class="mt-4 font-mono text-sm">
-        {sources.sources.map((source) => (
-          <li class="flex items-baseline gap-2 py-1">
-            <span class:list={[source.kind === 'commits' && 'font-bold']}>{source.name}</span>
-            <span class="flex-1 border-b border-dotted border-[var(--color-rule)]" aria-hidden="true" />
-            <span class:list={[source.kind === 'sessions' && 'text-[var(--color-muted)]']}>
-              {sourceKind[source.kind]}
-            </span>
-          </li>
-        ))}
-      </ul>
-      <p class="mt-4 max-w-prose text-sm text-pretty text-[var(--color-muted)]">{ui.sourcesNote}</p>
+      {/* The intake: a graphite panel seen from the printer's angle, one lamp per source. */}
+      <div class="intake mt-5">
+        <svg class="block w-full" viewBox="0 0 320 34" aria-hidden="true">
+          <path class="intake-top" d="M40 4H280a10 10 0 0 1 9 5L314 34H6L31 9a10 10 0 0 1 9-5Z"></path>
+          <path class="intake-vents" d="M120 14h80M114 20h92M108 26h104"></path>
+        </svg>
+        <ul class="intake-face font-mono text-xs min-[400px]:text-sm">
+          {sources.sources.map((source) => (
+            <li class="flex items-center gap-3 py-2">
+              <span class="lamp" data-kind={source.kind} aria-hidden="true" />
+              <span class:list={[source.kind === 'commits' && 'font-bold']}>{source.name}</span>
+              <span class="intake-groove flex-1" aria-hidden="true" />
+              <span class="intake-kind">{sourceKind[source.kind]}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <p class="mt-6 max-w-prose text-sm text-pretty text-[var(--color-muted)]">{ui.sourcesNote}</p>
     </section>
 
     <section class="motion-enter mt-20" aria-labelledby="projects-title">
@@ -421,26 +427,30 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
         {ui.projectsTitle}
       </h2>
       <p class="mt-2 max-w-prose text-pretty text-[var(--color-muted)]">{ui.projectsBody}</p>
-      <ul class="stubs mt-5 grid border border-[var(--color-rule)] font-mono text-sm sm:grid-cols-3">
+      {/* Three stubs torn off one report, dropped on the desk. */}
+      <ul class="stubs mt-8 grid grid-cols-3 gap-3 font-mono text-xs sm:gap-5 sm:text-sm">
         {stubs.map((stub) => (
-          <li class="flex items-baseline justify-between gap-3 px-4 py-3 sm:block sm:py-4">
-            <span class="font-bold">{stub.group}</span>
-            <span class="text-[var(--color-muted)] sm:mt-1 sm:block">{stub.reader}</span>
+          <li>
+            <span class="block px-3 pt-4 pb-3 font-bold">{stub.group}</span>
+            <span class="stub-tear block px-3 pt-3 pb-4 text-[var(--color-muted)]">{stub.reader}</span>
           </li>
         ))}
       </ul>
     </section>
 
-    <section class="motion-enter mt-20" aria-labelledby="week-title">
+    <section class="motion-enter mt-24" aria-labelledby="week-title">
       <h2 id="week-title" class="text-lg text-balance">
         {ui.weekTitle}
       </h2>
-      <ol class="week mt-5 grid grid-cols-7 gap-2 font-mono text-xs tabular-nums" aria-label={ui.weekCommits}>
+      {/* A pile of paper per day: the taller the pile, the more commits. */}
+      <ol class="week mt-8 grid grid-cols-7 gap-3 font-mono text-xs tabular-nums" aria-label={ui.weekCommits}>
         {week.map((day) => (
-          <li class="flex flex-col items-center gap-1">
-            <span class="flex h-24 w-full items-end border-b border-[var(--color-ink)]">
-              {day.height > 0 && (
-                <span class="w-full bg-[var(--color-ink)]" style={`height: ${day.height}%`} />
+          <li class="flex flex-col items-center gap-1.5">
+            <span class="flex h-28 w-full items-end">
+              {day.height > 0 ? (
+                <span class="pile" style={`height: ${day.height}%`} />
+              ) : (
+                <span class="tray" />
               )}
             </span>
             <span>{day.commits ?? '·'}</span>
@@ -448,7 +458,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
           </li>
         ))}
       </ol>
-      <p class="mt-4 max-w-prose text-pretty text-[var(--color-muted)]">{ui.weekBody}</p>
+      <p class="mt-5 max-w-prose text-pretty text-[var(--color-muted)]">{ui.weekBody}</p>
     </section>
 
     <section class="motion-enter mt-20" aria-labelledby="cost-title">
@@ -457,15 +467,16 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
       </h2>
       <figure class="mt-5">
         <figcaption class="text-sm text-[var(--color-muted)]">{ui.splitLabel}</figcaption>
-        <div class="split mt-2 flex h-3 w-full gap-px" aria-hidden="true">
+        {/* One moulded slab, cut where the tokens went. */}
+        <div class="slab mt-5 flex h-7" aria-hidden="true">
           {parts.map((part) => (
-            <span data-part={part.key} style={`flex: ${part.share} 0 2px`} />
+            <span data-part={part.key} style={`flex: ${part.share} 0 4px`} />
           ))}
         </div>
-        <ul class="mt-2 flex flex-wrap gap-x-5 font-mono text-xs tabular-nums">
+        <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-xs tabular-nums">
           {parts.map((part) => (
             <li class="flex items-center gap-1.5">
-              <span class="split-key" data-part={part.key} aria-hidden="true" />
+              <span class="slab-key" data-part={part.key} aria-hidden="true" />
               {percent(part.share)} {part.label}
             </li>
           ))}
@@ -619,10 +630,10 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
   }
   .printer-name {
     fill: var(--color-printer-dark);
-    font-family: var(--font-sans);
-    font-size: 11px;
+    font-family: var(--font-mono);
+    font-size: 8.5px;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.22em;
   }
   /* While it prints, the box shudders a pixel and the light blinks. */
   .examples.is-printing .printer {
@@ -702,31 +713,187 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
       animation: none;
     }
   }
-  /* One strip, perforated between its three stubs. */
-  .stubs li + li {
+  /* The intake panel. Same camera and light as the printer: a lid seen from above, a face below it. */
+  .intake {
+    filter: drop-shadow(0 12px 8px rgb(0 0 0 / 0.22));
+  }
+  .intake-top {
+    fill: var(--color-gear-light);
+  }
+  .intake-vents {
+    fill: none;
+    stroke: var(--color-gear-dark);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.55;
+  }
+  .intake-face {
+    margin-inline: 1.875%;
+    padding: 0.5rem 1rem 0.75rem;
+    border-radius: 0 0 1rem 1rem;
+    background: linear-gradient(var(--color-gear), var(--color-gear-dark));
+    box-shadow: inset 0 1.5px 0 rgb(255 255 255 / 0.28);
+    color: var(--color-gear-ink);
+  }
+  .intake-face li + li {
+    border-top: 1px solid rgb(0 0 0 / 0.4);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07);
+  }
+  .intake-kind {
+    color: var(--color-gear-muted);
+  }
+  .intake-groove {
+    height: 3px;
+    border-radius: 2px;
+    background: rgb(0 0 0 / 0.35);
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.08);
+  }
+  /* A lamp per source: white for commits, green for tokens, amber where only sessions can be counted. */
+  .lamp {
+    width: 0.55rem;
+    height: 0.55rem;
+    flex: none;
+    border-radius: 50%;
+    background: var(--color-printer-led);
+    box-shadow:
+      0 0 6px 1px var(--color-printer-led),
+      inset 0 -1px 1px rgb(0 0 0 / 0.3);
+  }
+  .lamp[data-kind='commits'] {
+    background: #fff;
+    box-shadow:
+      0 0 6px 1px #fff,
+      inset 0 -1px 1px rgb(0 0 0 / 0.3);
+  }
+  .lamp[data-kind='sessions'] {
+    background: var(--color-lamp-amber);
+    box-shadow:
+      0 0 6px 1px var(--color-lamp-amber),
+      inset 0 -1px 1px rgb(0 0 0 / 0.3);
+  }
+  /* Three paper stubs, each a little askew, with a perforation and the notches of a torn ticket. */
+  .stubs li {
+    --tear: 3.1rem;
+    border: 1px solid var(--color-rule);
+    background: var(--color-paper);
+    filter: drop-shadow(0 8px 6px rgb(0 0 0 / 0.25));
+  }
+  .stubs li:nth-child(1) {
+    rotate: -4deg;
+    translate: 0 4px;
+  }
+  .stubs li:nth-child(2) {
+    rotate: 1.5deg;
+  }
+  .stubs li:nth-child(3) {
+    rotate: 5deg;
+    translate: 0 7px;
+  }
+  .stub-tear {
+    position: relative;
     border-top: 1px dashed var(--color-rule);
   }
-  @media (min-width: 40rem) {
-    .stubs li + li {
-      border-top: 0;
-      border-inline-start: 1px dashed var(--color-rule);
-    }
+  /* The notches: two half circles of desk showing through at the ends of the perforation. */
+  .stub-tear::before,
+  .stub-tear::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--color-rule);
+    border-radius: 50%;
+    background: var(--color-paper);
+    clip-path: inset(0 0 0 50%);
+    left: -7px;
   }
-  .split [data-part='cache'],
-  .split-key[data-part='cache'] {
+  .stub-tear::after {
+    left: auto;
+    right: -7px;
+    clip-path: inset(0 50% 0 0);
+  }
+  /* A pile of paper: sheet edges on the front, a top face and a side face. */
+  .pile {
+    position: relative;
+    width: calc(100% - 8px);
+    border-inline: 1px solid var(--color-rule);
+    background: repeating-linear-gradient(var(--color-paper) 0 2px, var(--color-rule) 2px 3px);
+    filter: drop-shadow(0 6px 4px rgb(0 0 0 / 0.22));
+  }
+  .pile::before {
+    content: '';
+    position: absolute;
+    inset: auto -1px 100%;
+    height: 8px;
+    border: 1px solid var(--color-rule);
+    background: var(--color-paper);
+    transform: skewX(-45deg);
+    transform-origin: bottom left;
+  }
+  .pile::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 100%;
+    width: 8px;
+    background: repeating-linear-gradient(
+      color-mix(in srgb, var(--color-paper), var(--color-ink) 14%) 0 2px,
+      color-mix(in srgb, var(--color-rule), var(--color-ink) 22%) 2px 3px
+    );
+    transform: skewY(-45deg);
+    transform-origin: top left;
+  }
+  .tray {
+    width: calc(100% - 8px);
+    height: 3px;
+    border-radius: 2px;
     background: var(--color-rule);
   }
-  .split [data-part='fresh'],
-  .split-key[data-part='fresh'] {
-    background: var(--color-muted);
+  /* The slab: three blocks with a top face each and one end face. Graphite for the cache, orange for the work. */
+  .slab {
+    padding-inline-end: 10px;
+    filter: drop-shadow(0 10px 6px rgb(0 0 0 / 0.25));
   }
-  .split [data-part='output'],
-  .split-key[data-part='output'] {
-    background: var(--color-ink);
+  .slab span {
+    position: relative;
+    background: var(--front);
   }
-  .split-key {
+  .slab span::before {
+    content: '';
+    position: absolute;
+    inset: auto 0 100%;
+    height: 10px;
+    background: var(--top);
+    transform: skewX(-45deg);
+    transform-origin: bottom left;
+  }
+  .slab span:last-child::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 100%;
+    width: 10px;
+    background: var(--side);
+    transform: skewY(-45deg);
+    transform-origin: top left;
+  }
+  [data-part='cache'] {
+    --front: var(--color-gear);
+    --top: var(--color-gear-light);
+    --side: var(--color-gear-dark);
+  }
+  [data-part='fresh'] {
+    --front: var(--color-printer-light);
+    --top: #ffb596;
+    --side: var(--color-printer);
+  }
+  [data-part='output'] {
+    --front: var(--color-printer);
+    --top: var(--color-printer-light);
+    --side: var(--color-printer-dark);
+  }
+  .slab-key {
     width: 0.6rem;
     height: 0.6rem;
+    background: var(--front);
   }
   .notes {
     list-style: decimal;

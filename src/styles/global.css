@@ -38,6 +38,13 @@
   --color-printer-dark: #c8380f;
   --color-printer-deep: #4a1405;
   --color-printer-led: #7dffa6;
+  /* The intake panel and the bulk of the token slab: moulded graphite, the printer's quiet sibling. */
+  --color-gear: #2e3038;
+  --color-gear-light: #555965;
+  --color-gear-dark: #17181c;
+  --color-gear-ink: #ecebe6;
+  --color-gear-muted: #a9a8a0;
+  --color-lamp-amber: #ffc04d;
 }
 
 /*
