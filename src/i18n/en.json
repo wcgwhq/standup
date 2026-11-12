@@ -97,6 +97,7 @@
     "stubToClient": "to your client",
     "stubToNobody": "to nobody",
     "weekCommits": "commits",
-    "splitLabel": "Where Wednesday's 353 million tokens went"
+    "splitLabel": "Where Wednesday's 353 million tokens went",
+    "printAgain": "Print it again"
   }
 }
