@@ -30,6 +30,8 @@
   --color-accent-soft: #dbeafe;
   /* The sun on the dial (src/components/SunDial.astro). Not used for text. */
   --color-sun: #d98a00;
+  /* The WCGW arcade's floor (src/components/WcgwFooter.astro). Dark at every hour. */
+  --color-arcade: #0a0a0a;
 }
 
 /*

@@ -78,8 +78,8 @@ const { label, reset, now } = Astro.props;
     user-select: none;
     view-transition-name: sun-dial;
   }
-  /* The page ends above the dial, so the footer is never under it. */
-  :root:has(.sun-dial:not([hidden])) main {
+  /* The last block of the page (.dial-clearance) ends above the dial, so nothing sits under it. */
+  :root:has(.sun-dial:not([hidden])) .dial-clearance {
     padding-bottom: calc(10.5rem + env(safe-area-inset-bottom));
   }
   .sun-dial svg {

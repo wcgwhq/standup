@@ -1,0 +1,41 @@
+{
+  "_note": "What eod-review and eow-review read, and what each source gives. kind: commits | tokens | sessions. Source: the collectors in the plugin's eod_review.py.",
+  "sources": [
+    {
+      "name": "git",
+      "kind": "commits"
+    },
+    {
+      "name": "Claude Code",
+      "kind": "tokens"
+    },
+    {
+      "name": "Codex",
+      "kind": "tokens"
+    },
+    {
+      "name": "Grok",
+      "kind": "tokens"
+    },
+    {
+      "name": "Gemini CLI",
+      "kind": "tokens"
+    },
+    {
+      "name": "opencode",
+      "kind": "tokens"
+    },
+    {
+      "name": "Cowork",
+      "kind": "tokens"
+    },
+    {
+      "name": "Cursor",
+      "kind": "sessions"
+    },
+    {
+      "name": "Antigravity",
+      "kind": "sessions"
+    }
+  ]
+}

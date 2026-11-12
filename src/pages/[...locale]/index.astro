@@ -5,6 +5,7 @@ import CodeBlock from '@/components/CodeBlock.astro';
 import { siteName } from '../../../site.config.mjs';
 import install from '@/data/install.json';
 import report from '@/data/sample-report.json';
+import sources from '@/data/sources.json';
 
 export const getStaticPaths = localeStaticPaths;
 
@@ -57,15 +58,38 @@ const periods = [
   { id: 'month', label: ui.periodMonth },
 ];
 
-const sections = [
-  { title: ui.askTitle, body: ui.askBody },
-  { title: ui.agentsTitle, body: ui.agentsBody },
-  { title: ui.projectsTitle, body: ui.projectsBody },
-  { title: ui.readsTitle, body: ui.readsBody },
-  { title: ui.weekTitle, body: ui.weekBody },
-  { title: ui.numbersTitle, body: ui.numbersBody },
-  { title: ui.closeTitle, body: ui.closeBody },
+const sourceKind = {
+  commits: ui.sourceCommits,
+  tokens: ui.sourceTokens,
+  sessions: ui.sourceSessions,
+} as Record<string, string>;
+
+// Three stubs torn from one report: each group goes to its own reader.
+const stubs = [
+  { group: ui.stubWork, reader: ui.stubToManager },
+  { group: ui.stubConsulting, reader: ui.stubToClient },
+  { group: ui.stubPersonal, reader: ui.stubToNobody },
 ];
+
+// The week this page was built, as bars. A day that has not happened has no bar.
+const weekday = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' });
+const busiest = Math.max(...report.week_days.map((day) => day.commits ?? 0));
+const week = report.week_days.map((day) => ({
+  label: weekday.format(new Date(day.date)),
+  commits: day.commits,
+  height: day.commits ? Math.max(4, Math.round((day.commits / busiest) * 100)) : 0,
+}));
+
+// Where a day's tokens went, as shares of one bar.
+const split = report.token_split;
+const allTokens = split.output + split.fresh + split.cache;
+const share = (count: number) => (count / allTokens) * 100;
+const parts = [
+  { key: 'cache', label: ui.receiptCache, share: share(split.cache) },
+  { key: 'fresh', label: ui.receiptFresh, share: share(split.fresh) },
+  { key: 'output', label: ui.receiptOutput, share: share(split.output) },
+];
+const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFixed(1)) + '%';
 ---
 
 <BaseLayout locale={locale} title={siteNameFor(locale)} description={ui.description} graph={[software]}>
@@ -206,102 +230,116 @@ const sections = [
               <p class="mt-3 text-sm text-[var(--color-muted)]">{ui.voiceNote}</p>
             </figure>
 
-            <figure class="motion-enter mt-10">
+            <figure class="receipt mt-10">
               <figcaption class="text-sm text-[var(--color-muted)]">{ui.receiptCaption}</figcaption>
-              <div class="mt-2 border-y border-dashed border-[var(--color-rule)] py-5 font-mono text-sm tabular-nums">
-                <p class="font-bold">{period.title}</p>
+              {/* A thermal printer, front on. The receipt feeds out of its slot. */}
+              <svg class="printer mt-3 block w-full" viewBox="0 0 320 68" aria-hidden="true">
+                <rect class="printer-body" x="1" y="1" width="318" height="66" rx="10"></rect>
+                <path class="printer-seam" d="M1 27H319"></path>
+                <circle class="printer-led" cx="20" cy="14" r="3"></circle>
+                <text class="printer-name" x="32" y="17.5">
+                  standup
+                </text>
+                <rect class="printer-key" x="276" y="9" width="28" height="10" rx="5"></rect>
+                <path class="printer-seam" d="M236 11v6M244 11v6M252 11v6M260 11v6"></path>
+                <rect class="printer-slot" x="14" y="46" width="292" height="8" rx="4"></rect>
+              </svg>
+              <div class="receipt-feed">
+                <div class="receipt-paper px-3 pt-7 pb-2 sm:px-4 font-mono text-[0.8125rem] tabular-nums">
+                  <p class="font-bold">{period.title}</p>
 
-                <table class="mt-5 w-full">
-                  <caption class="text-start font-medium">
-                    <Hi>{ui.receiptCommits}</Hi>
-                    {n(5)}
-                  </caption>
-                  <tbody>
-                    {period.commits.repos.map((repo) => (
+                  <table class="mt-5 w-full">
+                    <caption class="text-start font-medium">
+                      <Hi>{ui.receiptCommits}</Hi>
+                      {n(5)}
+                    </caption>
+                    <tbody>
+                      {period.commits.repos.map((repo) => (
+                        <tr>
+                          <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                            {repo.name}
+                          </th>
+                          <td class="py-0.5 text-end">{repo.count}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <table class="mt-5 w-full">
+                    <caption class="text-start font-medium">
+                      <Hi>{ui.receiptUncommitted}</Hi>
+                      {n(6)}
+                    </caption>
+                    <tbody>
+                      {period.uncommitted.map((repo) => (
+                        <tr>
+                          <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                            {repo.name}
+                          </th>
+                          <td class="py-0.5 text-end">{repo.count}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <table class="mt-5 w-full">
+                    <caption class="text-start font-medium">{ui.receiptTokens}</caption>
+                    <tbody>
                       <tr>
                         <th scope="row" class="py-0.5 ps-4 text-start font-normal">
-                          {repo.name}
+                          <Hi>{ui.receiptOutput}</Hi>
+                          {n(7)}
                         </th>
-                        <td class="py-0.5 text-end">{repo.count}</td>
+                        <td class="py-0.5 text-end">{period.tokens.output}</td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-
-                <table class="mt-5 w-full">
-                  <caption class="text-start font-medium">
-                    <Hi>{ui.receiptUncommitted}</Hi>
-                    {n(6)}
-                  </caption>
-                  <tbody>
-                    {period.uncommitted.map((repo) => (
                       <tr>
                         <th scope="row" class="py-0.5 ps-4 text-start font-normal">
-                          {repo.name}
+                          <Hi>{ui.receiptFresh}</Hi>
+                          {n(7)}
                         </th>
-                        <td class="py-0.5 text-end">{repo.count}</td>
+                        <td class="py-0.5 text-end">{period.tokens.fresh}</td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-
-                <table class="mt-5 w-full">
-                  <caption class="text-start font-medium">{ui.receiptTokens}</caption>
-                  <tbody>
-                    <tr>
-                      <th scope="row" class="py-0.5 ps-4 text-start font-normal">
-                        <Hi>{ui.receiptOutput}</Hi>
-                        {n(7)}
-                      </th>
-                      <td class="py-0.5 text-end">{period.tokens.output}</td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="py-0.5 ps-4 text-start font-normal">
-                        <Hi>{ui.receiptFresh}</Hi>
-                        {n(7)}
-                      </th>
-                      <td class="py-0.5 text-end">{period.tokens.fresh}</td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="py-0.5 ps-4 text-start font-normal">
-                        <Hi>{ui.receiptCache}</Hi>
-                        {n(8)}
-                      </th>
-                      <td class="py-0.5 text-end">{period.tokens.cache}</td>
-                    </tr>
-                    <tr>
-                      <th scope="row" class="py-0.5 ps-4 text-start font-normal text-[var(--color-muted)]">
-                        {ui.receiptAll}
-                      </th>
-                      <td class="py-0.5 text-end text-[var(--color-muted)]">{period.tokens.total}</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <table class="mt-5 w-full">
-                  <caption class="text-start font-medium">{ui.receiptModels}</caption>
-                  <tbody>
-                    {period.models.map((row) => (
                       <tr>
                         <th scope="row" class="py-0.5 ps-4 text-start font-normal">
-                          {row.model}
+                          <Hi>{ui.receiptCache}</Hi>
+                          {n(8)}
                         </th>
-                        <td class="py-0.5 text-end text-[var(--color-muted)]">
-                          {row.output} {ui.receiptOutput}
-                        </td>
-                        <td class="w-20 py-0.5 text-end">{row.cost}</td>
+                        <td class="py-0.5 text-end">{period.tokens.cache}</td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                      <tr>
+                        <th scope="row" class="py-0.5 ps-4 text-start font-normal text-[var(--color-muted)]">
+                          {ui.receiptAll}
+                        </th>
+                        <td class="py-0.5 text-end text-[var(--color-muted)]">{period.tokens.total}</td>
+                      </tr>
+                    </tbody>
+                  </table>
 
-                <p class="mt-5 flex justify-between gap-4 border-t border-dashed border-[var(--color-rule)] pt-4">
-                  <span class="text-[var(--color-muted)]">{ui.receiptTotal}</span>
-                  <span class="font-bold whitespace-nowrap">
-                    <Hi>{period.cost}</Hi>
-                    {n(9)}
-                  </span>
-                </p>
+                  <table class="mt-5 w-full">
+                    <caption class="text-start font-medium">{ui.receiptModels}</caption>
+                    <tbody>
+                      {period.models.map((row) => (
+                        <tr>
+                          <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                            {row.model}
+                          </th>
+                          <td class="py-0.5 text-end text-[var(--color-muted)]">
+                            {row.output} {ui.receiptOutput}
+                          </td>
+                          <td class="w-16 py-0.5 text-end">{row.cost}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <p class="mt-5 flex justify-between gap-4 border-t border-dashed border-[var(--color-rule)] pt-4">
+                    <span class="text-[var(--color-muted)]">{ui.receiptTotal}</span>
+                    <span class="font-bold whitespace-nowrap">
+                      <Hi>{period.cost}</Hi>
+                      {n(9)}
+                    </span>
+                  </p>
+                </div>
               </div>
               {noted && (
                 <ol start="5" class="notes mt-3 space-y-1 text-sm text-[var(--color-muted)]">
@@ -318,12 +356,105 @@ const sections = [
       })}
     </section>
 
-    {sections.map((section) => (
-      <section class="motion-enter mt-14 space-y-2">
-        <h2 class="text-lg text-balance">{section.title}</h2>
-        <p class="max-w-prose text-pretty text-[var(--color-muted)]">{section.body}</p>
-      </section>
-    ))}
+    <section class="motion-enter mt-24">
+      <h2 class="text-2xl text-balance sm:text-3xl">{ui.askTitle}</h2>
+      <p class="mt-4 max-w-prose text-pretty text-[var(--color-muted)]">{ui.askBody}</p>
+      <p class="mt-3 max-w-prose text-pretty">{ui.readsBody}</p>
+    </section>
+
+    <section class="motion-enter mt-20" aria-labelledby="sources-title">
+      <h2 id="sources-title" class="text-lg text-balance">
+        {ui.agentsTitle}
+      </h2>
+      <ul class="mt-4 font-mono text-sm">
+        {sources.sources.map((source) => (
+          <li class="flex items-baseline gap-2 py-1">
+            <span class:list={[source.kind === 'commits' && 'font-bold']}>{source.name}</span>
+            <span class="flex-1 border-b border-dotted border-[var(--color-rule)]" aria-hidden="true" />
+            <span class:list={[source.kind === 'sessions' && 'text-[var(--color-muted)]']}>
+              {sourceKind[source.kind]}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-4 max-w-prose text-sm text-pretty text-[var(--color-muted)]">{ui.sourcesNote}</p>
+    </section>
+
+    <section class="motion-enter mt-20" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="text-lg text-balance">
+        {ui.projectsTitle}
+      </h2>
+      <p class="mt-2 max-w-prose text-pretty text-[var(--color-muted)]">{ui.projectsBody}</p>
+      <ul class="stubs mt-5 grid border border-[var(--color-rule)] font-mono text-sm sm:grid-cols-3">
+        {stubs.map((stub) => (
+          <li class="flex items-baseline justify-between gap-3 px-4 py-3 sm:block sm:py-4">
+            <span class="font-bold">{stub.group}</span>
+            <span class="text-[var(--color-muted)] sm:mt-1 sm:block">{stub.reader}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="motion-enter mt-20" aria-labelledby="week-title">
+      <h2 id="week-title" class="text-lg text-balance">
+        {ui.weekTitle}
+      </h2>
+      <ol class="week mt-5 grid grid-cols-7 gap-2 font-mono text-xs tabular-nums" aria-label={ui.weekCommits}>
+        {week.map((day) => (
+          <li class="flex flex-col items-center gap-1">
+            <span class="flex h-24 w-full items-end border-b border-[var(--color-ink)]">
+              {day.height > 0 && (
+                <span class="w-full bg-[var(--color-ink)]" style={`height: ${day.height}%`} />
+              )}
+            </span>
+            <span>{day.commits ?? '·'}</span>
+            <span class="text-[var(--color-muted)]">{day.label}</span>
+          </li>
+        ))}
+      </ol>
+      <p class="mt-4 max-w-prose text-pretty text-[var(--color-muted)]">{ui.weekBody}</p>
+    </section>
+
+    <section class="motion-enter mt-20" aria-labelledby="cost-title">
+      <h2 id="cost-title" class="text-lg text-balance">
+        {ui.numbersTitle}
+      </h2>
+      <figure class="mt-5">
+        <figcaption class="text-sm text-[var(--color-muted)]">{ui.splitLabel}</figcaption>
+        <div class="split mt-2 flex h-3 w-full gap-px" aria-hidden="true">
+          {parts.map((part) => (
+            <span data-part={part.key} style={`flex: ${part.share} 0 2px`} />
+          ))}
+        </div>
+        <ul class="mt-2 flex flex-wrap gap-x-5 font-mono text-xs tabular-nums">
+          {parts.map((part) => (
+            <li class="flex items-center gap-1.5">
+              <span class="split-key" data-part={part.key} aria-hidden="true" />
+              {percent(part.share)} {part.label}
+            </li>
+          ))}
+        </ul>
+      </figure>
+      <p class="mt-4 max-w-prose text-pretty text-[var(--color-muted)]">{ui.numbersBody}</p>
+    </section>
+
+    <section class="motion-enter mt-24" aria-labelledby="close-title">
+      <h2 id="close-title" class="text-2xl text-balance sm:text-3xl">
+        {ui.closeTitle}
+      </h2>
+      <p class="mt-4 max-w-prose text-pretty text-[var(--color-muted)]">{ui.closeBody}</p>
+      <div class="mt-6">
+        <CodeBlock
+          code={install.command}
+          labelledby="close-title"
+          copy={ui.copyCommand}
+          copied={ui.copied}
+          send={ui.sendLater}
+          shell
+          mark="standup"
+        />
+      </div>
+    </section>
 
     <footer class="mt-16 space-y-3 border-t border-[var(--color-rule)] pt-6 text-sm">
       <p class="text-[var(--color-muted)]">{ui.requirements}</p>
@@ -388,6 +519,98 @@ const sections = [
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
+  /* The printer is drawn in ink on paper, so it follows the sun dial like everything else. */
+  .printer-body {
+    fill: var(--color-paper);
+    stroke: var(--color-ink);
+    stroke-width: 2;
+  }
+  .printer-seam,
+  .printer-key {
+    fill: none;
+    stroke: var(--color-rule);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+  .printer-key {
+    stroke: var(--color-ink);
+  }
+  .printer-led,
+  .printer-slot {
+    fill: var(--color-ink);
+  }
+  .printer-name {
+    fill: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+  /* The paper is as wide as the slot and starts inside it (percentages are of the printer's width). */
+  .receipt-feed {
+    position: relative;
+    margin: -5.6% 5.6% 0;
+    overflow: clip;
+  }
+  .receipt-paper {
+    border-inline: 1px solid var(--color-rule);
+    background: var(--color-paper);
+  }
+  /* The torn edge: a zigzag in the rule colour. */
+  .receipt-paper::after {
+    content: '';
+    display: block;
+    height: 6px;
+    margin: 1.25rem -1rem 0;
+    background: var(--color-rule);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Cpath d='M0 .5 6 5.5 12 .5' fill='none' stroke='%23000' stroke-width='1.2'/%3E%3C/svg%3E")
+      repeat-x;
+  }
+  /* With JavaScript the paper waits inside the printer, then feeds out in steps when it scrolls into view.
+     Picking another period shows that receipt, and it feeds out again. */
+  .examples.will-print .receipt-paper {
+    transform: translateY(-101%);
+  }
+  .examples.is-printing .receipt-paper {
+    transform: none;
+    animation: feed 1.6s steps(26, end) both;
+  }
+  @keyframes feed {
+    from {
+      transform: translateY(-101%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .examples .receipt-paper {
+      transform: none;
+      animation: none;
+    }
+  }
+  /* One strip, perforated between its three stubs. */
+  .stubs li + li {
+    border-top: 1px dashed var(--color-rule);
+  }
+  @media (min-width: 40rem) {
+    .stubs li + li {
+      border-top: 0;
+      border-inline-start: 1px dashed var(--color-rule);
+    }
+  }
+  .split [data-part='cache'],
+  .split-key[data-part='cache'] {
+    background: var(--color-rule);
+  }
+  .split [data-part='fresh'],
+  .split-key[data-part='fresh'] {
+    background: var(--color-muted);
+  }
+  .split [data-part='output'],
+  .split-key[data-part='output'] {
+    background: var(--color-ink);
+  }
+  .split-key {
+    width: 0.6rem;
+    height: 0.6rem;
+  }
   .notes {
     list-style: decimal;
     padding-inline-start: 1.5em;
@@ -397,3 +620,20 @@ const sections = [
     color: var(--color-ink);
   }
 </style>
+
+<script>
+  // The receipt feeds out of the printer the first time a printer scrolls into view.
+  const examples = document.querySelector('.examples');
+  if (examples && 'IntersectionObserver' in window) {
+    examples.classList.add('will-print');
+    const seen = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        examples.classList.add('is-printing');
+        seen.disconnect();
+      },
+      { rootMargin: '0px 0px -25% 0px' },
+    );
+    for (const printer of examples.querySelectorAll('.printer')) seen.observe(printer);
+  }
+</script>

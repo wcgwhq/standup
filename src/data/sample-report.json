@@ -396,5 +396,41 @@
       ],
       "cost": "≈ $4,154"
     }
-  ]
+  ],
+  "week_days": [
+    {
+      "date": "2026-11-09",
+      "commits": 104
+    },
+    {
+      "date": "2026-11-10",
+      "commits": 22
+    },
+    {
+      "date": "2026-11-11",
+      "commits": 11
+    },
+    {
+      "date": "2026-11-12",
+      "commits": null
+    },
+    {
+      "date": "2026-11-13",
+      "commits": null
+    },
+    {
+      "date": "2026-11-14",
+      "commits": null
+    },
+    {
+      "date": "2026-11-15",
+      "commits": null
+    }
+  ],
+  "token_split": {
+    "_note": "The day's raw token counts, for the bar in the cost section.",
+    "output": 1540719,
+    "fresh": 6293161,
+    "cache": 345431917
+  }
 }
