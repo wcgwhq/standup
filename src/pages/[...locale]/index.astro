@@ -153,6 +153,24 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
         {ui.exampleTitle}
       </h2>
 
+      {/* The printer's paint, shared by the three printers below. */}
+      <svg class="absolute h-0 w-0" aria-hidden="true">
+        <defs>
+          <linearGradient id="printer-top" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--color-printer-light)"></stop>
+            <stop offset="1" stop-color="var(--color-printer)"></stop>
+          </linearGradient>
+          <linearGradient id="printer-front" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--color-printer)"></stop>
+            <stop offset="1" stop-color="var(--color-printer-dark)"></stop>
+          </linearGradient>
+          <linearGradient id="printer-slot" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#000"></stop>
+            <stop offset="1" stop-color="var(--color-printer-deep)"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+
       <fieldset class="picker mt-4 flex flex-wrap gap-x-4 text-sm">
         <legend class="sr-only">{ui.periodLegend}</legend>
         {periods.map((period) => (
@@ -232,20 +250,38 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
 
             <figure class="receipt mt-10">
               <figcaption class="text-sm text-[var(--color-muted)]">{ui.receiptCaption}</figcaption>
-              {/* A thermal printer, front on. The receipt feeds out of its slot. */}
-              <svg class="printer mt-3 block w-full" viewBox="0 0 320 68" aria-hidden="true">
-                <rect class="printer-body" x="1" y="1" width="318" height="66" rx="10"></rect>
-                <path class="printer-seam" d="M1 27H319"></path>
-                <circle class="printer-led" cx="20" cy="14" r="3"></circle>
-                <text class="printer-name" x="32" y="17.5">
+              {/* A chunky thermal printer seen from a little above: lid on top, slot on the front. The receipt feeds out of the slot. */}
+              <svg class="printer mt-3 block w-full" viewBox="0 0 320 150" aria-hidden="true">
+                <ellipse class="printer-shadow" cx="160" cy="133" rx="156" ry="12"></ellipse>
+                {/* front face */}
+                <path class="printer-front" d="M6 68H314V112a18 18 0 0 1-18 18H24a18 18 0 0 1-18-18Z"></path>
+                {/* lid */}
+                <path
+                  class="printer-top"
+                  d="M44 14H276a12 12 0 0 1 11 7L314 68H6L33 21a12 12 0 0 1 11-7Z"
+                ></path>
+                <path class="printer-edge" d="M7 68H313"></path>
+                {/* smoked window over the paper roll */}
+                <path class="printer-window" d="M92 24H228l10 30H82Z"></path>
+                <path class="printer-roll" d="M100 46q60-16 120 0"></path>
+                <path class="printer-glint" d="M100 28h44l-6 22H93Z"></path>
+                {/* feed key and light */}
+                <ellipse class="printer-key-side" cx="268" cy="43" rx="15" ry="6.5"></ellipse>
+                <ellipse class="printer-key" cx="268" cy="40" rx="15" ry="6.5"></ellipse>
+                <circle class="printer-halo" cx="50" cy="42" r="7"></circle>
+                <ellipse class="printer-led" cx="50" cy="42" rx="4" ry="2.6"></ellipse>
+                {/* tear bar, slot, and the name on the lid's front lip */}
+                <path
+                  class="printer-teeth"
+                  d="M24 82l4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4"
+                ></path>
+                <rect class="printer-slot" x="20" y="82" width="280" height="14" rx="5"></rect>
+                <text class="printer-name" x="160" y="64" text-anchor="middle">
                   standup
                 </text>
-                <rect class="printer-key" x="276" y="9" width="28" height="10" rx="5"></rect>
-                <path class="printer-seam" d="M236 11v6M244 11v6M252 11v6M260 11v6"></path>
-                <rect class="printer-slot" x="14" y="46" width="292" height="8" rx="4"></rect>
               </svg>
               <div class="receipt-feed">
-                <div class="receipt-paper px-3 pt-7 pb-2 sm:px-4 font-mono text-[0.8125rem] tabular-nums">
+                <div class="receipt-paper px-3 pt-7 pb-2 sm:px-4 font-mono text-xs tabular-nums min-[400px]:text-[0.8125rem]">
                   <p class="font-bold">{period.title}</p>
 
                   <table class="mt-5 w-full">
@@ -519,41 +555,119 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
-  /* The printer is drawn in ink on paper, so it follows the sun dial like everything else. */
-  .printer-body {
-    fill: var(--color-paper);
-    stroke: var(--color-ink);
-    stroke-width: 2;
+  /* The printer is the one loud object on the page: a moulded orange box with its own light,
+     so it reads as a thing on the desk at every hour the sun dial paints. */
+  .printer {
+    overflow: visible;
   }
-  .printer-seam,
-  .printer-key {
+  .printer-shadow {
+    fill: var(--color-ink);
+    opacity: 0.22;
+    filter: blur(6px);
+  }
+  .printer-front {
+    fill: url(#printer-front);
+  }
+  .printer-top {
+    fill: url(#printer-top);
+  }
+  .printer-edge {
     fill: none;
-    stroke: var(--color-rule);
+    stroke: var(--color-printer-light);
     stroke-width: 1.5;
     stroke-linecap: round;
+    opacity: 0.9;
+  }
+  .printer-window {
+    fill: var(--color-printer-deep);
+    opacity: 0.85;
+  }
+  .printer-roll {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 9;
+    stroke-linecap: round;
+    opacity: 0.16;
+  }
+  .printer-glint {
+    fill: #fff;
+    opacity: 0.12;
+  }
+  .printer-key-side {
+    fill: var(--color-printer-dark);
   }
   .printer-key {
-    stroke: var(--color-ink);
+    fill: var(--color-printer-light);
   }
-  .printer-led,
+  .printer-led {
+    fill: var(--color-printer-led);
+  }
+  .printer-halo {
+    fill: var(--color-printer-led);
+    opacity: 0.3;
+    filter: blur(2.5px);
+  }
+  .printer-teeth {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.2;
+    stroke-linejoin: round;
+    opacity: 0.55;
+  }
   .printer-slot {
-    fill: var(--color-ink);
+    fill: url(#printer-slot);
   }
   .printer-name {
-    fill: var(--color-muted);
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.08em;
+    fill: var(--color-printer-dark);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
-  /* The paper is as wide as the slot and starts inside it (percentages are of the printer's width). */
+  /* While it prints, the box shudders a pixel and the light blinks. */
+  .examples.is-printing .printer {
+    animation: rattle 1.6s steps(26, end);
+  }
+  .examples.is-printing .printer-led,
+  .examples.is-printing .printer-halo {
+    animation: blink 0.2s steps(2, end) 8;
+  }
+  @keyframes rattle {
+    10%,
+    50%,
+    90% {
+      transform: translateY(1px);
+    }
+    30%,
+    70% {
+      transform: translateY(-1px);
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0.1;
+    }
+  }
+  /* The paper is as wide as the slot and starts inside it (percentages are of the printer's width).
+     It hangs in front of the lower half of the box and throws a little shade on it. */
   .receipt-feed {
     position: relative;
-    margin: -5.6% 5.6% 0;
+    margin: -19.2% 8.2% 0;
     overflow: clip;
+  }
+  .receipt-feed::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 1;
+    height: 14px;
+    background: linear-gradient(rgb(0 0 0 / 0.28), transparent);
+    pointer-events: none;
   }
   .receipt-paper {
     border-inline: 1px solid var(--color-rule);
     background: var(--color-paper);
+    box-shadow: 0 6px 10px rgb(0 0 0 / 0.18);
   }
   /* The torn edge: a zigzag in the rule colour. */
   .receipt-paper::after {
@@ -580,7 +694,10 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .examples .receipt-paper {
+    .examples .receipt-paper,
+    .examples .printer,
+    .examples .printer-led,
+    .examples .printer-halo {
       transform: none;
       animation: none;
     }

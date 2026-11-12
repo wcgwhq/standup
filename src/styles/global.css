@@ -32,6 +32,12 @@
   --color-sun: #d98a00;
   /* The WCGW arcade's floor (src/components/WcgwFooter.astro). Dark at every hour. */
   --color-arcade: #0a0a0a;
+  /* The receipt printer: moulded orange, a sibling of the sun. Fixed, so the object keeps its own light. */
+  --color-printer: #ff5a2b;
+  --color-printer-light: #ff8d5e;
+  --color-printer-dark: #c8380f;
+  --color-printer-deep: #4a1405;
+  --color-printer-led: #7dffa6;
 }
 
 /*
