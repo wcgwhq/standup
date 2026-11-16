@@ -1,10 +1,10 @@
 # Publishing the plugin
 
-The repository is `wcgwhq/standup` on GitHub, created **private** on 16 November 2026. Private on purpose: see step 1. The site is deployed to Cloudflare Pages straight from disk.
+The repository is `wcgwhq/standup` on GitHub, created **private** on 16 November 2026 and still private: the steps below come first. The site is deployed to Cloudflare Pages straight from disk.
 
 ## Before it goes public
 
-1. **The email in the history.** All commits carry Radu's personal email as author and committer. A public repository publishes it for good. Either accept that, or rewrite authorship to the GitHub noreply address before the switch (a force push; easy while nobody else has cloned).
+1. ~~The email in the history.~~ Done on 16 November: every commit now carries the GitHub no-reply address, and this repository's git config uses it for new commits. The first push, which had the personal address, lives on as the private `wcgwhq/standup-old-history`; delete that repository (Settings, Danger Zone) and never make it public.
 2. **Names in the examples.** `plugin/skills/eod-review/voices/*.md` and `site/src/data/sample-report.json` carry real project names (Switchboard, Cât Vine Pensia, wcgw). The sample report is already on the public site. Keep or scrub, on purpose.
 3. **Owner name in the manifests.** They say "Radu Ceuca". Change to the studio name if that is the identity.
 4. **Switch the repository to public** (Settings, or `gh repo edit wcgwhq/standup --visibility public`).
