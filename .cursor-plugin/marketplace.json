@@ -1,0 +1,13 @@
+{
+  "name": "standup",
+  "owner": {
+    "name": "Radu Ceuca"
+  },
+  "plugins": [
+    {
+      "name": "standup",
+      "source": "./plugin",
+      "description": "End-of-day, weekly and monthly reviews written from your git commits and your agents' sessions."
+    }
+  ]
+}

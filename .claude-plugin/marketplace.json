@@ -1,0 +1,14 @@
+{
+  "name": "standup",
+  "description": "Standup: end-of-day, weekly and monthly reviews written from your git commits and your agents' sessions.",
+  "owner": {
+    "name": "Radu Ceuca"
+  },
+  "plugins": [
+    {
+      "name": "standup",
+      "source": "./plugin",
+      "description": "End-of-day, weekly and monthly reviews: what you and your agents committed, plus the tokens and estimated cost behind it."
+    }
+  ]
+}

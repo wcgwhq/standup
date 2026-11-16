@@ -1,4 +1,4 @@
-# Smoke build on every push / PR. Deploy stays manual (`npm run deploy`) or a
+# Smoke build of the site, and a run of the plugin's scripts, on every push / PR. Deploy stays manual (`npm run deploy`) or a
 # follow-up workflow with Cloudflare secrets — keep this job secret-free.
 name: CI
 
@@ -18,11 +18,27 @@ jobs:
     env:
       SITE_URL: http://localhost:4321/
       SITE_NAME: CI
+    defaults:
+      run:
+        working-directory: site
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: 'site/.nvmrc'
           cache: npm
+          cache-dependency-path: site/package-lock.json
       - run: npm ci
       - run: npm run build
+
+  plugin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      # The engine must stay runnable on the oldest Python it claims.
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.9'
+      - run: python3 plugin/skills/eod-review/eod_review.py --help
+      - run: python3 plugin/skills/eow-review/eow_review.py --help

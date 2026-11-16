@@ -1,0 +1,17 @@
+{
+  "_comment": "Copy to ~/.claude/eod-review/units.json and edit. Each key is a unit name usable as --unit <name> (shared by eod-review and eow-review). Explicit CLI flags override these. path supports ~ and, if it is a container folder, fans out to every child git repo (new repos are picked up automatically). all_branches:true logs every branch and drops the transcript branch filter. Omit a field to fall back to defaults (path=current dir, branch=current, author=git user.email).",
+  "_config_note": "Repo roots, groups and personal projects go in ~/.claude/eod-review/config.json, e.g. {\"dev_roots\": [\"~/code\"], \"groups\": {\"consulting\": [\"acme-site\"], \"side\": [\"my-blog\"]}, \"personal\": [\"my-journal\"]}. Each group is reported separately; personal projects are kept out of the totals, except when targeted directly.",
+  "work": {
+    "path": "~/code",
+    "all_branches": true
+  },
+  "my-app": {
+    "path": "~/code/my-app",
+    "all_branches": true
+  },
+  "my-feature": {
+    "path": "~/code/my-app",
+    "branch": "feature/checkout",
+    "author": "you@example.com"
+  }
+}

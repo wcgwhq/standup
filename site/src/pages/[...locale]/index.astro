@@ -1,0 +1,1287 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { copy, localePath, localeStaticPaths, siteNameFor } from '@/i18n';
+import CodeBlock from '@/components/CodeBlock.astro';
+import AgentIcon from '@/components/AgentIcon.astro';
+import { siteName } from '../../../site.config.mjs';
+import install from '@/data/install.json';
+import report from '@/data/sample-report.json';
+import sources from '@/data/sources.json';
+
+export const getStaticPaths = localeStaticPaths;
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const ui = copy(locale);
+
+// One lede per part of the day; SunDial.astro picks by the time on the dial.
+const ledes = {
+  morning: ui.ledeMorning,
+  midmorning: ui.ledeMidmorning,
+  afternoon: ui.ledeAfternoon,
+  evening: ui.ledeEvening,
+  night: ui.ledeNight,
+};
+
+const site = Astro.site!;
+const llms = new URL('/llms.txt', site).href;
+const agentPrompt = ui.agentPrompt.replace('{llms}', llms).replace('{command}', install.command);
+
+// What the plugin is, for crawlers and agents: free, MIT, runs on the visitor's machine.
+const software = {
+  '@type': 'SoftwareApplication',
+  '@id': new URL('/#software', site).href,
+  name: siteName,
+  description: ui.description,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'macOS, Linux',
+  softwareRequirements: 'Python 3.9 or later, git',
+  license: 'https://opensource.org/licenses/MIT',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+
+// The update is written once per voice; radio buttons pick which one shows (CSS only).
+const voices = [
+  { id: 'plain', label: ui.voicePlain },
+  { id: 'pirate', label: ui.voicePirate },
+  { id: 'genz', label: ui.voiceGenz },
+  { id: 'corporate', label: ui.voiceCorporate },
+  { id: 'oneliner', label: ui.voiceOneliner },
+  { id: 'observational', label: ui.voiceObservational },
+] as const;
+
+const periods = [
+  { id: 'day', label: ui.periodDay },
+  { id: 'week', label: ui.periodWeek },
+  { id: 'month', label: ui.periodMonth },
+];
+
+// One install command per agent, each that agent's own route (src/data/install.json).
+const installs = install.agents.map((agent) => ({
+  ...agent,
+  command: agent.command.replace('{repo}', install.repo),
+  note:
+    agent.id === 'claude'
+      ? ''
+      : agent.id === 'cursor'
+        ? ui.installCursor
+        : agent.command.startsWith('git clone')
+          ? ui.installCopy
+          : ui.installOther,
+}));
+
+const sourceKind = {
+  commits: ui.sourceCommits,
+  tokens: ui.sourceTokens,
+  sessions: ui.sourceSessions,
+} as Record<string, string>;
+
+// Three stubs torn from one report: each group goes to its own reader.
+const stubs = [
+  { group: ui.stubWork, reader: ui.stubToManager },
+  { group: ui.stubConsulting, reader: ui.stubToClient },
+  { group: ui.stubPersonal, reader: ui.stubToNobody },
+];
+
+// The week this page was built, as bars. A day that has not happened has no bar.
+const weekday = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' });
+const busiest = Math.max(...report.week_days.map((day) => day.commits ?? 0));
+const week = report.week_days.map((day) => ({
+  label: weekday.format(new Date(day.date)),
+  commits: day.commits,
+  height: day.commits ? Math.max(4, Math.round((day.commits / busiest) * 100)) : 0,
+}));
+
+// Where a day's tokens went, as shares of one bar.
+const split = report.token_split;
+const allTokens = split.output + split.fresh + split.cache;
+const share = (count: number) => (count / allTokens) * 100;
+const parts = [
+  { key: 'cache', label: ui.receiptCache, share: share(split.cache) },
+  { key: 'fresh', label: ui.receiptFresh, share: share(split.fresh) },
+  { key: 'output', label: ui.receiptOutput, share: share(split.output) },
+];
+const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFixed(1)) + '%';
+---
+
+<BaseLayout locale={locale} title={siteNameFor(locale)} description={ui.description} graph={[software]}>
+  <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16 sm:py-24">
+    <header class="motion-rise space-y-5">
+      {/* The wordmark: "up" stands one x-height above "stand". */}
+      <p class="text-4xl leading-none font-bold tracking-[-0.04em] sm:text-5xl">
+        <bdi>
+          stand<span class="align-[0.52em]">up</span>
+        </bdi>
+      </p>
+      <h1 class="text-2xl text-balance sm:text-3xl">
+        {/* From 768px the first sentence stays on one line, even where it runs past the column. */}
+        <span class="md:whitespace-nowrap">{ui.headline}</span>
+        <span class="block">{ui.headlineTurn}</span>
+      </h1>
+      <p
+        id="lede"
+        class="max-w-prose text-pretty text-[var(--color-muted)]"
+        data-ledes={JSON.stringify(ledes)}
+      >
+        {ledes.evening.replace('{time}', '6:21pm')}
+      </p>
+    </header>
+
+    <section class="install motion-rise mt-10" style="animation-delay: 80ms" aria-labelledby="install-label">
+      <h2 id="install-label" class="text-sm font-medium">
+        {ui.installLabel}
+      </h2>
+      <fieldset class="picker picker-agents mt-3 mb-3">
+        <legend class="sr-only">{ui.agentLegend}</legend>
+        {installs.map((agent) => (
+          <label>
+            <input
+              class="sr-only"
+              type="radio"
+              name="agent"
+              value={agent.id}
+              checked={agent.id === 'claude'}
+            />
+            <AgentIcon agent={agent.id} />
+            <span class="picker-name">{agent.name}</span>
+          </label>
+        ))}
+      </fieldset>
+      {installs.map((agent) => (
+        <div data-agent={agent.id}>
+          <CodeBlock
+            code={agent.command}
+            labelledby="install-label"
+            copy={ui.copyCommand}
+            copied={ui.copied}
+            send={ui.sendLater}
+            shell
+            mark="standup"
+          />
+          {agent.note && <p class="mt-2 text-sm text-[var(--color-muted)]">{agent.note}</p>}
+        </div>
+      ))}
+      <p class="mt-2 text-sm text-[var(--color-muted)]">{ui.installNote}</p>
+
+      <h2 id="agent-label" class="mt-8 text-sm font-medium">
+        {ui.agentPromptLabel}
+      </h2>
+      <div class="mt-2">
+        <CodeBlock code={agentPrompt} labelledby="agent-label" copy={ui.copyPrompt} copied={ui.copied} />
+      </div>
+      <p class="mt-2 flex flex-wrap gap-x-5 text-sm">
+        <a class="inline-block py-3" href="/llms.txt">
+          {ui.llmsLink}
+        </a>
+        <a class="inline-block py-3" href={localePath(locale, '/') + 'index.md'}>
+          {ui.markdownLink}
+        </a>
+      </p>
+    </section>
+
+    <section class="examples mt-14" aria-labelledby="example-title">
+      <h2 id="example-title" class="text-lg text-balance">
+        {ui.exampleTitle}
+      </h2>
+
+      {/* The printer's paint, shared by the three printers below. */}
+      <svg class="absolute h-0 w-0" aria-hidden="true">
+        <defs>
+          <linearGradient id="printer-top" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--color-printer-light)"></stop>
+            <stop offset="1" stop-color="var(--color-printer)"></stop>
+          </linearGradient>
+          <linearGradient id="printer-front" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--color-printer)"></stop>
+            <stop offset="1" stop-color="var(--color-printer-dark)"></stop>
+          </linearGradient>
+          <linearGradient id="printer-slot" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#000"></stop>
+            <stop offset="1" stop-color="var(--color-printer-deep)"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <fieldset class="picker mt-5">
+        <legend class="sr-only">{ui.periodLegend}</legend>
+        {periods.map((period) => (
+          <label>
+            <input
+              class="sr-only"
+              type="radio"
+              name="period"
+              value={period.id}
+              checked={period.id === 'day'}
+            />
+            <span>{period.label}</span>
+          </label>
+        ))}
+      </fieldset>
+      <fieldset class="picker mt-2 mb-5">
+        <legend class="sr-only">{ui.voiceLegend}</legend>
+        {voices.map((voice) => (
+          <label>
+            <input
+              class="sr-only"
+              type="radio"
+              name="voice"
+              value={voice.id}
+              checked={voice.id === 'plain'}
+            />
+            <span>{voice.label}</span>
+          </label>
+        ))}
+      </fieldset>
+
+      {report.periods.map((period) => {
+        // The numbered highlights and their notes explain the day. The week and the month read the same way.
+        const noted = period.id === 'day';
+        const Hi = noted ? 'mark' : Fragment;
+        const n = (number: number) => noted && <sup>{number}</sup>;
+        return (
+          <div data-period={period.id}>
+            <figure class="motion-enter mt-2">
+              <figcaption class="text-sm text-[var(--color-muted)]">{ui.updateCaption}</figcaption>
+              <div class="mt-2 border border-[var(--color-rule)] px-4 py-4 text-sm">
+                <p class="font-bold">
+                  <Hi>{period.title}</Hi>
+                  {n(1)}
+                </p>
+                <ul class="mt-2 space-y-1.5">
+                  {period.update.map((item, index) => (
+                    <li class="flex gap-2">
+                      <span aria-hidden="true">•</span>
+                      <span>
+                        <span class="font-medium">{index === 0 ? <Hi>{item.title}</Hi> : item.title}</span>
+                        {index === 0 && n(2)} {index === 1 ? <Hi>{item.status}</Hi> : item.status}
+                        {index === 1 && n(3)}
+                        {' → '}
+                        {voices.map((voice) => (
+                          <span data-voice={voice.id}>{item.text[voice.id]}</span>
+                        ))}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <p class="mt-3">
+                  <Hi>{period.footer}</Hi>
+                  {n(4)}
+                </p>
+              </div>
+              {noted && (
+                <ol class="notes mt-3 space-y-1 text-sm text-[var(--color-muted)]">
+                  <li>{ui.noteDate}</li>
+                  <li>{ui.noteLines}</li>
+                  <li>{ui.noteStatus}</li>
+                  <li>{ui.noteFooter}</li>
+                </ol>
+              )}
+              <p class="mt-3 text-sm text-[var(--color-muted)]">{ui.voiceNote}</p>
+            </figure>
+
+            <figure class="receipt mt-10" data-tilt>
+              <figcaption class="text-sm text-[var(--color-muted)]">{ui.receiptCaption}</figcaption>
+              {/* A chunky thermal printer seen from a little above: lid on top, slot on the front. The receipt feeds out of the slot. */}
+              <div class="printer-wrap relative mt-3">
+                {/* The feed key is a real button: press it and the receipt prints again. */}
+                <button
+                  class="printer-press"
+                  type="button"
+                  aria-label={ui.printAgain}
+                  title={ui.printAgain}
+                  hidden
+                ></button>
+                <svg class="printer block w-full" viewBox="0 0 320 150" aria-hidden="true">
+                  <ellipse class="printer-shadow" cx="160" cy="133" rx="156" ry="12"></ellipse>
+                  {/* front face */}
+                  <path
+                    class="printer-front"
+                    d="M6 68H314V112a18 18 0 0 1-18 18H24a18 18 0 0 1-18-18Z"
+                  ></path>
+                  {/* lid */}
+                  <path
+                    class="printer-top"
+                    d="M44 14H276a12 12 0 0 1 11 7L314 68H6L33 21a12 12 0 0 1 11-7Z"
+                  ></path>
+                  <path class="printer-edge" d="M7 68H313"></path>
+                  {/* smoked window over the paper roll */}
+                  <path class="printer-window" d="M92 24H228l10 30H82Z"></path>
+                  <path class="printer-roll" d="M100 46q60-16 120 0"></path>
+                  <path class="printer-glint" d="M100 28h44l-6 22H93Z"></path>
+                  {/* feed key and light */}
+                  <ellipse class="printer-key-side" cx="268" cy="43" rx="15" ry="6.5"></ellipse>
+                  <ellipse class="printer-key" cx="268" cy="40" rx="15" ry="6.5"></ellipse>
+                  <circle class="printer-halo" cx="50" cy="42" r="7"></circle>
+                  <ellipse class="printer-led" cx="50" cy="42" rx="4" ry="2.6"></ellipse>
+                  {/* tear bar, slot, and the name on the lid's front lip */}
+                  <path
+                    class="printer-teeth"
+                    d="M24 82l4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4"
+                  ></path>
+                  <rect class="printer-slot" x="20" y="82" width="280" height="14" rx="5"></rect>
+                  <text class="printer-name" x="160" y="63.5" text-anchor="middle">
+                    ALIBI 3000
+                  </text>
+                </svg>
+              </div>
+              <div class="receipt-feed">
+                <div class="receipt-paper px-3 pt-7 pb-2 sm:px-4 font-mono text-xs tabular-nums min-[400px]:text-[0.8125rem]">
+                  <p class="font-bold">{period.title}</p>
+
+                  <table class="mt-5 w-full">
+                    <caption class="text-start font-medium">
+                      <Hi>{ui.receiptCommits}</Hi>
+                      {n(5)}
+                    </caption>
+                    <tbody>
+                      {period.commits.repos.map((repo) => (
+                        <tr>
+                          <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                            {repo.name}
+                          </th>
+                          <td class="py-0.5 text-end">{repo.count}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <table class="mt-5 w-full">
+                    <caption class="text-start font-medium">
+                      <Hi>{ui.receiptUncommitted}</Hi>
+                      {n(6)}
+                    </caption>
+                    <tbody>
+                      {period.uncommitted.map((repo) => (
+                        <tr>
+                          <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                            {repo.name}
+                          </th>
+                          <td class="py-0.5 text-end">{repo.count}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <table class="mt-5 w-full">
+                    <caption class="text-start font-medium">{ui.receiptTokens}</caption>
+                    <tbody>
+                      <tr>
+                        <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                          <Hi>{ui.receiptOutput}</Hi>
+                          {n(7)}
+                        </th>
+                        <td class="py-0.5 text-end">{period.tokens.output}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                          <Hi>{ui.receiptFresh}</Hi>
+                          {n(7)}
+                        </th>
+                        <td class="py-0.5 text-end">{period.tokens.fresh}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                          <Hi>{ui.receiptCache}</Hi>
+                          {n(8)}
+                        </th>
+                        <td class="py-0.5 text-end">{period.tokens.cache}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="py-0.5 ps-4 text-start font-normal text-[var(--color-muted)]">
+                          {ui.receiptAll}
+                        </th>
+                        <td class="py-0.5 text-end text-[var(--color-muted)]">{period.tokens.total}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <table class="mt-5 w-full">
+                    <caption class="text-start font-medium">{ui.receiptModels}</caption>
+                    <tbody>
+                      {period.models.map((row) => (
+                        <tr>
+                          <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                            {row.model}
+                          </th>
+                          <td class="py-0.5 text-end text-[var(--color-muted)]">
+                            {row.output} {ui.receiptOutput}
+                          </td>
+                          <td class="w-16 py-0.5 text-end">{row.cost}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <p class="mt-5 flex justify-between gap-4 border-t border-dashed border-[var(--color-rule)] pt-4">
+                    <span class="text-[var(--color-muted)]">{ui.receiptTotal}</span>
+                    <span class="font-bold whitespace-nowrap">
+                      <Hi>{period.cost}</Hi>
+                      {n(9)}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              {noted && (
+                <ol start="5" class="notes mt-3 space-y-1 text-sm text-[var(--color-muted)]">
+                  <li>{ui.noteRepos}</li>
+                  <li>{ui.noteUncommitted}</li>
+                  <li>{ui.noteWork}</li>
+                  <li>{ui.noteCache}</li>
+                  <li>{ui.noteCost}</li>
+                </ol>
+              )}
+            </figure>
+          </div>
+        );
+      })}
+    </section>
+
+    <section class="motion-enter mt-24">
+      <h2 class="text-2xl text-balance sm:text-3xl">{ui.askTitle}</h2>
+      <p class="mt-4 max-w-prose text-pretty text-[var(--color-muted)]">{ui.askBody}</p>
+      <p class="mt-3 max-w-prose text-pretty">{ui.readsBody}</p>
+    </section>
+
+    <section class="motion-enter mt-20" aria-labelledby="sources-title">
+      <h2 id="sources-title" class="text-lg text-balance">
+        {ui.agentsTitle}
+      </h2>
+      {/* The intake: a graphite panel seen from the printer's angle, one lamp per source. */}
+      <div class="intake tilt mt-5" data-tilt>
+        <svg class="block w-full" viewBox="0 0 320 34" aria-hidden="true">
+          <path class="intake-top" d="M40 4H280a10 10 0 0 1 9 5L314 34H6L31 9a10 10 0 0 1 9-5Z"></path>
+          <path class="intake-vents" d="M120 14h80M114 20h92M108 26h104"></path>
+        </svg>
+        <ul class="intake-face font-mono text-xs min-[400px]:text-sm">
+          {sources.sources.map((source) => (
+            <li class="flex items-center gap-3 py-2">
+              <span
+                class="lamp"
+                data-kind={source.kind}
+                style={`--i: ${sources.sources.indexOf(source)}`}
+                aria-hidden="true"
+              />
+              <span class:list={[source.kind === 'commits' && 'font-bold']}>{source.name}</span>
+              <span class="intake-groove flex-1" aria-hidden="true" />
+              <span class="intake-kind">{sourceKind[source.kind]}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <p class="mt-6 max-w-prose text-sm text-pretty text-[var(--color-muted)]">{ui.sourcesNote}</p>
+    </section>
+
+    <section class="motion-enter mt-20" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="text-lg text-balance">
+        {ui.projectsTitle}
+      </h2>
+      <p class="mt-2 max-w-prose text-pretty text-[var(--color-muted)]">{ui.projectsBody}</p>
+      {/* Three stubs torn off one report, dropped on the desk. */}
+      <ul class="stubs mt-8 grid grid-cols-3 gap-3 font-mono text-xs sm:gap-5 sm:text-sm">
+        {stubs.map((stub) => (
+          <li>
+            <span class="block px-3 pt-4 pb-3 font-bold">{stub.group}</span>
+            <span class="stub-tear block px-3 pt-3 pb-4 text-[var(--color-muted)]">{stub.reader}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="motion-enter mt-24" aria-labelledby="week-title">
+      <h2 id="week-title" class="text-lg text-balance">
+        {ui.weekTitle}
+      </h2>
+      {/* A pile of paper per day: the taller the pile, the more commits. */}
+      <ol
+        class="week mt-8 grid grid-cols-7 gap-3 font-mono text-xs tabular-nums"
+        aria-label={ui.weekCommits}
+        data-reveal
+      >
+        {week.map((day, index) => (
+          <li class="flex flex-col items-center gap-1.5" style={`--i: ${index}`}>
+            <span class="flex h-28 w-full items-end">
+              {day.height > 0 ? (
+                <span class="pile" style={`height: ${day.height}%`} />
+              ) : (
+                <span class="tray" />
+              )}
+            </span>
+            <span>{day.commits ?? '·'}</span>
+            <span class="text-[var(--color-muted)]">{day.label}</span>
+          </li>
+        ))}
+      </ol>
+      <p class="mt-5 max-w-prose text-pretty text-[var(--color-muted)]">{ui.weekBody}</p>
+    </section>
+
+    <section class="motion-enter mt-20" aria-labelledby="cost-title">
+      <h2 id="cost-title" class="text-lg text-balance">
+        {ui.numbersTitle}
+      </h2>
+      <figure class="mt-5">
+        <figcaption class="text-sm text-[var(--color-muted)]">{ui.splitLabel}</figcaption>
+        {/* One moulded slab, cut where the tokens went. */}
+        <div class="slab tilt mt-5 flex h-7" aria-hidden="true" data-tilt data-reveal>
+          {parts.map((part) => (
+            <span data-part={part.key} style={`flex: ${part.share} 0 4px`} />
+          ))}
+        </div>
+        <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-xs tabular-nums">
+          {parts.map((part) => (
+            <li class="flex items-center gap-1.5">
+              <span class="slab-key" data-part={part.key} aria-hidden="true" />
+              {percent(part.share)} {part.label}
+            </li>
+          ))}
+        </ul>
+      </figure>
+      <p class="mt-4 max-w-prose text-pretty text-[var(--color-muted)]">{ui.numbersBody}</p>
+    </section>
+
+    <section class="motion-enter mt-24" aria-labelledby="close-title">
+      <h2 id="close-title" class="text-2xl text-balance sm:text-3xl">
+        {ui.closeTitle}
+      </h2>
+      <p class="mt-4 max-w-prose text-pretty text-[var(--color-muted)]">{ui.closeBody}</p>
+      <div class="mt-6">
+        <CodeBlock
+          code={install.command}
+          labelledby="close-title"
+          copy={ui.copyCommand}
+          copied={ui.copied}
+          send={ui.sendLater}
+          shell
+          mark="standup"
+        />
+      </div>
+    </section>
+
+    <footer class="mt-16 space-y-3 border-t border-[var(--color-rule)] pt-6 text-sm">
+      <p class="text-[var(--color-muted)]">{ui.requirements}</p>
+      <nav>
+        <a class="inline-block py-3" href={localePath(locale, '/about/')}>
+          {ui.about}
+        </a>
+      </nav>
+    </footer>
+  </main>
+</BaseLayout>
+
+<style>
+  /* A highlight is a soft chip plus a number. The number carries it when the sun dial moves the colours. */
+  .examples mark {
+    background: var(--color-accent-soft);
+    box-shadow: 0 0 0 0.15em var(--color-accent-soft);
+    color: inherit;
+  }
+  .examples sup {
+    margin-inline-start: 0.3em;
+    font-size: 0.7em;
+    font-weight: 700;
+  }
+  /* The install command for Claude Code shows unless another agent is picked. */
+  [data-agent]:not([data-agent='claude']) {
+    display: none;
+  }
+  .install:has([value='codex']:checked) [data-agent='claude'],
+  .install:has([value='cursor']:checked) [data-agent='claude'],
+  .install:has([value='gemini']:checked) [data-agent='claude'],
+  .install:has([value='opencode']:checked) [data-agent='claude'],
+  .install:has([value='grok']:checked) [data-agent='claude'],
+  .install:has([value='other']:checked) [data-agent='claude'] {
+    display: none;
+  }
+  .install:has([value='codex']:checked) [data-agent='codex'],
+  .install:has([value='cursor']:checked) [data-agent='cursor'],
+  .install:has([value='gemini']:checked) [data-agent='gemini'],
+  .install:has([value='opencode']:checked) [data-agent='opencode'],
+  .install:has([value='grok']:checked) [data-agent='grok'],
+  .install:has([value='other']:checked) [data-agent='other'] {
+    display: block;
+  }
+  /* Plain shows unless another voice is picked. Browsers without :has() keep plain. */
+  .examples [data-voice]:not([data-voice='plain']),
+  .examples [data-period]:not([data-period='day']) {
+    display: none;
+  }
+  .examples:has([value='week']:checked) [data-period='day'],
+  .examples:has([value='month']:checked) [data-period='day'] {
+    display: none;
+  }
+  .examples:has([value='week']:checked) [data-period='week'],
+  .examples:has([value='month']:checked) [data-period='month'] {
+    display: block;
+  }
+  .examples:has([value='pirate']:checked) [data-voice='plain'],
+  .examples:has([value='genz']:checked) [data-voice='plain'],
+  .examples:has([value='corporate']:checked) [data-voice='plain'],
+  .examples:has([value='oneliner']:checked) [data-voice='plain'],
+  .examples:has([value='observational']:checked) [data-voice='plain'] {
+    display: none;
+  }
+  .examples:has([value='pirate']:checked) [data-voice='pirate'],
+  .examples:has([value='genz']:checked) [data-voice='genz'],
+  .examples:has([value='corporate']:checked) [data-voice='corporate'],
+  .examples:has([value='oneliner']:checked) [data-voice='oneliner'],
+  .examples:has([value='observational']:checked) [data-voice='observational'] {
+    display: inline;
+  }
+  /* A segmented control: a recessed track, and the chosen segment raised out of it like a key.
+     Always one row. Where the labels do not fit (the voices on a phone) the row scrolls sideways. */
+  .picker {
+    display: flex;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    gap: 3px;
+    padding: 3px;
+    overflow-x: auto;
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--color-ink) 8%, var(--color-paper));
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.14);
+    font-size: 0.875rem;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+  .picker::-webkit-scrollbar {
+    display: none;
+  }
+  .picker label {
+    display: flex;
+    flex: 1 0 auto;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding-inline: 0.8rem;
+    border-radius: 0.55rem;
+    color: var(--color-muted);
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    scroll-snap-align: center;
+    transition:
+      background-color 0.15s ease-out,
+      color 0.15s ease-out,
+      box-shadow 0.15s ease-out;
+  }
+  /* The agents: marks in one row. On a phone only the chosen one spells its name out and the
+     row scrolls if it must; from 640px each mark sits over its name. */
+  .picker-agents label {
+    flex: 1 1 0;
+    padding-inline: 0.25rem;
+  }
+  .picker-agents label:has(:checked) {
+    flex: 0 0 auto;
+    padding-inline: 0.8rem;
+  }
+  .picker-agents label:not(:has(:checked)) .picker-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  @media (min-width: 40rem) {
+    .picker-agents {
+      overflow: visible;
+    }
+    /* Each segment is as wide as its own name plus real padding, then they share what is
+       left over. Equal widths made the long names ("Claude Code") touch the edges. */
+    .picker-agents label,
+    .picker-agents label:has(:checked) {
+      flex: 1 0 auto;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 0.6rem 0.75rem 0.5rem;
+      font-size: 0.75rem;
+    }
+    .picker-agents label:not(:has(:checked)) .picker-name {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
+    }
+  }
+  .picker label:hover {
+    color: var(--color-ink);
+  }
+  .picker label:has(:checked) {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    box-shadow:
+      0 0 0 1px var(--color-rule),
+      0 1px 0 1px rgb(0 0 0 / 0.06),
+      0 3px 6px -2px rgb(0 0 0 / 0.25);
+  }
+  .picker label:active {
+    translate: 0 1px;
+  }
+  .picker label:has(:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+  }
+  /* The printer is the one loud object on the page: a moulded orange box with its own light,
+     so it reads as a thing on the desk at every hour the sun dial paints. */
+  .printer {
+    overflow: visible;
+  }
+  .printer-shadow {
+    fill: var(--color-ink);
+    opacity: 0.22;
+    filter: blur(6px);
+  }
+  .printer-front {
+    fill: url(#printer-front);
+  }
+  .printer-top {
+    fill: url(#printer-top);
+  }
+  .printer-edge {
+    fill: none;
+    stroke: var(--color-printer-light);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    opacity: 0.9;
+  }
+  .printer-window {
+    fill: var(--color-printer-deep);
+    opacity: 0.85;
+  }
+  /* Hover with a mouse and the objects lean toward the pointer (the script sets --tx and --ty, each -1 to 1). */
+  .tilt,
+  .printer-wrap,
+  .receipt-feed {
+    transition: transform 0.25s ease-out;
+  }
+  .tilt {
+    transform: perspective(900px) rotateX(calc(var(--ty, 0) * -5deg)) rotateY(calc(var(--tx, 0) * 6deg));
+  }
+  /* The printer and its paper share one vanishing point and hinge at the slot, so they lean as one thing. */
+  .receipt {
+    perspective: 900px;
+  }
+  .printer-wrap {
+    transform: rotateX(calc(var(--ty, 0) * -4deg)) rotateY(calc(var(--tx, 0) * 5deg));
+    transform-origin: 50% 61%;
+  }
+  .receipt-feed {
+    transform: rotateX(calc(var(--ty, 0) * -4deg)) rotateY(calc(var(--tx, 0) * 5deg));
+    transform-origin: 50% 0;
+  }
+  /* The feed key: an invisible 44px button over the drawn key, which sinks when pressed. */
+  .printer-press {
+    position: absolute;
+    top: 6%;
+    left: 74%;
+    z-index: 1;
+    width: 20%;
+    height: 42%;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .printer-key {
+    transition: transform 80ms ease-out;
+  }
+  .printer-press:hover + .printer .printer-key {
+    transform: translateY(-1px);
+  }
+  .printer-press:active + .printer .printer-key {
+    transform: translateY(2.5px);
+  }
+  /* The roll turns while it prints, and the light breathes when it does not. */
+  .printer-roll {
+    stroke-dasharray: 7 4;
+  }
+  .examples.is-printing .printer-roll {
+    animation: roll 1.6s linear;
+  }
+  @keyframes roll {
+    to {
+      stroke-dashoffset: -88;
+    }
+  }
+  .printer-halo {
+    animation: breathe 2.4s ease-in-out infinite alternate;
+  }
+  @keyframes breathe {
+    to {
+      opacity: 0.75;
+    }
+  }
+  .printer-roll {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 9;
+    stroke-linecap: round;
+    opacity: 0.16;
+  }
+  .printer-glint {
+    fill: #fff;
+    opacity: 0.12;
+  }
+  .printer-key-side {
+    fill: var(--color-printer-dark);
+  }
+  .printer-key {
+    fill: var(--color-printer-light);
+  }
+  .printer-led {
+    fill: var(--color-printer-led);
+  }
+  .printer-halo {
+    fill: var(--color-printer-led);
+    opacity: 0.3;
+    filter: blur(2.5px);
+  }
+  .printer-teeth {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.2;
+    stroke-linejoin: round;
+    opacity: 0.55;
+  }
+  .printer-slot {
+    fill: url(#printer-slot);
+  }
+  .printer-name {
+    fill: var(--color-printer-dark);
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+  }
+  /* While it prints, the box shudders a pixel and the light blinks. */
+  .examples.is-printing .printer {
+    animation: rattle 1.6s steps(26, end);
+  }
+  .examples.is-printing .printer-led,
+  .examples.is-printing .printer-halo {
+    animation: blink 0.2s steps(2, end) 8;
+  }
+  @keyframes rattle {
+    10%,
+    50%,
+    90% {
+      transform: translateY(1px);
+    }
+    30%,
+    70% {
+      transform: translateY(-1px);
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0.1;
+    }
+  }
+  /* The paper is as wide as the slot and starts inside it (percentages are of the printer's width).
+     It hangs in front of the lower half of the box and throws a little shade on it. */
+  .receipt-feed {
+    position: relative;
+    margin: -19.2% 8.2% 0;
+    overflow: clip;
+  }
+  .receipt-feed::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 1;
+    height: 14px;
+    background: linear-gradient(rgb(0 0 0 / 0.28), transparent);
+    pointer-events: none;
+  }
+  .receipt-paper {
+    border-inline: 1px solid var(--color-rule);
+    background: var(--color-paper);
+    box-shadow: 0 6px 10px rgb(0 0 0 / 0.18);
+  }
+  /* The torn edge: a zigzag in the rule colour. */
+  .receipt-paper::after {
+    content: '';
+    display: block;
+    height: 6px;
+    margin: 1.25rem -1rem 0;
+    background: var(--color-rule);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Cpath d='M0 .5 6 5.5 12 .5' fill='none' stroke='%23000' stroke-width='1.2'/%3E%3C/svg%3E")
+      repeat-x;
+  }
+  /* With JavaScript the paper waits inside the printer, then feeds out in steps when it scrolls into view.
+     Picking another period shows that receipt, and it feeds out again. */
+  .examples.will-print .receipt-paper {
+    transform: translateY(-101%);
+  }
+  .examples.is-printing .receipt-paper {
+    transform: none;
+    animation: feed 1.6s steps(26, end) both;
+  }
+  @keyframes feed {
+    from {
+      transform: translateY(-101%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .examples .receipt-paper,
+    .examples .printer,
+    .examples .printer-led,
+    .examples .printer-halo {
+      transform: none;
+      animation: none;
+    }
+  }
+  /* The intake panel. Same camera and light as the printer: a lid seen from above, a face below it. */
+  .intake {
+    filter: drop-shadow(0 12px 8px rgb(0 0 0 / 0.22));
+  }
+  .intake-top {
+    fill: var(--color-gear-light);
+  }
+  .intake-vents {
+    fill: none;
+    stroke: var(--color-gear-dark);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.55;
+  }
+  .intake-face {
+    margin-inline: 1.875%;
+    padding: 0.5rem 1rem 0.75rem;
+    border-radius: 0 0 1rem 1rem;
+    background: linear-gradient(var(--color-gear), var(--color-gear-dark));
+    box-shadow: inset 0 1.5px 0 rgb(255 255 255 / 0.28);
+    color: var(--color-gear-ink);
+  }
+  .intake-face li + li {
+    border-top: 1px solid rgb(0 0 0 / 0.4);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07);
+  }
+  .intake-kind {
+    color: var(--color-gear-muted);
+  }
+  .intake-groove {
+    height: 3px;
+    border-radius: 2px;
+    background: rgb(0 0 0 / 0.35);
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.08);
+  }
+  /* A lamp per source: white for commits, green for tokens, amber where only sessions can be counted. */
+  .lamp {
+    width: 0.55rem;
+    height: 0.55rem;
+    flex: none;
+    border-radius: 50%;
+    background: var(--color-printer-led);
+    box-shadow:
+      0 0 6px 1px var(--color-printer-led),
+      inset 0 -1px 1px rgb(0 0 0 / 0.3);
+  }
+  .lamp[data-kind='commits'] {
+    background: #fff;
+    box-shadow:
+      0 0 6px 1px #fff,
+      inset 0 -1px 1px rgb(0 0 0 / 0.3);
+  }
+  .lamp[data-kind='sessions'] {
+    background: var(--color-lamp-amber);
+    box-shadow:
+      0 0 6px 1px var(--color-lamp-amber),
+      inset 0 -1px 1px rgb(0 0 0 / 0.3);
+  }
+  /* The lamps flicker like activity lights, each on its own beat. Amber ones are slower. */
+  .lamp {
+    animation: flicker 3.1s steps(1, end) infinite;
+    animation-delay: calc(var(--i, 0) * -0.43s);
+  }
+  .lamp[data-kind='sessions'] {
+    animation-duration: 5.3s;
+  }
+  .lamp[data-kind='commits'] {
+    animation: none;
+  }
+  @keyframes flicker {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    6% {
+      opacity: 0.35;
+    }
+    9% {
+      opacity: 1;
+    }
+    41% {
+      opacity: 0.5;
+    }
+    44% {
+      opacity: 1;
+    }
+    47% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  /* Three paper stubs, each a little askew, with a perforation and the notches of a torn ticket. */
+  .stubs li {
+    --tear: 3.1rem;
+    border: 1px solid var(--color-rule);
+    background: var(--color-paper);
+    filter: drop-shadow(0 8px 6px rgb(0 0 0 / 0.25));
+  }
+  .stubs li:nth-child(1) {
+    rotate: -4deg;
+    translate: 0 4px;
+  }
+  .stubs li:nth-child(2) {
+    rotate: 1.5deg;
+  }
+  .stubs li:nth-child(3) {
+    rotate: 5deg;
+    translate: 0 7px;
+  }
+  /* Pick one up: it straightens and lifts off the desk. */
+  .stubs li {
+    transition:
+      rotate 0.2s ease-out,
+      translate 0.2s ease-out,
+      filter 0.2s ease-out;
+  }
+  .stubs li:hover {
+    rotate: 0deg;
+    translate: 0 -8px;
+    filter: drop-shadow(0 18px 10px rgb(0 0 0 / 0.3));
+  }
+  .stub-tear {
+    position: relative;
+    border-top: 1px dashed var(--color-rule);
+  }
+  /* The notches: two half circles of desk showing through at the ends of the perforation. */
+  .stub-tear::before,
+  .stub-tear::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--color-rule);
+    border-radius: 50%;
+    background: var(--color-paper);
+    clip-path: inset(0 0 0 50%);
+    left: -7px;
+  }
+  .stub-tear::after {
+    left: auto;
+    right: -7px;
+    clip-path: inset(0 50% 0 0);
+  }
+  /* A pile of paper: sheet edges on the front, a top face and a side face. */
+  .pile {
+    position: relative;
+    width: calc(100% - 8px);
+    border-inline: 1px solid var(--color-rule);
+    background: repeating-linear-gradient(var(--color-paper) 0 2px, var(--color-rule) 2px 3px);
+    filter: drop-shadow(0 6px 4px rgb(0 0 0 / 0.22));
+  }
+  .pile::before {
+    content: '';
+    position: absolute;
+    inset: auto -1px 100%;
+    height: 8px;
+    border: 1px solid var(--color-rule);
+    background: var(--color-paper);
+    transform: skewX(-45deg);
+    transform-origin: bottom left;
+  }
+  .pile::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 100%;
+    width: 8px;
+    background: repeating-linear-gradient(
+      color-mix(in srgb, var(--color-paper), var(--color-ink) 14%) 0 2px,
+      color-mix(in srgb, var(--color-rule), var(--color-ink) 22%) 2px 3px
+    );
+    transform: skewY(-45deg);
+    transform-origin: top left;
+  }
+  /* When the week scrolls into view the piles stack up sheet by sheet, Monday first. */
+  .will-reveal .pile {
+    clip-path: inset(100% -12px 0 -12px);
+  }
+  .is-in .pile {
+    animation: stack 0.9s steps(14, end) both;
+    animation-delay: calc(var(--i, 0) * 0.18s);
+  }
+  @keyframes stack {
+    from {
+      clip-path: inset(100% -12px 0 -12px);
+    }
+    to {
+      clip-path: inset(-12px);
+    }
+  }
+  /* The slab slides out from the left. */
+  .slab.will-reveal {
+    clip-path: inset(-14px 100% -20px 0);
+  }
+  .slab.is-in {
+    animation: extrude 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  @keyframes extrude {
+    from {
+      clip-path: inset(-14px 100% -20px 0);
+    }
+    to {
+      clip-path: inset(-14px -14px -20px 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tilt,
+    .printer-wrap,
+    .receipt-feed {
+      transform: none;
+    }
+    .lamp,
+    .printer-halo,
+    .printer-roll,
+    .is-in .pile,
+    .slab.is-in {
+      animation: none;
+    }
+    .will-reveal .pile,
+    .slab.will-reveal {
+      clip-path: none;
+    }
+  }
+  .tray {
+    width: calc(100% - 8px);
+    height: 3px;
+    border-radius: 2px;
+    background: var(--color-rule);
+  }
+  /* The slab: three blocks with a top face each and one end face. Graphite for the cache, orange for the work. */
+  .slab {
+    padding-inline-end: 10px;
+    filter: drop-shadow(0 10px 6px rgb(0 0 0 / 0.25));
+  }
+  .slab span {
+    position: relative;
+    background: var(--front);
+  }
+  .slab span::before {
+    content: '';
+    position: absolute;
+    inset: auto 0 100%;
+    height: 10px;
+    background: var(--top);
+    transform: skewX(-45deg);
+    transform-origin: bottom left;
+  }
+  .slab span:last-child::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 100%;
+    width: 10px;
+    background: var(--side);
+    transform: skewY(-45deg);
+    transform-origin: top left;
+  }
+  [data-part='cache'] {
+    --front: var(--color-gear);
+    --top: var(--color-gear-light);
+    --side: var(--color-gear-dark);
+  }
+  [data-part='fresh'] {
+    --front: var(--color-printer-light);
+    --top: #ffb596;
+    --side: var(--color-printer);
+  }
+  [data-part='output'] {
+    --front: var(--color-printer);
+    --top: var(--color-printer-light);
+    --side: var(--color-printer-dark);
+  }
+  .slab-key {
+    width: 0.6rem;
+    height: 0.6rem;
+    background: var(--front);
+  }
+  .notes {
+    list-style: decimal;
+    padding-inline-start: 1.5em;
+  }
+  .notes li::marker {
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const examples = document.querySelector<HTMLElement>('.examples');
+
+  // The receipt feeds out of the printer the first time a printer scrolls into view.
+  if (examples && 'IntersectionObserver' in window) {
+    examples.classList.add('will-print');
+    const seen = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        examples.classList.add('is-printing');
+        seen.disconnect();
+      },
+      { rootMargin: '0px 0px -25% 0px' },
+    );
+    for (const printer of examples.querySelectorAll('.printer')) seen.observe(printer);
+  }
+
+  // The feed key prints the receipt again: the class comes off, the page takes a breath, it goes back on.
+  for (const key of document.querySelectorAll<HTMLButtonElement>('.printer-press')) {
+    if (!examples || still) continue;
+    key.hidden = false;
+    key.addEventListener('click', () => {
+      examples.classList.remove('is-printing');
+      void examples.offsetWidth;
+      examples.classList.add('is-printing');
+    });
+  }
+
+  // Piles and the slab build themselves when they scroll into view.
+  if ('IntersectionObserver' in window && !still) {
+    const reveal = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('is-in');
+          reveal.unobserve(entry.target);
+        }
+      },
+      { rootMargin: '0px 0px -15% 0px' },
+    );
+    for (const block of document.querySelectorAll('[data-reveal]')) {
+      block.classList.add('will-reveal');
+      reveal.observe(block);
+    }
+  }
+
+  // With a mouse, the objects lean toward the pointer.
+  if (matchMedia('(hover: hover)').matches && !still) {
+    for (const object of document.querySelectorAll<HTMLElement>('[data-tilt]')) {
+      object.addEventListener('pointermove', (event) => {
+        const box = object.getBoundingClientRect();
+        object.style.setProperty('--tx', (((event.clientX - box.left) / box.width) * 2 - 1).toFixed(2));
+        object.style.setProperty('--ty', (((event.clientY - box.top) / box.height) * 2 - 1).toFixed(2));
+      });
+      object.addEventListener('pointerleave', () => {
+        object.style.removeProperty('--tx');
+        object.style.removeProperty('--ty');
+      });
+    }
+  }
+</script>

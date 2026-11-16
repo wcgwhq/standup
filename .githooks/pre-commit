@@ -1,5 +1,6 @@
 #!/bin/sh
-# Stops a commit whose copy (src/i18n, src/content) changed since the last copy review.
+# Stops a commit whose site copy (site/src/i18n, site/src/content) changed since the last copy review.
 # Skipped when node is not on PATH, as in some GUI git clients.
 command -v node >/dev/null 2>&1 || exit 0
+cd "$(git rev-parse --show-toplevel)/site" || exit 0
 exec node scripts/copy-reviewed.mjs --check

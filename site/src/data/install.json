@@ -1,0 +1,42 @@
+{
+  "_note": "Replace <owner>/<repo> in `repo` when the plugin repository is public, then remove ui.installNote. One command per agent; {repo} is filled in from `repo`. Each command is that agent's own install route, read from its CLI help on 2026-11-12: Codex and Grok accept the repository's Claude-format manifest (checked with `codex plugin marketplace add` on the local folder and `grok plugin validate`), Gemini CLI loads it as an extension (`gemini-extension.json`, checked with `gemini extensions link`). Cursor's manifest (.cursor-plugin/) follows its docs and has not been run. opencode has no plugin route for skills, so it copies the two folders. Since 2026-11-16 the plugin sits in plugin/ of the one Standup repository: the marketplace files at the repository root point at it, Gemini's manifest is at the root with a skills link, and Grok installs the subfolder with #plugin.",
+  "repo": "<owner>/<repo>",
+  "command": "/plugin install standup --marketplace <owner>/<repo>",
+  "agents": [
+    {
+      "id": "claude",
+      "name": "Claude Code",
+      "command": "/plugin install standup --marketplace {repo}"
+    },
+    {
+      "id": "codex",
+      "name": "Codex",
+      "command": "codex plugin marketplace add {repo} && codex plugin add standup@standup"
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "command": "cursor-agent plugin marketplace add https://github.com/{repo}"
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "command": "gemini extensions install https://github.com/{repo}"
+    },
+    {
+      "id": "grok",
+      "name": "Grok",
+      "command": "grok plugin install {repo}#plugin"
+    },
+    {
+      "id": "opencode",
+      "name": "opencode",
+      "command": "git clone https://github.com/{repo} ~/standup && cp -R ~/standup/plugin/skills/eod-review ~/standup/plugin/skills/eow-review ~/.config/opencode/skills/"
+    },
+    {
+      "id": "other",
+      "name": "Other",
+      "command": "git clone https://github.com/{repo} ~/standup && cp -R ~/standup/plugin/skills/eod-review ~/standup/plugin/skills/eow-review ~/.agents/skills/"
+    }
+  ]
+}
