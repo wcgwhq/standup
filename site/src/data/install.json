@@ -1,7 +1,7 @@
 {
-  "_note": "Replace <owner>/<repo> in `repo` when the plugin repository is public, then remove ui.installNote. One command per agent; {repo} is filled in from `repo`. Each command is that agent's own install route, read from its CLI help on 2026-11-12: Codex and Grok accept the repository's Claude-format manifest (checked with `codex plugin marketplace add` on the local folder and `grok plugin validate`), Gemini CLI loads it as an extension (`gemini-extension.json`, checked with `gemini extensions link`). Cursor's manifest (.cursor-plugin/) follows its docs and has not been run. opencode has no plugin route for skills, so it copies the two folders. Since 2026-11-16 the plugin sits in plugin/ of the one Standup repository: the marketplace files at the repository root point at it, Gemini's manifest is at the root with a skills link, and Grok installs the subfolder with #plugin.",
-  "repo": "<owner>/<repo>",
-  "command": "/plugin install standup --marketplace <owner>/<repo>",
+  "_note": "The plugin's repository is wcgwhq/standup. While it is private the commands below fail for everyone else, so ui.installNote stays until it is public. One command per agent; {repo} is filled in from `repo`. Each command is that agent's own install route, read from its CLI help on 2026-11-12: Codex and Grok accept the repository's Claude-format manifest (checked with `codex plugin marketplace add` on the local folder and `grok plugin validate`), Gemini CLI loads it as an extension (`gemini-extension.json`, checked with `gemini extensions link`). Cursor's manifest (.cursor-plugin/) follows its docs and has not been run. opencode has no plugin route for skills, so it copies the two folders. Since 2026-11-16 the plugin sits in plugin/ of the one Standup repository: the marketplace files at the repository root point at it, Gemini's manifest is at the root with a skills link, and Grok installs the subfolder with #plugin.",
+  "repo": "wcgwhq/standup",
+  "command": "/plugin install standup --marketplace wcgwhq/standup",
   "agents": [
     {
       "id": "claude",

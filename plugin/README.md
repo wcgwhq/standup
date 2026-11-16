@@ -41,12 +41,12 @@ One repository installs everywhere: it carries the manifest each agent looks for
 
 | Agent | Install |
 | --- | --- |
-| Claude Code | `/plugin install standup --marketplace <owner>/<repo>` (2.1.275 or later) |
-| Codex | `codex plugin marketplace add <owner>/<repo>` then `codex plugin add standup@standup` |
-| Cursor | `cursor-agent plugin marketplace add https://github.com/<owner>/<repo>`, then turn Standup on under Plugins |
-| Gemini CLI | `gemini extensions install https://github.com/<owner>/<repo>` |
-| Grok | `grok plugin install <owner>/<repo>#plugin` |
-| opencode, and any agent that reads `SKILL.md` folders | `git clone https://github.com/<owner>/<repo> ~/standup`, then copy `plugin/skills/eod-review` and `plugin/skills/eow-review`, side by side, into `~/.config/opencode/skills/` (opencode) or `~/.agents/skills/` |
+| Claude Code | `/plugin install standup --marketplace wcgwhq/standup` (2.1.275 or later) |
+| Codex | `codex plugin marketplace add wcgwhq/standup` then `codex plugin add standup@standup` |
+| Cursor | `cursor-agent plugin marketplace add https://github.com/wcgwhq/standup`, then turn Standup on under Plugins |
+| Gemini CLI | `gemini extensions install https://github.com/wcgwhq/standup` |
+| Grok | `grok plugin install wcgwhq/standup#plugin` |
+| opencode, and any agent that reads `SKILL.md` folders | `git clone https://github.com/wcgwhq/standup ~/standup`, then copy `plugin/skills/eod-review` and `plugin/skills/eow-review`, side by side, into `~/.config/opencode/skills/` (opencode) or `~/.agents/skills/` |
 
 Then ask the agent for today's EOD.
 

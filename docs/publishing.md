@@ -1,15 +1,17 @@
 # Publishing the plugin
 
-Nothing here is public yet. As of 16 November 2026 the repository has no remote and no `main` branch, and the site is deployed to Cloudflare Pages straight from disk.
+The repository is `wcgwhq/standup` on GitHub, created **private** on 16 November 2026. Private on purpose: see step 1. The site is deployed to Cloudflare Pages straight from disk.
 
-## Before the first push
+## Before it goes public
 
-1. **Owner.** Pick the GitHub owner. `wcgw` is taken by someone else's organisation; `wcgwfun` and `wcgw-fun` were free on 12 November. Only Radu can create the organisation.
-2. **Names in the examples.** `plugin/skills/eod-review/voices/*.md` and `site/src/data/sample-report.json` carry real project names (Switchboard, Cât Vine Pensia, wcgw). Keep or scrub, on purpose.
-3. **`main`.** The only branch is `content/homepage`. Rename it or merge it.
-4. **Owner name in the manifests.** They say "Radu Ceuca". Change to the studio name if that is the identity.
-5. **Replace `<owner>/<repo>`** in `plugin/README.md` and in `repo` and `command` in `site/src/data/install.json`, and remove `ui.installNote` from `site/src/i18n/en.json`.
-6. **Old skills.** Remove `~/.claude/skills/eod-review` and `eow-review` once the plugin is installed, or both sets answer.
+1. **The email in the history.** All commits carry Radu's personal email as author and committer. A public repository publishes it for good. Either accept that, or rewrite authorship to the GitHub noreply address before the switch (a force push; easy while nobody else has cloned).
+2. **Names in the examples.** `plugin/skills/eod-review/voices/*.md` and `site/src/data/sample-report.json` carry real project names (Switchboard, Cât Vine Pensia, wcgw). The sample report is already on the public site. Keep or scrub, on purpose.
+3. **Owner name in the manifests.** They say "Radu Ceuca". Change to the studio name if that is the identity.
+4. **Switch the repository to public** (Settings, or `gh repo edit wcgwhq/standup --visibility public`).
+5. **Remove `ui.installNote`** from `site/src/i18n/en.json` ("Not published yet"), and redeploy the site.
+6. **Run one real install in each agent** from the public repository. None has been run.
+7. **Old skills.** Remove `~/.claude/skills/eod-review` and `eow-review` once the plugin is installed, or both sets answer.
+8. Then the listings, in the order in `marketplaces.md`.
 
 ## Checks to re-run after touching any manifest
 
@@ -26,6 +28,6 @@ Run from the repository root. Each one was green on 16 November 2026.
 
 ## Not yet proven
 
-- No install from a public repository has been run in any agent. The checks above use the local folder.
+- No install from the repository has been run in any agent. The checks above use the local folder.
 - Grok's `#plugin` subfolder install and Cursor's marketplace add are from their help text and docs only.
 - The copied skills have not been run inside Codex, Cursor, Gemini CLI or opencode: found is not the same as working.
