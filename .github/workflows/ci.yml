@@ -34,11 +34,10 @@ jobs:
   plugin:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # The engine must stay runnable on the oldest Python it claims. The runner image no
+    # longer offers 3.9 through setup-python, so the job runs in the official 3.9 image.
+    container: python:3.9-slim
     steps:
       - uses: actions/checkout@v7
-      # The engine must stay runnable on the oldest Python it claims.
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.9'
       - run: python3 plugin/skills/eod-review/eod_review.py --help
       - run: python3 plugin/skills/eow-review/eow_review.py --help
