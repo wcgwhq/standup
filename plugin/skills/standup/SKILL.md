@@ -1,12 +1,22 @@
 ---
-name: eod-review
-description: End-of-day / standup review for a work unit (a git branch, a worktree path, or a predefined named unit). Summarizes the day's commits AND the agent token usage + estimated cost attributable to that work — Claude Code, Codex, Grok, Claude Cowork, Gemini CLI and opencode (plus session counts for Cursor and Antigravity), including work run in orchestrator worktrees (Superconductor, Conductor) — then writes a succinct standup report. Personal projects you list are kept separate from the work totals. Use when the user asks for an EOD report, standup, daily summary, "what did we ship/do today", "how many tokens did we use", token/cost accounting for a branch/worktree/project, or usage across Codex / Grok / Gemini / opencode / Cursor / orchestrator worktrees. Designed to run cold in a fresh session with no prior chat context.
-allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/eod_review.py *), Bash(python3 ${CLAUDE_SKILL_DIR}/eod_review.py)
+name: standup
+description: Writes the user's standup update, what they and their coding agents did, from git commits and agent sessions, with token usage and an estimated cost, for today, a week, a month or any date range. Use when the user says "standup", "write my standup update", "what have we done today", "what have you worked on today", "what did I work on this week", "what did we ship this month", asks for an EOD, an EOW, a daily summary or a week recap, or asks "how many tokens did we use". Works on a git branch, a worktree path or a predefined named unit. Reads Claude Code, Codex, Grok, Claude Cowork, Gemini CLI and opencode (session counts for Cursor and Antigravity), including work run in orchestrator worktrees (Superconductor, Conductor). Personal projects the user lists are kept separate from the work totals. Designed to run cold in a fresh session with no prior chat context.
+allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/standup.py *), Bash(python3 ${CLAUDE_SKILL_DIR}/standup.py), Bash(python3 ${CLAUDE_SKILL_DIR}/standup_week.py *), Bash(python3 ${CLAUDE_SKILL_DIR}/standup_week.py)
 ---
 
-# EOD Review
+# Standup
 
-Produces a standup-style report for a **work unit** by combining two sources:
+## Which report
+
+| The user means | Do this |
+| --- | --- |
+| Today, yesterday, one named day, or no period at all | Carry on in this file (`standup.py`) |
+| This week, last week, a month, or a range of dates | Read `week.md`, next to this file, and follow it (`standup_week.py`) |
+
+When the request names no period, it is today. Do not ask. Everything below is the day
+report; `week.md` builds on it and says where it differs.
+
+Produces a standup report for a **work unit** by combining two sources:
 
 1. **Commits** — `git log`, filtered by branch + author + date window. A bare
    container path (e.g. `~/development`) fans out to **every child git repo** so
@@ -60,16 +70,16 @@ commits into themes yourself; use plain text for a quick look.
 
 ```bash
 # Default: current worktree, current branch, today
-python3 ${CLAUDE_SKILL_DIR}/eod_review.py
+python3 ${CLAUDE_SKILL_DIR}/standup.py
 
 # A named unit (see units.json), as JSON for richer rendering
-python3 ${CLAUDE_SKILL_DIR}/eod_review.py --unit my-app --json
+python3 ${CLAUDE_SKILL_DIR}/standup.py --unit my-app --json
 
 # An explicit branch / worktree / window
-python3 ${CLAUDE_SKILL_DIR}/eod_review.py --branch my-feature --json
-python3 ${CLAUDE_SKILL_DIR}/eod_review.py --path /path/to/worktree --json
-python3 ${CLAUDE_SKILL_DIR}/eod_review.py --days 7 --json          # last 7 days
-python3 ${CLAUDE_SKILL_DIR}/eod_review.py --since 2026-06-10 --until 2026-06-16 --json
+python3 ${CLAUDE_SKILL_DIR}/standup.py --branch my-feature --json
+python3 ${CLAUDE_SKILL_DIR}/standup.py --path /path/to/worktree --json
+python3 ${CLAUDE_SKILL_DIR}/standup.py --days 7 --json          # last 7 days
+python3 ${CLAUDE_SKILL_DIR}/standup.py --since 2026-06-10 --until 2026-06-16 --json
 ```
 
 ### Resolving the date window (do this FIRST, verify before reporting)
@@ -85,20 +95,21 @@ against *today's actual date*, then VERIFY before you run anything else:
 - NEVER trust a weekday label from earlier in this conversation — recompute every time.
   If you mislabeled a day before, the fix is to use the correct calendar date now, not
   to repeat the wrong label.
-- The report header MUST show both the weekday and the date, and they must agree
-  (e.g. `EOD Wed 2026-06-17`). A header whose weekday and date disagree is a bug.
+- The update's title line is `Standup EOD <Weekday>, <Month> <day with its ordinal>, <year>`,
+  for example `Standup EOD Wednesday, June 17th, 2026`. Spell the weekday and the month
+  out. The weekday and the date MUST agree; a title where they disagree is a bug.
 
 ### Translating the user's request to flags
 
 - "everything / all my repos / what did I do today" → the aggregate unit if one is
   defined (conventionally `--unit work`: a container folder, all branches, Codex +
   Grok + Cowork folded in, orchestrator worktrees remapped, personal projects
-  separated). This is the usual EOD.
-- "EOD for <project>" → `--unit <name>` (see the predefined units).
-- "EOD for the <feature> branch" → `--branch <that-branch>` (or `--unit` if defined).
+  separated). This is the usual request.
+- "Standup for <project>" → `--unit <name>` (see the predefined units).
+- "Standup for the <feature> branch" → `--branch <that-branch>` (or `--unit` if defined).
 - "this month", "October", "last month", or any range longer than a day or two →
-  use `eow-review` (`--month`, or `--since`/`--until`): it breaks the window down by day.
-- "this week" or "last week" → use `eow-review` (a Mon-Sun week, day by day).
+  read `week.md` and run `standup_week.py` (`--month`, or `--since`/`--until`): it breaks the window down by day.
+- "this week" or "last week" → read `week.md` and run `standup_week.py` (a Mon-Sun week, day by day).
   "the last 7 days" → `--days 7`. "yesterday" → `--since`/`--until` with that date.
 - "everything, all branches" → `--all-branches`. "the whole team" → `--all-authors`.
 - "just my personal project" → `--unit <that-project>` (reported in full).
@@ -110,7 +121,7 @@ Before the first report on a machine, or when `--unit work` answers "Unknown uni
 run the setup check. It writes nothing:
 
 ```bash
-python3 ${CLAUDE_SKILL_DIR}/eod_review.py --check
+python3 ${CLAUDE_SKILL_DIR}/standup.py --check
 ```
 
 Show the user what it found, in a few lines: their code folders and repo count,
@@ -159,7 +170,7 @@ the data at all. If the user says something is missing, say that is why.
 | `--init` | First run: write the missing config files, then show `--check` | off |
 
 Repo discovery roots, personal projects, and orchestrator worktree roots are
-configurable via `~/.claude/eod-review/config.json`
+configurable via `~/.claude/standup/config.json`
 (`{"dev_roots": [...], "authors": [...], "personal": [...], "groups": {...}, "voice": "...", "worktree_roots": [...], "oneshot_roots": [...]}`);
 `authors` lists other names or emails that are also the user (commits are matched
 on the git email plus these);
@@ -169,7 +180,7 @@ Superconductor + Conductor worktree dirs, and Superconductor `one-shot`.
 
 ## Predefined work units
 
-Named units live in `~/.claude/eod-review/units.json` (shared with eow-review).
+Named units live in `~/.claude/standup/units.json` (shared by the day and the week reports).
 None exist until the user creates the file: copy `units.example.json` from this
 skill and edit it. Read the file to see which units are defined. Each unit may set `path` (supports `~`), `branch`, `author`, `all_branches`,
 `all_authors`. Explicit flags always override the unit. New repos under a dev
@@ -222,7 +233,7 @@ After running the engine, produce a **succinct** standup the user can paste:
   about cost.
 - **Unpriced models.** `tokens.unpriced` lists models with no price row: every
   non-Anthropic model (Codex, Grok, Gemini, opencode's providers) unless the user has
-  added rates to `~/.claude/eod-review/pricing.json`, and any Claude model newer or
+  added rates to `~/.claude/standup/pricing.json`, and any Claude model newer or
   older than the built-in table. Their tokens are in the totals and their cost is NOT
   in the estimate. When that list is not empty, say so next to the figure: "≈$X at
   list prices, not counting N tokens on <models>".
@@ -238,7 +249,7 @@ After running the engine, produce a **succinct** standup the user can paste:
   still appear, because commits come from git.
 
 - Tokens are attributed by **worktree + branch + day**, not by commit — so they include
-  exploration and dead-ends that produced no commit. That's the intended EOD semantics.
+  exploration and dead-ends that produced no commit. That is what a standup should count.
 - If work spanned multiple worktrees/branches in one session, run per unit and note it.
 - `synthetic` model rows are zero-cost local bookkeeping turns; ignore them in cost.
 - **Commits are already agent-agnostic** — `git log` doesn't know whether Claude,
@@ -270,23 +281,23 @@ After running the engine, produce a **succinct** standup the user can paste:
 
 ## Output style
 
-If `~/.claude/eod-review/style.md` exists, read it before writing the report and
+If `~/.claude/standup/style.md` exists, read it before writing the report and
 follow it: it overrides the generic formatting guidance above. No file means the
-generic guidance applies. `style.example.md` in the eod-review skill is a ready
+generic guidance applies. `style.example.md` in this skill is a ready
 Slack-paste-safe style to copy.
 
 ## Voices
 
 A voice changes how the report is worded. It never changes what the report says.
-The built-in voices are files in the eod-review skill's `voices/` folder:
+The built-in voices are files in this skill's `voices/` folder:
 `pirate`, `genz`, `corporate`, `one-liner` and `observational`. A user's own
-voices live in `~/.claude/eod-review/voices/<name>.md` and win on a name clash.
+voices live in `~/.claude/standup/voices/<name>.md` and win on a name clash.
 
 Use a voice only when one is chosen:
 
 1. The user names it in the request ("eod in pirate voice", "pirate mode",
    "make it corporate"). This wins.
-2. Otherwise `"voice": "<name>"` in `~/.claude/eod-review/config.json`.
+2. Otherwise `"voice": "<name>"` in `~/.claude/standup/config.json`.
 3. Otherwise write plainly. "Plain" or "no voice" in the request turns a
    configured voice off for that report.
 
@@ -302,3 +313,18 @@ When a voice is chosen, read its file, then write the report under these rules:
 - If the user asks for a real person's voice (a named comedian, say), do not
   imitate them. Pick the nearest built-in voice, say which one you used and why.
 - If a voice name matches no file, list the voices that exist and write plainly.
+
+## After the update: say what else they can ask
+
+After the update, leave a blank line and add one line, outside the text they will paste:
+
+```
+Try next: "for this week" · "in pirate voice" · "for last month"
+```
+
+Offer three requests that fit what they just asked: a different period, a voice
+(`pirate`, `genz`, `corporate`, `one-liner`, `observational`), or one of their named
+groups or units if the report showed any. Leave out anything they just used.
+
+Skip the line when the user asked for the update only ("just the update", "nothing
+else"), or when they have already seen it twice in this conversation.

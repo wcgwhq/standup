@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""EOW review engine: commits + Claude Code token usage for one ISO week.
+"""Standup engine, a week, a month or a range: commits + Claude Code token usage for one ISO week.
 
 A thin *weekly* wrapper around the EOD engine. It does two things the daily
 engine doesn't:
@@ -13,7 +13,7 @@ engine doesn't:
 
 Everything else — commit collection, token attribution by worktree+branch+day,
 the editable pricing table, and the shared ``units.json`` — is imported from
-``eod_review.py`` so the two reviews never drift apart.
+``standup.py`` so the two reviews never drift apart.
 
 Cost is an ESTIMATE from the same editable price table and is labelled as such —
 never quote it as billed cost.
@@ -27,21 +27,14 @@ import json
 import os
 import sys
 
-# Reuse the EOD engine as the single source of truth for collection, pricing,
-# and unit resolution (incl. the shared ~/.claude/eod-review/units.json).
-# Looked up next to this skill first (works wherever the pair is installed),
-# then in the default personal skills folder.
+# Reuse the day engine as the single source of truth for collection, pricing and unit
+# resolution (incl. the shared ~/.claude/standup/units.json). It is the file next to this one.
 _HERE = os.path.dirname(os.path.abspath(__file__))
-EOD_SKILL_DIR = next(
-    (d for d in (os.path.join(os.path.dirname(_HERE), "eod-review"),
-                 os.path.join(os.path.expanduser("~"), ".claude", "skills", "eod-review"))
-     if os.path.isfile(os.path.join(d, "eod_review.py"))),
-    os.path.join(os.path.dirname(_HERE), "eod-review"))
-if EOD_SKILL_DIR not in sys.path:
-    sys.path.insert(0, EOD_SKILL_DIR)
+if _HERE not in sys.path:
+    sys.path.insert(0, _HERE)
 
 try:
-    from eod_review import (  # noqa: E402
+    from standup import (  # noqa: E402
         resolve_unit,
         parse_day,
         load_pricing,
@@ -69,8 +62,8 @@ try:
     )
 except Exception as exc:  # pragma: no cover - import guard
     sys.exit(
-        "eow-review: could not import the eod-review engine from "
-        f"{EOD_SKILL_DIR}: {exc}"
+        "standup: could not import the engine (standup.py) from "
+        f"{_HERE}: {exc}"
     )
 
 
@@ -127,7 +120,7 @@ def render_text(report: dict) -> str:
     lines = []
     lines.append("=" * 64)
     week_long = w["kind"] == "week"
-    lines.append({"week": f"EOW REVIEW  (week {w['week']}, {w['year']})",
+    lines.append({"week": f"STANDUP  (week {w['week']}, {w['year']})",
                   "month": f"MONTH REVIEW  ({w['label']})",
                   "range": f"RANGE REVIEW  ({w['days']} days)"}[w["kind"]])
     scope = f"branch={u['branch'] or '(all)'}  author={u['author'] or '(all)'}"
@@ -176,9 +169,9 @@ def render_text(report: dict) -> str:
 
 def main() -> None:
     p = argparse.ArgumentParser(
-        description="EOW review: commits + token usage for one ISO week (Mon -> Sun)."
+        description="Standup: commits + token usage for one ISO week (Mon -> Sun)."
     )
-    p.add_argument("--unit", help="named work unit from units.json (shared with eod-review)")
+    p.add_argument("--unit", help="named work unit from units.json (shared with the day report)")
     p.add_argument("--path", help="worktree path (default: cwd)")
     p.add_argument("--branch", help="git branch (default: current)")
     p.add_argument("--author", help="commit/author filter email (default: git config user.email)")

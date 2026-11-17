@@ -1,7 +1,7 @@
 {
   "name": "standup",
-  "version": "0.5.0",
-  "description": "End-of-day, weekly and monthly reviews written from your git commits and your agents' sessions.",
+  "version": "0.6.0",
+  "description": "Standup updates for a day, a week or a month, written from your git commits and your agents' sessions.",
   "author": { "name": "What Could Go Wrong" },
   "license": "MIT",
   "logo": "assets/logo.svg"

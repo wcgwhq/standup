@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""EOD review engine: commits + Claude Code token usage for a work unit.
+"""Standup engine, one day: commits + Claude Code token usage for a work unit.
 
 A "work unit" is resolved from (in priority order) explicit flags, a named unit
 in units.json, then sensible defaults (current worktree + current branch + today).
@@ -11,7 +11,7 @@ filter by worktree path (cwd) and/or branch (gitBranch), bucketed by local date.
 
 Commits come from `git log` in the worktree. Token attribution is by
 worktree+branch (NOT by commit), so it also counts exploration that produced no
-commit, which is what an honest EOD review wants.
+commit, which is what an honest standup wants.
 
 Cost is an ESTIMATE from an editable price table (pricing.json) and is labelled
 as such — never quote it as billed cost.
@@ -74,7 +74,7 @@ COWORK_ROOTS = (
     os.path.join(HOME, "Library", "Application Support", "Claude", "claude-code-sessions"),
 )
 SKILL_DIR = os.path.dirname(os.path.abspath(__file__))
-CONFIG_DIR = os.path.join(CLAUDE_DIR, "eod-review")
+CONFIG_DIR = os.path.join(CLAUDE_DIR, "standup")
 
 # Where real repos live, so an orchestrator worktree <repo> can be resolved to a
 # real checkout AND so an aggregate can auto-discover repos (incl. brand-new ones).
@@ -192,7 +192,7 @@ def load_units() -> dict:
 
 
 def load_config() -> dict:
-    """Optional ~/.claude/eod-review/config.json: {dev_roots:[...], personal:[...]}."""
+    """Optional ~/.claude/standup/config.json: {dev_roots:[...], personal:[...]}."""
     for c in (os.path.join(CONFIG_DIR, "config.json"),
               os.path.join(SKILL_DIR, "config.json")):
         if os.path.isfile(c):
@@ -309,7 +309,7 @@ def resolve_unit(args) -> dict:
         units = load_units()
         if args.unit not in units:
             sys.exit(f"Unknown unit '{args.unit}'. Defined: {', '.join(units) or '(none)'}. "
-                     f"To see the setup run: python3 {os.path.join(SKILL_DIR, 'eod_review.py')} --check "
+                     f"To see the setup run: python3 {os.path.join(SKILL_DIR, 'standup.py')} --check "
                      "(add --init to create a 'work' unit).")
         unit = units[args.unit]
 
@@ -1346,7 +1346,7 @@ def render_text(report: dict) -> str:
     u, w = report["unit"], report["window"]
     lines = []
     lines.append("=" * 64)
-    lines.append("EOD REVIEW")
+    lines.append("STANDUP")
     scope = f"branch={u['branch'] or '(all)'}  author={u['author'] or '(all)'}"
     lines.append(f"  worktree: {u['path']}")
     lines.append(f"  {scope}")
@@ -1489,7 +1489,7 @@ def init_setup() -> list[str]:
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="EOD review: commits + token usage for a work unit.")
+    p = argparse.ArgumentParser(description="Standup: commits + token usage for a work unit.")
     p.add_argument("--unit", help="named work unit from units.json")
     p.add_argument("--path", help="worktree path (default: cwd)")
     p.add_argument("--branch", help="git branch (default: current)")

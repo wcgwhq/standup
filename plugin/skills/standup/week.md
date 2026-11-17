@@ -1,12 +1,7 @@
----
-name: eow-review
-description: End-of-week, monthly or date-range review for a work unit (a git branch, a worktree path, or a predefined named unit). Summarizes the whole current week's commits (Mon-Sun, grouped by day) AND the agent token usage + estimated cost attributable to that work — Claude Code, Codex, Grok, Claude Cowork, Gemini CLI and opencode (plus session counts for Cursor and Antigravity), including work run in orchestrator worktrees (Superconductor, Conductor) — then writes a succinct weekly recap. Personal projects you list are kept separate from the work totals. Requires the eod-review skill installed alongside it. Use when the user asks for an EOW report, weekly standup, week-in-review, weekly summary, "what did we ship this week", "week recap", token/cost accounting for the week, or usage across Codex / Grok / Gemini / opencode / Cursor / orchestrator worktrees. Designed to run cold in a fresh session with no prior chat context.
-allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/eow_review.py *), Bash(python3 ${CLAUDE_SKILL_DIR}/eow_review.py)
----
+# Standup: a week, a month or a range
 
-# EOW Review
-
-The weekly companion to `eod-review`. Produces a recap for a **work unit** over a
+The second half of the standup skill; `SKILL.md` sends you here when the request covers
+more than a day or two. Produces a recap for a **work unit** over a
 full **Monday -> Sunday** week by combining two sources:
 
 1. **Commits** — `git log`, filtered by branch + author, across the whole week,
@@ -28,8 +23,7 @@ full **Monday -> Sunday** week by combining two sources:
    is attributed, not lost. **Personal projects** (none by default; set in
    `config.json`) are split into a separate line, unless targeted directly.
 
-This reuses the `eod-review` engine under the hood, so that skill must be
-installed next to this one (same
+This reuses the day engine (`standup.py`, next to this file) under the hood (same
 attribution, same editable pricing, same shared `units.json`), so it works in a
 brand-new session or a separate agent with zero prior context.
 
@@ -45,24 +39,24 @@ write the recap. Prefer `--json` so you can group commits into themes yourself.
 
 ```bash
 # Default: current worktree, current branch, THIS week (Mon-Sun)
-python3 ${CLAUDE_SKILL_DIR}/eow_review.py
+python3 ${CLAUDE_SKILL_DIR}/standup_week.py
 
-# A named unit (shared with eod-review's units.json), as JSON for richer rendering
-python3 ${CLAUDE_SKILL_DIR}/eow_review.py --unit my-app --json
+# A named unit (the same units.json as the day report), as JSON for richer rendering
+python3 ${CLAUDE_SKILL_DIR}/standup_week.py --unit my-app --json
 
 # Last week
-python3 ${CLAUDE_SKILL_DIR}/eow_review.py --unit my-app --week-offset -1 --json
+python3 ${CLAUDE_SKILL_DIR}/standup_week.py --unit my-app --week-offset -1 --json
 
 # Explicit branch / worktree
-python3 ${CLAUDE_SKILL_DIR}/eow_review.py --branch my-feature --json
-python3 ${CLAUDE_SKILL_DIR}/eow_review.py --path /path/to/worktree --json
+python3 ${CLAUDE_SKILL_DIR}/standup_week.py --branch my-feature --json
+python3 ${CLAUDE_SKILL_DIR}/standup_week.py --path /path/to/worktree --json
 ```
 
 ### Verify the window before reporting
 
 You don't compute the window, but you DO confirm the script chose the week the
 user meant. The header prints both the ISO week number and the Mon -> Sun dates
-(e.g. `EOW REVIEW (week 25, 2026)` / `window: 2026-06-15 -> 2026-06-21`):
+(e.g. `STANDUP (week 25, 2026)` / `window: 2026-06-15 -> 2026-06-21`):
 
 - "this week" / "the week" / no qualifier → `--week-offset 0` (default).
 - "last week" / "previous week" → `--week-offset -1`. Two weeks ago → `-2`, etc.
@@ -76,9 +70,9 @@ user meant. The header prints both the ISO week number and the Mon -> Sun dates
 - "everything / all my repos / the whole week" → the aggregate unit if one is
   defined (conventionally `--unit work`: a container folder, all branches, Codex +
   Grok + Cowork folded in, orchestrator worktrees remapped, personal projects
-  separated). This is the usual EOW.
-- "EOW for <project>" → `--unit <name>` (see the predefined units).
-- "EOW for the <feature> branch" → `--branch <that-branch>` (or `--unit` if defined).
+  separated). This is the usual request.
+- "Standup for <project> this week" → `--unit <name>` (see the predefined units).
+- "This week on the <feature> branch" → `--branch <that-branch>` (or `--unit` if defined).
 - "last week" → `--week-offset -1`. "two weeks ago" → `--week-offset -2`.
 - "everything, all branches" → `--all-branches`. "the whole team" → `--all-authors`.
 - "just my personal project" → `--unit <that-project>` (reported in full).
@@ -119,21 +113,21 @@ deletes transcripts after about 30 days, so a month older than that has commits
 and few or no tokens: say so.
 
 The JSON also carries `activity` (projects with sessions and no commits); handle
-it as `../eod-review/SKILL.md` describes under "Work that left no commit". For
-first-run setup, run `python3 ${CLAUDE_SKILL_DIR}/../eod-review/eod_review.py --check`;
+it as `SKILL.md` describes under "Work that left no commit". For
+first-run setup, run `python3 ${CLAUDE_SKILL_DIR}/standup.py --check`;
 this script has no `--check` of its own.
 
 ## Predefined work units
 
-Shared with `eod-review` — the same `~/.claude/eod-review/units.json` (no second
-file to maintain). None exist until the user creates it from eod-review's
+Shared with the day report: the same `~/.claude/standup/units.json` (no second
+file to maintain). None exist until the user creates it from this skill's
 `units.example.json`; read the file to see which are defined. Each unit may set `path` (supports `~`), `branch`, `author`,
 `all_branches`, `all_authors`. Explicit flags always override the unit. New repos
 under a dev root are auto-discovered by the aggregate.
 
 ## Groups (work, consulting, side projects)
 
-Same as `eod-review`: when `config.json` names `groups`, the report has a `by_group`
+Same as the day report: when `config.json` names `groups`, the report has a `by_group`
 block and each commit carries its `group`. Write one section per group, skip empty
 ones, and never mix two groups in one update.
 
@@ -152,7 +146,7 @@ After running the engine, produce a **succinct weekly recap** the user can paste
   **cache reads**. Quote model split only if asked. There is one row per model, named
   by its id (`opus-5-5`, `fable-5-2`, `gpt-...`). Name only the sources listed in
   `contributed`, and when `tokens.unpriced` is not empty say the estimate leaves those
-  models out, as the eod-review skill describes.
+  models out, as `SKILL.md` describes.
 - **Personal projects are a separate line.** When the report has a
   `personal_tokens` block, keep it OUT of the work headline;
   mention it separately only if the user cares. Never fold it into the work total.
@@ -171,7 +165,7 @@ After running the engine, produce a **succinct weekly recap** the user can paste
 - **Gemini CLI and opencode** tokens are folded in; **Cursor and Antigravity** keep
   no token counts, so the report's `sessions` block lists their session counts
   instead. Never invent tokens or cost for them.
-- Same source caveats as `eod-review` apply (it's the same engine): non-Anthropic
+- The source caveats in `SKILL.md` apply (it is the same engine): non-Anthropic
   rows are unpriced until rated in `pricing.json`; orchestrator
   (Superconductor/Conductor) worktrees are remapped to their repo so Claude,
   Codex, and Grok run there are all attributed; personal projects
@@ -181,23 +175,23 @@ After running the engine, produce a **succinct weekly recap** the user can paste
 
 ## Output style
 
-If `~/.claude/eod-review/style.md` exists, read it before writing the report and
+If `~/.claude/standup/style.md` exists, read it before writing the report and
 follow it: it overrides the generic formatting guidance above. No file means the
-generic guidance applies. `style.example.md` in the eod-review skill is a ready
+generic guidance applies. `style.example.md` in this skill is a ready
 Slack-paste-safe style to copy.
 
 ## Voices
 
 A voice changes how the report is worded. It never changes what the report says.
-The built-in voices are files in the eod-review skill's `voices/` folder (`../eod-review/voices/`):
+The built-in voices are files in this skill's `voices/` folder:
 `pirate`, `genz`, `corporate`, `one-liner` and `observational`. A user's own
-voices live in `~/.claude/eod-review/voices/<name>.md` and win on a name clash.
+voices live in `~/.claude/standup/voices/<name>.md` and win on a name clash.
 
 Use a voice only when one is chosen:
 
 1. The user names it in the request ("eod in pirate voice", "pirate mode",
    "make it corporate"). This wins.
-2. Otherwise `"voice": "<name>"` in `~/.claude/eod-review/config.json`.
+2. Otherwise `"voice": "<name>"` in `~/.claude/standup/config.json`.
 3. Otherwise write plainly. "Plain" or "no voice" in the request turns a
    configured voice off for that report.
 

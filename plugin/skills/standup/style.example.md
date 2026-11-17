@@ -1,9 +1,9 @@
 # Standup style (example)
 
-Copy to `~/.claude/eod-review/style.md` and edit. This one produces updates that
+Copy to `~/.claude/standup/style.md` and edit. This one produces updates that
 paste cleanly into Slack.
 
-Read by eod-review and eow-review before writing a report. Overrides their generic
+Read by the standup skill before writing a report. Overrides their generic
 formatting guidance.
 
 **Per-item format** — every item is exactly:
@@ -31,7 +31,9 @@ Slack's composer, which by DEFAULT does NOT re-parse markdown on paste:
   asterisks) unless the account has Slack Preferences → Advanced → "Format messages with markup"
   enabled. Carry emphasis with the `•` + status-emoji + `→` structure (and Title Case), never
   with `*asterisks*`.
-- No markdown `#` headers (Slack shows the `#`). Use a plain title line above the bullets.
+- No markdown `#` headers (Slack shows the `#`). Use a plain title line above the bullets:
+  `Standup EOD <Weekday>, <Month> <day with its ordinal>, <year>`, for example
+  `Standup EOD Wednesday, June 17th, 2026`.
 - `→`, `•`, and the status emoji always render — they are literal characters, not markup.
 - Only if the user explicitly wants bold titles: tell them to enable that Advanced setting (or
   bold in-composer). Otherwise keep the output completely markup-free.
@@ -53,8 +55,9 @@ Slack's composer, which by DEFAULT does NOT re-parse markdown on paste:
 - Optional honest footer (no bullet): one line on where it stands (e.g. on a working branch,
   mocked backend, not yet merged) so leadership doesn't read "built" as "shipped".
 
-**Weekly recaps (eow-review):**
+**Weekly recaps:**
 
-- Title line: `Week of <Mon date> → <Sun date>`.
+- Title line: `Standup EOW <Month> <day> → <Month> <day>, <year>`, Monday to Sunday, for
+  example `Standup EOW June 15th → June 21st, 2026`. A month is `Standup <Month> <year>`.
 - One line per theme, synthesized across days, not one per day.
 - Completeness pass covers every day of the week, including work early in the week.

@@ -1,7 +1,7 @@
 {
   "name": "standup",
-  "version": "0.5.0",
-  "description": "End-of-day and end-of-week reviews: what you and your agents committed, plus the tokens and estimated cost behind it, across Claude Code, Codex, Grok, Gemini CLI, opencode and Cowork.",
+  "version": "0.6.0",
+  "description": "Standup updates for a day, a week or a month: what you and your agents committed, plus the tokens and estimated cost behind it, across Claude Code, Codex, Grok, Gemini CLI, opencode and Cowork.",
   "author": {
     "name": "What Could Go Wrong"
   },

@@ -28,7 +28,7 @@
 
 ## Install
 
-Pick your agent, run one command, then ask it for today's EOD.
+Pick your agent, run one command, then say "write my standup update".
 
 | Agent | Command |
 | --- | --- |
@@ -37,7 +37,7 @@ Pick your agent, run one command, then ask it for today's EOD.
 | Cursor | `cursor-agent plugin marketplace add https://github.com/wcgwhq/standup`, then turn Standup on under Plugins |
 | Gemini CLI | `gemini extensions install https://github.com/wcgwhq/standup` |
 | Grok | `grok plugin install wcgwhq/standup#plugin` |
-| opencode | `git clone https://github.com/wcgwhq/standup ~/standup && cp -R ~/standup/plugin/skills/eod-review ~/standup/plugin/skills/eow-review ~/.config/opencode/skills/` |
+| opencode | `git clone https://github.com/wcgwhq/standup ~/standup && cp -R ~/standup/plugin/skills/standup ~/.config/opencode/skills/` |
 
 Any other agent that reads `SKILL.md` folders: same as opencode, copied into `~/.agents/skills/`.
 
@@ -45,18 +45,16 @@ It needs Python 3.9 or later and git, on macOS or Linux. There are no packages t
 
 ## What you get
 
-Four to six lines you can say out loud. Paste them into Slack, say them at standup, or keep them as proof the day happened. This is a real one, from the day the website was built:
+Four to six lines you can say out loud. Paste them into Slack, say them at standup, or keep them as proof the day happened. This is a real one, from a day spent on this website:
 
-> **EOD Wed 2026-11-11**
+> **Standup EOD Tuesday, November 17th, 2026**
 >
-> - **Standup Site** ✅ → scaffolded, homepage written, sun dial and wordmark in, live on pages.dev
-> - **Switchboard Quota (E-080)** 🔁 → rc-quota merged, eight review findings fixed
-> - **Standup Plugin** ✅ → writing voices, month reports, a setup check, token counts no longer counted twice
-> - **My Pension** 🚧 → site scaffolded, design prototypes and two art rounds
-> - **wcgw.fun and Pipeline** 🚧 → new homepage section, pipeline plan and skills drafted
-> - **wcgw Starter** ✅ → copywriting skill and a pre-commit copy review for new sites
+> - **Standup Site** ✅ → a sun dial across the window with a sky behind the page, voice characters, a page per agent, and it deploys itself on every push
+> - **wcgw.fun** 🔁 → four pull requests from Cursor merged: an Astro landing, an editorial manifesto, the WCGW mark in the masthead
+> - **Standup Plugin** 🚧 → three skills folded into one called standup, a new title line, three things to try next; on disk, not committed
+> - **Jungle Cards** 🚧 → 516 files changed over 416 agent turns, no commit yet
 >
-> Three projects have work on disk and no commit yet. The plugin is not in git, so its line is from memory.
+> Two projects have work on disk that is not committed yet. Read at 3:30pm, so the day is not over.
 
 🔁 marks a merge, ✅ work finished here and 🚧 work still in progress, so nobody reads a merge as new work.
 
@@ -65,7 +63,7 @@ Behind the update are the numbers: commits per repo, projects with work and no c
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/readme/receipt-dark.png">
-    <img src="docs/readme/receipt-light.png" width="520" alt="The numbers for 11 November 2026: 11 commits in three repos, three projects with no commit yet, 395.67 million tokens, about $185 at API list prices.">
+    <img src="docs/readme/receipt-light.png" width="520" alt="The numbers for 17 November 2026: 15 commits in two repos, two projects with work on disk, 274.94 million tokens, about $133 at API list prices.">
   </picture>
 </p>
 
@@ -75,20 +73,20 @@ Ask for "EOD in pirate voice". Facts, numbers and status marks stay as they are;
 
 | Voice | Line |
 | --- | --- |
-| `pirate` | Arr, she was bare timber at dawn and by dusk she had a homepage, a wordmark and a sun dial, for no navigator trusts a clock. She sails on pages.dev |
-| `corporate` | delighted to announce that a homepage, a wordmark and a sun dial have reached general availability on pages.dev. The sun dial was not on the roadmap. It is now the roadmap |
-| `one-liner` | built a sun dial for a website about saving time. It took all day |
+| `pirate` | Arr, a sun now sails clear across the window with a sky behind the page, six odd characters speak for the crew, every agent has its own page, and the ship launches herself at every push |
+| `corporate` | delivered a window-wide sun dial with supporting sky, six voice characters and a page per agent, and automated deployment on every push. Weather is now a core competency |
+| `one-liner` | built a sky for a website about status updates. The forecast is commits |
 
 Also built in: `genz` and `observational`. You can add your own.
 
 ### For the week or the month
 
-`eow-review` covers Monday to Sunday day by day, and a whole month the same way. Ask "what did I ship this week?".
+A week is covered Monday to Sunday, day by day, and a whole month the same way. Say "write my standup update for this week".
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/readme/week-dark.png">
-    <img src="docs/readme/week-light.png" width="520" alt="Commits per day for the week of 9 November 2026: 104 on Monday, 22 on Tuesday, 11 on Wednesday.">
+    <img src="docs/readme/week-light.png" width="520" alt="Commits per day for the week of 9 November 2026: 104 on Monday, 22 on Tuesday, 11 on Wednesday, 9 on Thursday, none on Friday, 7 on Saturday, 1 on Sunday.">
   </picture>
 </p>
 

@@ -39,5 +39,5 @@ jobs:
     container: python:3.9-slim
     steps:
       - uses: actions/checkout@v7
-      - run: python3 plugin/skills/eod-review/eod_review.py --help
-      - run: python3 plugin/skills/eow-review/eow_review.py --help
+      - run: python3 plugin/skills/standup/standup.py --help
+      - run: python3 plugin/skills/standup/standup_week.py --help

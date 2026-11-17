@@ -2,13 +2,12 @@
 
 New here? The [repository front page](../README.md) shows what a report looks like. This page is the reference.
 
-Two agent skills that answer "what did my agents and I do today, and what did it cost?"
+An agent skill that answers "what did my agents and I do today, and what did it cost?"
 
 They run in Claude Code as a plugin, and in any agent that reads the open
 SKILL.md format (Codex, Cursor, Gemini CLI, opencode).
 
-- **eod-review** — a standup for one day (or any date range).
-- **eow-review** — a recap for one Monday to Sunday week.
+One skill, **standup**. Ask for a day and it writes the day; ask for a week, a month or a range and it writes that, day by day.
 
 Each report combines:
 
@@ -48,9 +47,9 @@ One repository installs everywhere: it carries the manifest each agent looks for
 | Cursor | `cursor-agent plugin marketplace add https://github.com/wcgwhq/standup`, then turn Standup on under Plugins |
 | Gemini CLI | `gemini extensions install https://github.com/wcgwhq/standup` |
 | Grok | `grok plugin install wcgwhq/standup#plugin` |
-| opencode, and any agent that reads `SKILL.md` folders | `git clone https://github.com/wcgwhq/standup ~/standup`, then copy `plugin/skills/eod-review` and `plugin/skills/eow-review`, side by side, into `~/.config/opencode/skills/` (opencode) or `~/.agents/skills/` |
+| opencode, and any agent that reads `SKILL.md` folders | `git clone https://github.com/wcgwhq/standup ~/standup`, then copy the `plugin/skills/standup` folder into `~/.config/opencode/skills/` (opencode) or `~/.agents/skills/` |
 
-Then ask the agent for today's EOD.
+Then say "write my standup update".
 
 To try it from a local checkout without installing:
 
@@ -60,28 +59,29 @@ claude --plugin-dir /path/to/standup/plugin
 
 ## Use
 
-Ask in plain words ("EOD for today"), or in Claude Code call the skills directly:
+Ask in plain words ("write my standup update", "what have we done today?"), or in Claude Code call the skill directly:
 
 ```
-/standup:eod-review
-/standup:eow-review
+/standup:standup
 ```
 
-- "EOD for today" → current folder, current branch, today.
+It ends each update with three things to try next.
+
+- "Write my standup update" → current folder, current branch, today. "EOD for today" does the same.
 - "What did I ship this week?" → the current week.
 - "EOW for last week across all my repos" → needs a `work` unit, see below.
 
 ## Configure (optional)
 
-All settings live in `~/.claude/eod-review/`. With none of them, the skills
+All settings live in `~/.claude/standup/`. With none of them, the skill
 report on the folder and branch you are in.
 
 | File | What it does |
 | --- | --- |
-| `units.json` | Named targets for `--unit <name>`: a repo, a branch, or a folder of repos. Start from `skills/eod-review/units.example.json`. |
+| `units.json` | Named targets for `--unit <name>`: a repo, a branch, or a folder of repos. Start from `skills/standup/units.example.json`. |
 | `config.json` | `dev_roots` (where your repos live), `groups` (named sets of repos, each reported separately), `personal` (repo names kept out of the totals), `worktree_roots`, `oneshot_roots`. |
-| (first run) | `python3 plugin/skills/eod-review/eod_review.py --check` shows your code folders, the email commits are matched on and which agents have data. `--init` writes the three files below and never overwrites one. |
-| `style.md` | How the written report should look. Start from `skills/eod-review/style.example.md`, which pastes cleanly into Slack. |
+| (first run) | `python3 plugin/skills/standup/standup.py --check` shows your code folders, the email commits are matched on and which agents have data. `--init` writes the three files below and never overwrites one. |
+| `style.md` | How the written report should look. Start from `skills/standup/style.example.md`, which pastes cleanly into Slack. |
 | `voices/<name>.md` | Your own writing voices. Built in: `pirate`, `genz`, `corporate`, `one-liner`, `observational`. Ask for one ("eod in pirate voice") or set `"voice"` in `config.json`. Facts and numbers never change, only the wording. |
 | `pricing.json` | USD per 1M tokens, per model family. Overrides the built-in table. |
 
@@ -123,10 +123,10 @@ repos stay out of the totals. An update for one group never includes another's w
 
 | Ask for | Runs |
 | --- | --- |
-| today, yesterday, a named day | `eod-review` (`--since` / `--until`) |
-| this week, last week | `eow-review` (`--week-offset -1`) |
-| this month, last month, October | `eow-review --month`, `--month last`, `--month 2026-10` |
-| any range | `eow-review --since 2026-10-06 --until 2026-10-19` |
+| today, yesterday, a named day | `standup.py` (`--since` / `--until`) |
+| this week, last week | `standup_week.py` (`--week-offset -1`) |
+| this month, last month, October | `standup_week.py --month`, `--month last`, `--month 2026-10` |
+| any range | `standup_week.py --since 2026-10-06 --until 2026-10-19` |
 
 ## What it checks
 
@@ -144,7 +144,7 @@ report prints. On a subscription you pay none of it per token.
 
 Models with no row are **unpriced**: their tokens are counted and their cost is left out,
 and the report says which. That is every non-Anthropic model (Codex, Grok, Gemini,
-opencode's providers) until you add rates to `~/.claude/eod-review/pricing.json`:
+opencode's providers) until you add rates to `~/.claude/standup/pricing.json`:
 
 ```json
 { "gpt": { "input": 1.25, "output": 10, "read": 0.125 } }
