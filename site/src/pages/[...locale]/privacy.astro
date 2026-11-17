@@ -1,0 +1,173 @@
+---
+import BrandBar from '@/components/BrandBar.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { copy, localePath, localeStaticPaths } from '@/i18n';
+
+export const getStaticPaths = localeStaticPaths;
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const ui = copy(locale);
+
+/** The page's last change of substance; bump it with the text. */
+const updated = '2026-11-18';
+const updatedLabel = new Date(`${updated}T12:00:00Z`).toLocaleDateString(locale, {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+const cookies = [
+  { name: '_clck', purpose: ui.privacyCookieClck, life: ui.privacyCookieYear },
+  { name: '_clsk', purpose: ui.privacyCookieClsk, life: ui.privacyCookieDay },
+];
+---
+
+<BaseLayout locale={locale} title={ui.privacyTitle} description={ui.privacyDescription}>
+  <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16">
+    <div class="mb-10">
+      <BrandBar facts={ui.brandFacts} href={localePath(locale)} homeLabel={ui.backHome} />
+    </div>
+    <article class="privacy">
+      <h1 class="text-3xl">{ui.privacyTitle}</h1>
+      <p class="privacy-lede">{ui.privacyLede}</p>
+      <p class="privacy-date">
+        {ui.privacyUpdated}{' '}<time datetime={updated}>{updatedLabel}</time>
+      </p>
+
+      <h2>{ui.privacyPluginTitle}</h2>
+      <p>{ui.privacyPluginBody}</p>
+      <p>{ui.privacyPluginSent}</p>
+
+      <h2>{ui.privacySiteTitle}</h2>
+      <p>{ui.privacySiteBody}</p>
+      <p>{ui.privacySiteNever}</p>
+
+      <h2>{ui.privacyCookiesTitle}</h2>
+      <p>{ui.privacyCookiesBody}</p>
+      <div class="privacy-table">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">{ui.privacyColName}</th>
+              <th scope="col">{ui.privacyColPurpose}</th>
+              <th scope="col">{ui.privacyColLife}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              cookies.map((cookie) => (
+                <tr>
+                  <th scope="row">
+                    <code>{cookie.name}</code>
+                  </th>
+                  <td>{cookie.purpose}</td>
+                  <td>{cookie.life}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p>{ui.privacyStorageBody}</p>
+
+      <h2>{ui.privacyChoiceTitle}</h2>
+      <p>
+        {ui.privacyChoiceBody}{' '}
+        <button type="button" class="link" data-consent-reset>{ui.consentReset}</button>
+      </p>
+
+      <h2>{ui.privacyWhoTitle}</h2>
+      <p>{ui.privacyWhoBody}</p>
+      <ul>
+        <li>
+          {ui.privacyWhoMicrosoft}{' '}
+          <a href="https://www.microsoft.com/privacy/privacystatement" rel="noopener">{ui.privacyMicrosoftLink}</a>
+        </li>
+        <li>
+          {ui.privacyWhoCloudflare}{' '}
+          <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">{ui.privacyCloudflareLink}</a>
+        </li>
+      </ul>
+
+      <h2>{ui.privacyKeepTitle}</h2>
+      <p>{ui.privacyKeepBody}</p>
+
+      <h2>{ui.privacyRightsTitle}</h2>
+      <p>{ui.privacyRightsBody}</p>
+
+      <h2>{ui.privacyContactTitle}</h2>
+      <p>
+        {ui.privacyContactBody}{' '}
+        <a href="https://github.com/wcgwhq/standup/issues" rel="noopener">{ui.privacyContactLink}</a>
+      </p>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  .privacy {
+    max-width: 65ch;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+  .privacy h1,
+  .privacy h2 {
+    color: var(--color-ink);
+  }
+  .privacy h2 {
+    margin-top: 2.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  .privacy p,
+  .privacy ul,
+  .privacy-table {
+    margin-top: 0.75rem;
+  }
+  .privacy-lede {
+    color: var(--color-ink);
+    font-size: 1.125rem;
+  }
+  .privacy-date {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .privacy ul {
+    padding-left: 1.1rem;
+    list-style: disc;
+  }
+  .privacy li + li {
+    margin-top: 0.4rem;
+  }
+  .privacy-table {
+    overflow-x: auto;
+  }
+  .privacy table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    text-align: left;
+  }
+  .privacy th,
+  .privacy td {
+    padding: 0.5rem 0.75rem 0.5rem 0;
+    border-bottom: 1px solid var(--color-rule);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .privacy thead th {
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .privacy code {
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+</style>

@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- An underscore and the u that stood up from it. -->
-  <rect width="32" height="32" fill="#1a1a18" />
-  <rect x="5" y="23" width="10" height="3" fill="#f4f1ea" />
-  <path d="M19.5 8v6a2.5 2.5 0 0 0 5 0V8" fill="none" stroke="#f4f1ea" stroke-width="3" />
-</svg>

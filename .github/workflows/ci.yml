@@ -39,5 +39,14 @@ jobs:
     container: python:3.9-slim
     steps:
       - uses: actions/checkout@v7
+      # Every manifest an agent installs from carries the same version.
+      - run: |
+          python3 - <<'PY'
+          import json, sys
+          files = ["plugin/plugin.json", "plugin/.claude-plugin/plugin.json", "plugin/.cursor-plugin/plugin.json", "gemini-extension.json"]
+          versions = {f: json.load(open(f))["version"] for f in files}
+          print(versions)
+          sys.exit(len(set(versions.values())) != 1)
+          PY
       - run: python3 plugin/skills/standup/standup.py --help
       - run: python3 plugin/skills/standup/standup_week.py --help

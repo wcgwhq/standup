@@ -4,5 +4,5 @@
   "description": "Standup updates for a day, a week or a month, written from your git commits and your agents' sessions.",
   "author": { "name": "What Could Go Wrong" },
   "license": "MIT",
-  "logo": "assets/logo.svg"
+  "logo": "assets/icon.png"
 }

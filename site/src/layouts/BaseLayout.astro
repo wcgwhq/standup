@@ -4,7 +4,7 @@ import ConsentNote from '@/components/ConsentNote.astro';
 import SunDial from '@/components/SunDial.astro';
 import WcgwFooter from '@/components/WcgwFooter.astro';
 import { absolute, canonicalUrl, jsonLd, organizationId, websiteId, type GraphNode } from '@/lib/seo';
-import { copy, defaultLocale, locales, meta, pagePath, siteNameFor, versions } from '@/i18n';
+import { copy, defaultLocale, localePath, locales, meta, pagePath, siteNameFor, versions } from '@/i18n';
 import { clarityId, darkMode, modified, published, publisher, siteName } from '../../site.config.mjs';
 
 interface Props {
@@ -178,7 +178,14 @@ const fullGraph: GraphNode[] = [
       hours={[ui.dialDawn, ui.dialNoon, ui.dialDusk]}
     />
     <slot />
-    {clarityId && <ConsentNote label={ui.consentLabel} body={ui.consentBody} yes={ui.consentYes} no={ui.consentNo} />}
+    {clarityId && <ConsentNote
+          label={ui.consentLabel}
+          body={ui.consentBody}
+          yes={ui.consentYes}
+          no={ui.consentNo}
+          more={ui.consentMore}
+          moreHref={localePath(locale, '/privacy/')}
+        />}
     <WcgwFooter />
     {translations.length > 0 && (
       <footer class="mx-auto w-full max-w-xl px-6 pb-10">

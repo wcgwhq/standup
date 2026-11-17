@@ -24,6 +24,7 @@ Run from the repository root. Each one was green on 16 November 2026.
 | Gemini CLI | `gemini extensions validate .`, `gemini extensions link "$PWD"`, `gemini skills list`, then `gemini extensions uninstall standup` | The extension loads and the skill is discovered. |
 | Grok | `grok plugin validate plugin` | The manifest is valid. |
 | Cursor | none run | The `.cursor-plugin/` files follow Cursor's docs and have never been loaded. |
+| OpenAI | `python3 -m json.tool plugin/plugin.json` and the limits in `submissions.md` | The listing manifest parses. There is no local validator for it; OpenAI checks it on upload. |
 | Python 3.9 | `/usr/bin/python3 plugin/skills/standup/standup.py --check` | The engine runs on the oldest Python it claims. |
 
 ## Not yet proven

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "standup",
+  "version": "0.6.0",
+  "description": "Writes your standup update from your git commits and your coding agents' sessions, on your disk.",
+  "author": {
+    "name": "What Could Go Wrong",
+    "url": "https://wcgw.fun"
+  },
+  "homepage": "https://standup.wcgw.fun",
+  "repository": "https://github.com/wcgwhq/standup",
+  "license": "MIT",
+  "keywords": [
+    "standup",
+    "eod",
+    "weekly",
+    "git",
+    "tokens",
+    "cost"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Standup",
+        "shortDescription": "Your standup update, from git",
+        "longDescription": "You start three things before lunch, an agent finishes two of them, and another runs in a worktree you forgot about. By the end of the day \"what did you work on?\" is a hard question.\n\nStandup answers it. Say \"write my standup update\" and it reads your git commits and the session files your coding agents keep on your disk, then writes four to six lines you can paste into Slack or say at standup. Ask for this week or this month and it covers every day in the range.\n\nBehind the update are the numbers: commits per repository, projects with work and no commit yet, tokens by type, and an estimated cost at API list prices.\n\nIt reads git plus eight agents. Claude Code, Codex, Grok, Gemini CLI, opencode and Cowork give tokens and cost. Cursor and Antigravity give session counts. Work run in Superconductor or Conductor worktrees is counted under its real repository.\n\nFive voices are built in if plain is too plain: pirate, Gen Z, corporate, one-liner and observational. A Slack markup style adds bold names and inline code.\n\nIts scripts are plain Python with no packages, and they open no network connection.",
+        "developerName": "What Could Go Wrong",
+        "category": "Productivity",
+        "capabilities": [
+          "Read local git history",
+          "Read coding agents' session files",
+          "Write a standup update"
+        ],
+        "websiteURL": "https://standup.wcgw.fun",
+        "supportURL": "https://github.com/wcgwhq/standup/issues",
+        "privacyPolicyURL": "https://standup.wcgw.fun/privacy/",
+        "defaultPrompt": [
+          "Write my standup update",
+          "Write my standup update for this week",
+          "How many tokens did we use today?"
+        ],
+        "brandColor": "#C8380F",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/icon.png"
+      }
+    }
+  }
+}

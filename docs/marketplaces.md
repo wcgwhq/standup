@@ -61,7 +61,7 @@ Everything else is a file in this repository or a pull request, and can be prepa
   - no lifecycle hooks.
 - **Review:** policy attestations, one active review per plugin, feedback by email. Timing and cost: not found.
 - **Open question:** the build page says public submission "still requires a remote HTTPS MCP endpoint"; the submission page says a skills-only plugin can be submitted without one. Standup is skills only. Settle this before spending time on the listing.
-- **Where Standup stands:** Codex already installs it from our Claude-format marketplace file. A listing needs a separate root `plugin.json` in OpenAI's shape, the icons, and a privacy page on the site. None of that exists yet.
+- **Where Standup stands (18 November 2026):** Codex already installs it from our Claude-format marketplace file. For the listing, `plugin/plugin.json` is written in the Agent Plugins format with the listing under `extensions.com.openai.interface`, its icon is `plugin/assets/icon.png`, and the privacy page is at https://standup.wcgw.fun/privacy/. The open question above is settled by the submission page read that day: a skills-only package is uploaded as a ZIP and needs no MCP endpoint, review cases or demo recording. What remains is Radu's: the verified OpenAI organisation and the upload. See `submissions.md`.
 
 ### Cursor
 
