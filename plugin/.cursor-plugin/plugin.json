@@ -2,6 +2,7 @@
   "name": "standup",
   "version": "0.5.0",
   "description": "End-of-day, weekly and monthly reviews written from your git commits and your agents' sessions.",
-  "author": { "name": "Radu Ceuca" },
-  "license": "MIT"
+  "author": { "name": "What Could Go Wrong" },
+  "license": "MIT",
+  "logo": "assets/logo.svg"
 }

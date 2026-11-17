@@ -2,7 +2,7 @@
   "name": "standup",
   "description": "Standup: end-of-day, weekly and monthly reviews written from your git commits and your agents' sessions.",
   "owner": {
-    "name": "Radu Ceuca"
+    "name": "What Could Go Wrong"
   },
   "plugins": [
     {

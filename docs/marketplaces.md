@@ -103,4 +103,4 @@ Everything else is a file in this repository or a pull request, and can be prepa
 
 Only OpenAI verifies a publisher name. Anthropic ties a listing to the organisation that submits it and screens `author.name`. Everywhere else the publisher is the GitHub owner or the name in the manifest.
 
-So the identity is three things: the GitHub organisation's name, `author.name` and `owner.name` in the manifests (they say "Radu Ceuca" today), and the verified name on the OpenAI organisation. Make them the same string.
+So the identity is three things: the GitHub organisation's name, `author.name` and `owner.name` in the manifests ("What Could Go Wrong" since 16 November), and the verified name on the OpenAI organisation. Make them the same string.

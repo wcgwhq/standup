@@ -3,7 +3,7 @@
   "version": "0.5.0",
   "description": "End-of-day and end-of-week reviews: what you and your agents committed, plus the tokens and estimated cost behind it, across Claude Code, Codex, Grok, Gemini CLI, opencode and Cowork.",
   "author": {
-    "name": "Radu Ceuca"
+    "name": "What Could Go Wrong"
   },
   "license": "MIT",
   "keywords": [
