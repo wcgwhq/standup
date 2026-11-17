@@ -264,18 +264,15 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
             <figure class="motion-enter mt-2">
               <figcaption class="text-sm text-[var(--color-muted)]">{ui.updateCaption}</figcaption>
               <div class="mt-2 border border-[var(--color-rule)] px-4 py-4 text-sm">
-                <p class="font-bold">
-                  <Hi>{period.title}</Hi>
-                  {n(1)}
-                </p>
+                <p class="font-bold">{period.title}</p>
                 <ul class="mt-2 space-y-1.5">
                   {period.update.map((item, index) => (
                     <li class="flex gap-2">
                       <span aria-hidden="true">•</span>
                       <span>
-                        <span class="font-medium">{index === 0 ? <Hi>{item.title}</Hi> : item.title}</span>
-                        {index === 0 && n(2)} {index === 1 ? <Hi>{item.status}</Hi> : item.status}
-                        {index === 1 && n(3)}
+                        <span class="font-medium">{item.title}</span>{' '}
+                        {index === 1 ? <Hi>{item.status}</Hi> : item.status}
+                        {index === 1 && n(1)}
                         {' → '}
                         {voices.map((voice) => (
                           <span data-voice={voice.id} data-md={voice.id === 'plain' ? undefined : 'skip'}>
@@ -286,17 +283,11 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                     </li>
                   ))}
                 </ul>
-                <p class="mt-3">
-                  <Hi>{period.footer}</Hi>
-                  {n(4)}
-                </p>
+                <p class="mt-3">{period.footer}</p>
               </div>
               {noted && (
                 <ol class="notes mt-3 space-y-1 text-sm text-[var(--color-muted)]">
-                  <li>{ui.noteDate}</li>
-                  <li>{ui.noteLines}</li>
                   <li>{ui.noteStatus}</li>
-                  <li>{ui.noteFooter}</li>
                 </ol>
               )}
               <p class="mt-3 text-sm text-[var(--color-muted)]">{ui.voiceNote}</p>
@@ -352,10 +343,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                   <p class="font-bold">{period.title}</p>
 
                   <table class="mt-5 w-full">
-                    <caption class="text-start font-medium">
-                      <Hi>{ui.receiptCommits}</Hi>
-                      {n(5)}
-                    </caption>
+                    <caption class="text-start font-medium">{ui.receiptCommits}</caption>
                     <tbody>
                       {period.commits.repos.map((repo) => (
                         <tr>
@@ -369,10 +357,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                   </table>
 
                   <table class="mt-5 w-full">
-                    <caption class="text-start font-medium">
-                      <Hi>{ui.receiptUncommitted}</Hi>
-                      {n(6)}
-                    </caption>
+                    <caption class="text-start font-medium">{ui.receiptUncommitted}</caption>
                     <tbody>
                       {period.uncommitted.map((repo) => (
                         <tr>
@@ -390,22 +375,20 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                     <tbody>
                       <tr>
                         <th scope="row" class="py-0.5 ps-4 text-start font-normal">
-                          <Hi>{ui.receiptOutput}</Hi>
-                          {n(7)}
+                          {ui.receiptOutput}
                         </th>
                         <td class="py-0.5 text-end">{period.tokens.output}</td>
                       </tr>
                       <tr>
                         <th scope="row" class="py-0.5 ps-4 text-start font-normal">
-                          <Hi>{ui.receiptFresh}</Hi>
-                          {n(7)}
+                          {ui.receiptFresh}
                         </th>
                         <td class="py-0.5 text-end">{period.tokens.fresh}</td>
                       </tr>
                       <tr>
                         <th scope="row" class="py-0.5 ps-4 text-start font-normal">
                           <Hi>{ui.receiptCache}</Hi>
-                          {n(8)}
+                          {n(2)}
                         </th>
                         <td class="py-0.5 text-end">{period.tokens.cache}</td>
                       </tr>
@@ -439,16 +422,13 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                     <span class="text-[var(--color-muted)]">{ui.receiptTotal}</span>
                     <span class="font-bold whitespace-nowrap">
                       <Hi>{period.cost}</Hi>
-                      {n(9)}
+                      {n(3)}
                     </span>
                   </p>
                 </div>
               </div>
               {noted && (
-                <ol start="5" class="notes mt-3 space-y-1 text-sm text-[var(--color-muted)]">
-                  <li>{ui.noteRepos}</li>
-                  <li>{ui.noteUncommitted}</li>
-                  <li>{ui.noteWork}</li>
+                <ol start="2" class="notes mt-3 space-y-1 text-sm text-[var(--color-muted)]">
                   <li>{ui.noteCache}</li>
                   <li>{ui.noteCost}</li>
                 </ol>
@@ -594,23 +574,23 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
             .filter((agent) => 'slug' in agent)
             .map((agent) => (
               <li>
-                <a class="inline-block py-3" href={localePath(locale, `/${agent.slug}/`)}>
+                <a class="inline-block min-w-11 py-3" href={localePath(locale, `/${agent.slug}/`)}>
                   {agent.name}
                 </a>
               </li>
             ))}
           <li>
-            <a class="inline-block py-3" href={localePath(locale, '/about/')}>
+            <a class="inline-block min-w-11 py-3" href={localePath(locale, '/about/')}>
               {ui.about}
             </a>
           </li>
           <li>
-            <a class="inline-block py-3" href="/llms.txt">
+            <a class="inline-block min-w-11 py-3" href="/llms.txt">
               {ui.llmsLink}
             </a>
           </li>
           <li>
-            <a class="inline-block py-3" href={localePath(locale, '/') + 'index.md'}>
+            <a class="inline-block min-w-11 py-3" href={localePath(locale, '/') + 'index.md'}>
               {ui.markdownLink}
             </a>
           </li>

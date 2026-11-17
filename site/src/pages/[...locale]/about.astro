@@ -16,8 +16,16 @@ const ui = copy(locale);
 <BaseLayout locale={locale} title={ui.aboutTitle} description={ui.aboutDescription} pageType="AboutPage">
   <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16">
     <p class="mb-6">
-      <a class="-m-1.5 inline-block p-1.5" href={localePath(locale)} aria-label={ui.backHome}>
+      <a
+        class="-m-1.5 inline-flex items-center gap-2.5 p-1.5 no-underline"
+        href={localePath(locale)}
+        aria-label={ui.backHome}
+      >
         <LogoMark />
+        {/* The wordmark beside the mark, so the page is plainly Standup's before its headline. */}
+        <bdi class="text-2xl leading-none font-bold tracking-[-0.04em]">
+          stand<span class="align-[0.52em]">up</span>
+        </bdi>
       </a>
     </p>
     <article class="space-y-3">
