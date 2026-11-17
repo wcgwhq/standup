@@ -54,7 +54,7 @@ Write and review copy with the `copywriting` skill in `.claude/skills/copywritin
 ├── .claude/skills/copywriting/     ← writes and reviews every word against Copy below
 ├── ../.githooks/pre-commit ← at the repository root: asks for a copy review when a commit changes src/i18n or src/content
 ├── agent-app files        ← only for the apps picked at creation (Agent apps below)
-├── ../.github/workflows/ci.yml ← at the repository root
+├── ../.github/workflows/ci.yml · deploy.yml ← at the repository root: checks, and the deploy on push to main
 ├── .vscode/ · .editorconfig · .nvmrc
 └── src/
     ├── i18n/              ← <code>.json strings per language · index.ts helpers
@@ -137,6 +137,8 @@ Cursor needs no file. Every app reads this file (`CLAUDE.md` imports it), so all
 npm run deploy -- https://your-domain           # production branch main
 npm run deploy -- https://your-domain preview   # any other branch is a preview
 ```
+
+A push to `main` that changes `site/` deploys by itself: `../.github/workflows/deploy.yml` runs the same script for `https://standup.wcgw.fun`, with the Cloudflare token and account ID from the repository's secrets. Run it by hand only for a preview.
 
 The header of `scripts/deploy.sh` lists what it refuses, how to log in, and how pages.dev hosts are noindexed.
 

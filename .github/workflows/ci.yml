@@ -1,5 +1,5 @@
-# Smoke build of the site, and a run of the plugin's scripts, on every push / PR. Deploy stays manual (`npm run deploy`) or a
-# follow-up workflow with Cloudflare secrets — keep this job secret-free.
+# Smoke build of the site, and a run of the plugin's scripts, on every push / PR. Deploying is deploy.yml;
+# keep this job secret-free.
 name: CI
 
 on:
