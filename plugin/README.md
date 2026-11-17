@@ -1,5 +1,7 @@
 # standup
 
+New here? The [repository front page](../README.md) shows what a report looks like. This page is the reference.
+
 Two agent skills that answer "what did my agents and I do today, and what did it cost?"
 
 They run in Claude Code as a plugin, and in any agent that reads the open
@@ -117,10 +119,6 @@ repos stay out of the totals. An update for one group never includes another's w
   transcripts after 30 days unless you raise `cleanupPeriodDays` in
   `~/.claude/settings.json`.
 
-## License
-
-MIT
-
 ## Day, week, month
 
 | Ask for | Runs |
@@ -160,3 +158,7 @@ The scripts open no network connection. The report they print goes to your agent
 means it goes to your model provider like anything else in the conversation: folder
 paths, commit subjects, the names of changed files and, when a repo has commits by
 someone else, their email address.
+
+## License
+
+MIT. See [`LICENSE`](LICENSE).
