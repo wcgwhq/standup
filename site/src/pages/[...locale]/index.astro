@@ -4,6 +4,7 @@ import { copy, localePath, localeStaticPaths } from '@/i18n';
 import { organizationId } from '@/lib/seo';
 import CodeBlock from '@/components/CodeBlock.astro';
 import AgentIcon from '@/components/AgentIcon.astro';
+import VoiceIcon from '@/components/VoiceIcon.astro';
 import { siteName } from '../../../site.config.mjs';
 import install from '@/data/install.json';
 import report from '@/data/sample-report.json';
@@ -173,20 +174,21 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
       ))}
       <p class="mt-2 text-sm text-[var(--color-muted)]">{ui.installNote}</p>
 
-      <h2 id="agent-label" class="mt-8 text-sm font-medium">
-        {ui.agentPromptLabel}
-      </h2>
-      <div class="mt-2">
+      {/* One line: the button copies the prompt, and the prompt itself opens in a popover (no JavaScript needed). */}
+      <p class="prompt-row mt-4 flex flex-wrap items-baseline gap-x-5 text-sm">
+        <span id="agent-label" class="text-[var(--color-muted)]">
+          {ui.agentPromptLabel}
+        </span>{' '}
+        <button type="button" class="code-copy py-3" data-copy={agentPrompt} data-copied={ui.copied} hidden>
+          {ui.copyPrompt}
+        </button>{' '}
+        <button type="button" class="py-3" popovertarget="agent-prompt">
+          {ui.readPrompt}
+        </button>
+      </p>
+      <div id="agent-prompt" class="prompt-popover" popover>
         <CodeBlock code={agentPrompt} labelledby="agent-label" copy={ui.copyPrompt} copied={ui.copied} />
       </div>
-      <p class="mt-2 flex flex-wrap gap-x-5 text-sm">
-        <a class="inline-block py-3" href="/llms.txt">
-          {ui.llmsLink}
-        </a>{' '}
-        <a class="inline-block py-3" href={localePath(locale, '/') + 'index.md'}>
-          {ui.markdownLink}
-        </a>
-      </p>
     </section>
 
     <section class="examples mt-14" aria-labelledby="example-title">
@@ -204,6 +206,14 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
           <linearGradient id="printer-front" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="var(--color-printer)"></stop>
             <stop offset="1" stop-color="var(--color-printer-dark)"></stop>
+          </linearGradient>
+          <linearGradient id="gear-top" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--color-gear-light)"></stop>
+            <stop offset="1" stop-color="var(--color-gear)"></stop>
+          </linearGradient>
+          <linearGradient id="gear-front" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--color-gear)"></stop>
+            <stop offset="1" stop-color="var(--color-gear-dark)"></stop>
           </linearGradient>
           <linearGradient id="printer-slot" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#000"></stop>
@@ -227,7 +237,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
           </label>
         ))}
       </fieldset>
-      <fieldset class="picker mt-2 mb-5">
+      <fieldset class="picker picker-voices mt-3 mb-5">
         <legend class="sr-only">{ui.voiceLegend}</legend>
         {voices.map((voice) => (
           <label>
@@ -238,7 +248,8 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
               value={voice.id}
               checked={voice.id === 'plain'}
             />
-            <span>{voice.label}</span>
+            <VoiceIcon voice={voice.id} />
+            <span class="picker-name">{voice.label}</span>
           </label>
         ))}
       </fieldset>
@@ -593,6 +604,16 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
               {ui.about}
             </a>
           </li>
+          <li>
+            <a class="inline-block py-3" href="/llms.txt">
+              {ui.llmsLink}
+            </a>
+          </li>
+          <li>
+            <a class="inline-block py-3" href={localePath(locale, '/') + 'index.md'}>
+              {ui.markdownLink}
+            </a>
+          </li>
         </ul>
       </nav>
     </footer>
@@ -755,6 +776,121 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
   .picker label:has(:focus-visible) {
     outline: 2px solid var(--color-accent);
     outline-offset: 1px;
+  }
+  .prompt-row button {
+    text-decoration: underline var(--color-accent);
+    text-underline-offset: 0.18em;
+    cursor: pointer;
+  }
+  .prompt-row button:hover {
+    text-decoration-thickness: 2px;
+  }
+  .prompt-popover {
+    inset: 0;
+    width: min(34rem, calc(100vw - 2rem));
+    margin: auto;
+    padding: 0;
+    border: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    box-shadow: 0 1.5rem 4rem -1rem rgb(0 0 0 / 0.45);
+  }
+  .prompt-popover::backdrop {
+    background: rgb(0 0 0 / 0.4);
+  }
+  /* The voices are not a second segmented control: an open row of small moulded objects, each over
+     its name, with no track. The chosen one is in ink and underlined; on a phone only it
+     spells its name out. */
+  .picker-voices {
+    gap: 0;
+    padding: 0;
+    overflow: visible;
+    background: none;
+    box-shadow: none;
+    font-size: 0.75rem;
+  }
+  .picker-voices label,
+  .picker-voices label:has(:checked) {
+    position: relative;
+    flex: 1 1 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-width: 0;
+    gap: 0.35rem;
+    padding: 0.5rem 0 0.7rem;
+    background: none;
+    box-shadow: none;
+  }
+  .picker-voices label::after {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 1.25rem;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--color-ink);
+    content: '';
+    opacity: 0;
+    translate: -50% 0;
+    scale: 0.4 1;
+    transition:
+      opacity 0.15s ease-out,
+      scale 0.15s ease-out;
+  }
+  .picker-voices label:has(:checked)::after {
+    opacity: 1;
+    scale: 1;
+  }
+  /* Each character leans and lifts when pointed at or chosen. The drum takes one rimshot. */
+  :global(.voice-icon) {
+    overflow: visible;
+    transition:
+      translate 0.15s ease-out,
+      rotate 0.15s ease-out;
+  }
+  .picker-voices label:hover :global(.voice-icon),
+  .picker-voices label:has(:checked) :global(.voice-icon) {
+    translate: 0 -3px;
+    rotate: -5deg;
+  }
+  :global(.voice-sticks) {
+    transform-box: fill-box;
+    transform-origin: 100% 0;
+  }
+  .picker-voices label:has(:checked) :global(.voice-sticks) {
+    animation: rimshot 0.32s ease-out;
+  }
+  @keyframes rimshot {
+    0% {
+      transform: rotate(-14deg);
+    }
+    45% {
+      transform: rotate(3deg);
+    }
+    100% {
+      transform: rotate(0);
+    }
+  }
+  .picker-voices label:active {
+    translate: none;
+  }
+  @media (max-width: 29.99rem) {
+    .picker-voices label:not(:has(:checked)) .picker-name {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.voice-icon),
+    .picker-voices label::after {
+      transition: none;
+    }
+    .picker-voices label:has(:checked) :global(.voice-sticks) {
+      animation: none;
+    }
   }
   /* The printer is the one loud object on the page: a moulded orange box with its own light,
      so it reads as a thing on the desk at every hour the sun dial paints. */

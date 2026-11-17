@@ -7,13 +7,19 @@
  * lede is shown, and the colours of the whole page from night through dawn, day and dusk.
  * Left alone it follows the visitor's real clock. "Now" returns to it.
  * Without JavaScript the dial stays hidden and the page keeps its system colours.
+ * From 1280px it leaves the bottom edge for the empty margin right of the column, at
+ * about one and a half times the size, with the hours named under the horizon and, until
+ * the visitor first moves it, a line saying it can be dragged.
  */
 interface Props {
   label: string;
   reset: string;
   now: string;
+  hint: string;
+  /** Names for 6am, noon and 6pm, under the three ticks. */
+  hours: string[];
 }
-const { label, reset, now } = Astro.props;
+const { label, reset, now, hint, hours } = Astro.props;
 ---
 
 <div id="sun-dial" class="sun-dial" hidden>
@@ -30,18 +36,27 @@ const { label, reset, now } = Astro.props;
         <circle cx="4" cy="-3" r="6.5" fill="#000"></circle>
       </mask>
     </defs>
+    <path class="sun-dial-wash" d="M14 68 A86 54 0 0 1 186 68Z" clip-path="url(#sun-dial-past)"></path>
     <path class="sun-dial-arc" d="M14 68 A86 54 0 0 1 186 68"></path>
     <path class="sun-dial-trail" d="M14 68 A86 54 0 0 1 186 68" clip-path="url(#sun-dial-past)"></path>
     <path class="sun-dial-ticks" d="M57 68v4M100 68v6M143 68v4"></path>
     <g clip-path="url(#sun-dial-sky)">
       <g id="sun-dial-body">
         <g class="sun-dial-shape">
+          <circle class="sun-dial-halo" r="13"></circle>
           <circle class="sun-dial-sun" r="8"></circle>
           <circle class="sun-dial-moon" r="7.5" mask="url(#sun-dial-crescent)"></circle>
         </g>
       </g>
     </g>
     <path class="sun-dial-horizon" d="M4 68H196"></path>
+    <g class="sun-dial-hours">
+      {hours.map((hour, index) => (
+        <text x={57 + index * 43} y="84">
+          {hour}
+        </text>
+      ))}
+    </g>
   </svg>
   <input
     id="sun-dial-range"
@@ -58,6 +73,7 @@ const { label, reset, now } = Astro.props;
       {now}
     </button>
   </div>
+  <p class="sun-dial-hint">{hint}</p>
 </div>
 
 <style is:global>
@@ -72,15 +88,18 @@ const { label, reset, now } = Astro.props;
     box-sizing: content-box;
     padding: 0.5rem 0.75rem 0;
     border: 1px solid var(--color-rule);
-    border-radius: 6.5rem 6.5rem 1rem 1rem / 4.75rem 4.75rem 1rem 1rem;
+    border-radius: calc(var(--dial) * 0.59) calc(var(--dial) * 0.59) 1rem 1rem / calc(var(--dial) * 0.43)
+      calc(var(--dial) * 0.43) 1rem 1rem;
     background: var(--color-paper);
     touch-action: none;
     user-select: none;
     view-transition-name: sun-dial;
   }
   /* The last block of the page (.dial-clearance) ends above the dial, so nothing sits under it. */
-  :root:has(.sun-dial:not([hidden])) .dial-clearance {
-    padding-bottom: calc(10.5rem + env(safe-area-inset-bottom));
+  @media (max-width: 79.99rem) {
+    :root:has(.sun-dial:not([hidden])) .dial-clearance {
+      padding-bottom: calc(10.5rem + env(safe-area-inset-bottom));
+    }
   }
   .sun-dial svg {
     display: block;
@@ -113,14 +132,36 @@ const { label, reset, now } = Astro.props;
   .sun-dial-horizon {
     stroke: var(--color-ink);
   }
-  .sun-dial-sun {
+  .sun-dial-sun,
+  .sun-dial-halo {
     fill: var(--color-sun);
+  }
+  .sun-dial-halo {
+    opacity: 0.22;
+  }
+  /* The day so far, washed in the sun's colour. */
+  .sun-dial-wash {
+    fill: color-mix(in srgb, var(--color-sun) 16%, transparent);
+  }
+  .sun-dial[data-sky='night'] .sun-dial-wash {
+    fill: color-mix(in srgb, var(--color-ink) 7%, transparent);
+  }
+  .sun-dial-hours,
+  .sun-dial-hint {
+    display: none;
+  }
+  .sun-dial-hours text {
+    fill: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 7.5px;
+    text-anchor: middle;
   }
   .sun-dial-moon {
     fill: var(--color-ink);
   }
   .sun-dial[data-sky='day'] .sun-dial-moon,
-  .sun-dial[data-sky='night'] .sun-dial-sun {
+  .sun-dial[data-sky='night'] .sun-dial-sun,
+  .sun-dial[data-sky='night'] .sun-dial-halo {
     display: none;
   }
   /* Picked up, the sun grows a little. */
@@ -137,7 +178,7 @@ const { label, reset, now } = Astro.props;
     position: absolute;
     inset: 0.5rem 0.75rem auto;
     width: var(--dial);
-    height: 4rem;
+    height: calc(var(--dial) * 0.36);
     margin: 0;
     opacity: 0;
     pointer-events: none;
@@ -178,6 +219,42 @@ const { label, reset, now } = Astro.props;
   @media (pointer: coarse) {
     .sun-dial-row {
       height: 2.75rem;
+    }
+  }
+  /* A wide screen has an empty margin right of the column. The dial moves up into it,
+     beside the hero, and grows: it is the page's instrument there, not a tab on its edge. */
+  @media (min-width: 80rem) {
+    .sun-dial {
+      --dial: 17rem;
+      top: 6.5rem;
+      bottom: auto;
+      left: calc(75vw + 9rem);
+      padding: 1rem 1.25rem 0.5rem;
+    }
+    .sun-dial svg {
+      margin-bottom: 1.25rem;
+    }
+    .sun-dial-range {
+      inset: 1rem 1.25rem auto;
+    }
+    .sun-dial-hours {
+      display: block;
+    }
+    .sun-dial-row {
+      height: 2.75rem;
+    }
+    .sun-dial-time {
+      font-size: 1.125rem;
+    }
+    .sun-dial-hint {
+      display: block;
+      margin: 0 0 0.5rem;
+      color: var(--color-muted);
+      font-size: 0.75rem;
+      text-align: center;
+    }
+    .sun-dial[data-used] .sun-dial-hint {
+      visibility: hidden;
     }
   }
 </style>
@@ -410,7 +487,18 @@ const { label, reset, now } = Astro.props;
       const x = ((e.clientX - r.left) / r.width) * 200;
       choose(((x - LEFT) / SPAN) * 1440, animate);
     };
+    // Once the visitor has moved the dial, the line saying it can be dragged goes away for the visit.
+    const used = () => {
+      dial.dataset.used = '';
+      try {
+        sessionStorage.setItem('sun-dial-used', '1');
+      } catch {}
+    };
+    try {
+      if (sessionStorage.getItem('sun-dial-used') || chosen !== null) dial.dataset.used = '';
+    } catch {}
     svg.addEventListener('pointerdown', (e) => {
+      used();
       const r = svg.getBoundingClientRect();
       const x = ((e.clientX - r.left) / r.width) * 200;
       dragging = true;
@@ -428,7 +516,10 @@ const { label, reset, now } = Astro.props;
     };
     svg.addEventListener('pointerup', release);
     svg.addEventListener('pointercancel', release);
-    range.addEventListener('input', () => choose(Number(range.value), false));
+    range.addEventListener('input', () => {
+      used();
+      choose(Number(range.value), false);
+    });
     reset.addEventListener('click', () => choose(null, true));
 
     dial.hidden = false;

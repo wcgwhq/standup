@@ -151,7 +151,13 @@ const fullGraph: GraphNode[] = [
     >
       {ui.skipToContent}
     </a>
-    <SunDial label={ui.dialLabel} reset={ui.dialReset} now={ui.dialNow} />
+    <SunDial
+      label={ui.dialLabel}
+      reset={ui.dialReset}
+      now={ui.dialNow}
+      hint={ui.dialHint}
+      hours={[ui.dialDawn, ui.dialNoon, ui.dialDusk]}
+    />
     <slot />
     <WcgwFooter />
     {translations.length > 0 && (

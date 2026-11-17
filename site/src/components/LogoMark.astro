@@ -1,0 +1,17 @@
+---
+/**
+ * The logo mark: an underscore and the u that stood up from it, on an ink plate.
+ * Drawn in the page's own ink and paper, so the sun dial repaints it. Same drawing
+ * as public/favicon.svg, which keeps fixed colours for the browser tab.
+ */
+interface Props {
+  size?: number;
+}
+const { size = 32 } = Astro.props;
+---
+
+<svg class="logo-mark" viewBox="0 0 32 32" width={size} height={size} aria-hidden="true">
+  <rect width="32" height="32" rx="6" fill="var(--color-ink)"></rect>
+  <rect x="5" y="23" width="10" height="3" fill="var(--color-paper)"></rect>
+  <path d="M19.5 8v6a2.5 2.5 0 0 0 5 0V8" fill="none" stroke="var(--color-paper)" stroke-width="3"></path>
+</svg>
