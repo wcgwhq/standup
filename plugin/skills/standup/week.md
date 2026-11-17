@@ -178,7 +178,8 @@ After running the engine, produce a **succinct weekly recap** the user can paste
 If `~/.claude/standup/style.md` exists, read it before writing the report and
 follow it: it overrides the generic formatting guidance above. No file means the
 generic guidance applies. `style.example.md` in this skill is a ready
-Slack-paste-safe style to copy.
+Slack-paste-safe style to copy. For Slack markup (bold names, inline code, a code block
+of numbers), see "Slack markup" in `SKILL.md`.
 
 ## Voices
 

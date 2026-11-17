@@ -82,6 +82,7 @@ report on the folder and branch you are in.
 | `config.json` | `dev_roots` (where your repos live), `groups` (named sets of repos, each reported separately), `personal` (repo names kept out of the totals), `worktree_roots`, `oneshot_roots`. |
 | (first run) | `python3 plugin/skills/standup/standup.py --check` shows your code folders, the email commits are matched on and which agents have data. `--init` writes the three files below and never overwrites one. |
 | `style.md` | How the written report should look. Start from `skills/standup/style.example.md`, which pastes cleanly into Slack. |
+| (Slack markup) | Say "with Slack markup" for bold names, identifiers in inline code and, when you ask for the numbers, a code block. It needs Slack's "Format messages with markup" setting. To make it your default, start `style.md` from `skills/standup/style.slack-markup.example.md`. |
 | `voices/<name>.md` | Your own writing voices. Built in: `pirate`, `genz`, `corporate`, `one-liner`, `observational`. Ask for one ("eod in pirate voice") or set `"voice"` in `config.json`. Facts and numbers never change, only the wording. |
 | `pricing.json` | USD per 1M tokens, per model family. Overrides the built-in table. |
 

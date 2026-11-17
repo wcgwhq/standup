@@ -286,6 +286,12 @@ follow it: it overrides the generic formatting guidance above. No file means the
 generic guidance applies. `style.example.md` in this skill is a ready
 Slack-paste-safe style to copy.
 
+**Slack markup.** When the user asks for the update "with Slack markup", "with formatting",
+"with bold" or "with code blocks", read `style.slack-markup.example.md` in this skill and
+follow it for this report: bold item names, identifiers in inline code, and the numbers in
+one code block when they are asked for. It needs a Slack setting, which that file names;
+say so in one line after the update the first time you use it in a conversation.
+
 ## Voices
 
 A voice changes how the report is worded. It never changes what the report says.

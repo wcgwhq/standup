@@ -1,5 +1,5 @@
 {
-  "_note": "Radu's own runs, read on Tuesday 17 November 2026 at about 3:30pm with plugin 0.6.0 (--unit work): the standup for that day, for the full week of 9 to 15 November, and for 1 to 17 November. Real commits and real token counts, shown on the homepage at his request. The day was chosen because it shows the most: commits, merged pull requests, and work with no commit yet. Cost is at Anthropic's list prices of 2026-11-03, one price per model; the Codex model has no price row and is shown as unpriced. Each update follows his style file and is also written in the five built-in voices, turned up at his request. Four Romanian project names are shown in English so the example reads the same for everyone: My Pension (cat-vine-pensia), pension-meter (pensiometru), Jungle Cards (cartile-pe-fata) and Cotroceni Conference (conferinta-de-la-cotroceni). vibe-check is listed as personal in his settings and is left out. Nothing else is changed.",
+  "_note": "Radu's own runs, read on Tuesday 17 November 2026 at about 3:30pm with plugin 0.6.0 (--unit work): the standup for that day, for the full week of 9 to 15 November, and for 1 to 17 November. Real commits and real token counts, shown on the homepage at his request. The day was chosen because it shows the most: commits, merged pull requests, and work with no commit yet. Cost is at Anthropic's list prices of 2026-11-03, one price per model; the Codex model has no price row and is shown as unpriced. Each update follows his style file and is also written in the five built-in voices, turned up at his request. Four Romanian project names are shown in English so the example reads the same for everyone: My Pension (cat-vine-pensia), pension-meter (pensiometru), Jungle Cards (cartile-pe-fata) and Cotroceni Conference (conferinta-de-la-cotroceni). vibe-check is listed as personal in his settings and is left out. Nothing else is changed. Identifiers in backticks are shown as inline code, as the Slack markup style writes them.",
   "periods": [
     {
       "id": "day",
@@ -11,10 +11,10 @@
           "text": {
             "plain": "a sun dial across the window with a sky behind the page, voice characters, a page per agent, and it deploys itself on every push",
             "pirate": "Arr, a sun now sails clear across the window with a sky behind the page, six odd characters speak for the crew, every agent has its own page, and the ship launches herself at every push",
-            "genz": "put a whole sun across the window. gave the page a sky. six little characters for the voices. it deploys itself now. the site has more weather than my week",
+            "genz": "woke up and chose weather. there is a whole sun going across the window now and a sky behind the page. six little guys for the voices. it deploys itself. the site has more atmosphere than my entire personality",
             "corporate": "delivered a window-wide sun dial with supporting sky, six voice characters and a page per agent, and automated deployment on every push. Weather is now a core competency",
             "oneliner": "built a sky for a website about status updates. The forecast is commits",
-            "observational": "I spent today moving a sun. Across a web page. Then I added clouds. The page sells a tool for people who lost track of their day"
+            "observational": "I spent today moving a sun across a web page. Then I gave it clouds. It is a site for people who lost track of their day, and I lost a day making it. I am both the product and the warning"
           }
         },
         {
@@ -23,22 +23,22 @@
           "text": {
             "plain": "four pull requests from Cursor merged: an Astro landing, an editorial manifesto, the WCGW mark in the masthead",
             "pirate": "four prizes from the Cursor's crew hauled aboard and merged: an Astro landing, a manifesto and our mark on the masthead. I signed for them. I did not sail them",
-            "genz": "merged four PRs cursor wrote. astro landing, editorial manifesto, logo in the masthead. i clicked merge four times. carried",
+            "genz": "merged four PRs that cursor wrote. astro landing, manifesto, logo in the masthead. i pressed a green button four times and called it a day. group project where i wrote my name on it. bffr",
             "corporate": "integrated four pull requests authored by Cursor, covering an Astro landing, an editorial manifesto and masthead branding. Leadership's contribution was approval",
             "oneliner": "merged four pull requests I did not write. Management is going well",
-            "observational": "four pull requests merged today. Cursor wrote them. I pressed the green button. Four times. That is the job now, and I was tired after"
+            "observational": "four pull requests merged today. Cursor wrote all four. I pressed a green button, four times, and I was tired after. My grandfather worked in a mine. He would have had questions"
           }
         },
         {
           "title": "Standup Plugin",
           "status": "🚧",
           "text": {
-            "plain": "three skills folded into one called standup, a new title line, three things to try next; on disk, not committed",
-            "pirate": "the three skills be lashed into one called standup, with a new title on the log and three headings to try after every report. All of it still in the hold, uncommitted",
-            "genz": "three skills became one skill called standup. new title line. it suggests what to ask next. none of it is committed. it lives in the working tree rent free",
-            "corporate": "consolidated three skills into a single offering named standup, with a refreshed title line and next-step suggestions. The release is pre-commit and tracking to plan",
-            "oneliner": "renamed the standup plugin's skill to standup. It took all afternoon to think of",
-            "observational": "the plugin is called Standup. The skill was called eod-review. Today I renamed the skill to standup. That is the whole insight. It is not committed"
+            "plain": "three skills folded into one called `standup`, a new title line, three things to try next; on disk, not committed",
+            "pirate": "the three skills be lashed into one called `standup`, with a new title on the log and three headings to try after every report. All of it still in the hold, uncommitted",
+            "genz": "three skills became one skill called `standup`. new title line. it tells you what to ask next. none of it is committed. no proof, no alibi, we are so cooked 💀",
+            "corporate": "consolidated three skills into a single offering named `standup`, with a refreshed title line and next-step suggestions. The release is pre-commit and tracking to plan",
+            "oneliner": "renamed the standup plugin's skill to `standup`. It took all afternoon to think of",
+            "observational": "the plugin is called Standup and the skill was called something else. Today I renamed the skill to `standup`. It took an afternoon and two machines. That is the whole achievement, and it is not even saved"
           }
         },
         {
@@ -47,10 +47,10 @@
           "text": {
             "plain": "516 files changed over 416 agent turns, no commit yet",
             "pirate": "516 planks changed in the Jungle Cards' hull over 416 turns of the capstan, and not one line in the log",
-            "genz": "516 files changed. 416 agent turns. zero commits. the jungle is in its private era",
+            "genz": "516 files changed. 416 agent turns. commits: zero. be so for real. that is not a project, that is a secret",
             "corporate": "516 files remain in a pre-commit state following 416 agent turns. We continue to see strong momentum that is not yet visible to shareholders",
             "oneliner": "changed 516 files in Jungle Cards and committed none. It is a card game. I am bluffing",
-            "observational": "516 changed files. No commit. If you ask git what happened in Jungle Cards today, git says nothing happened. Git was not there"
+            "observational": "516 changed files and no commit. If the laptop dies tonight, none of this happened. Which is also, when you think about it, the plan for me"
           }
         }
       ],

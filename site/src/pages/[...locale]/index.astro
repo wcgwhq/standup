@@ -302,7 +302,10 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                         {' → '}
                         {voices.map((voice) => (
                           <span data-voice={voice.id} data-md={voice.id === 'plain' ? undefined : 'skip'}>
-                            {item.text[voice.id]}
+                            {/* Backticks in the sample are Slack's inline code. */}
+                            {item.text[voice.id]
+                              .split('`')
+                              .map((part, index) => (index % 2 ? <code>{part}</code> : part))}
                           </span>
                         ))}
                       </span>
@@ -798,6 +801,14 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
   .update-project {
     font-weight: 650;
     letter-spacing: -0.01em;
+  }
+  .update code {
+    padding: 0.1em 0.35em;
+    border: 1px solid var(--color-rule);
+    border-radius: 0.3em;
+    background: var(--surface-well-soft);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
   }
   .update-footer {
     margin-top: 0.9rem;

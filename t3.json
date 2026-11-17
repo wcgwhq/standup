@@ -18,7 +18,7 @@
     },
     { "name": "Build", "command": "npm --prefix site run build", "icon": "build" },
     { "name": "Preview", "command": "npm --prefix site run build && npm --prefix site run preview", "icon": "play" },
-    { "name": "Check setup", "command": "python3 plugin/skills/eod-review/eod_review.py --check", "icon": "configure" },
-    { "name": "Today's report", "command": "python3 plugin/skills/eod-review/eod_review.py --unit work", "icon": "play" }
+    { "name": "Check setup", "command": "python3 plugin/skills/standup/standup.py --check", "icon": "configure" },
+    { "name": "Today's report", "command": "python3 plugin/skills/standup/standup.py --unit work", "icon": "play" }
   ]
 }

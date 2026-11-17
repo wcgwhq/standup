@@ -135,8 +135,8 @@ const llms = [
   '',
   ...commands,
   '',
-  // Present only while the repository is private (docs/publishing.md).
-  ...(ui.installNote ? [ui.installNote, ''] : []),
+  ui.installNote,
+  '',
   ...sections.flatMap(({ name, pages }) => [
     `## ${name}`,
     '',
