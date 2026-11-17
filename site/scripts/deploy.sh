@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build and upload dist/ to Cloudflare Pages (Direct Upload, static, no SSR adapter).
-# Needs `npx wrangler@4.158.0 login` once, or CLOUDFLARE_API_TOKEN with Pages: Edit.
+# Needs `npx wrangler@4.158.0 login` once, or CLOUDFLARE_API_TOKEN with Pages: Edit plus CLOUDFLARE_ACCOUNT_ID.
 # Refuses a localhost SITE_URL and a build that still has the placeholder sentence, and creates
 # the Pages project on first deploy (name from wrangler.toml, or CLOUDFLARE_PAGES_PROJECT).
 #
@@ -32,8 +32,9 @@ case "$HOST" in
     ;;
 esac
 
-if ! npx --yes "$WRANGLER" whoami --json >/dev/null 2>&1; then
-  echo "Not logged in to Cloudflare. Run: npx $WRANGLER login (or set CLOUDFLARE_API_TOKEN with Pages: Edit)"
+# Listing the projects is the login check: a token limited to Pages can do it, and `whoami` refuses that token.
+if ! PROJECTS="$(npx --yes "$WRANGLER" pages project list --json 2>/dev/null)"; then
+  echo "Not logged in to Cloudflare. Run: npx $WRANGLER login (or set CLOUDFLARE_API_TOKEN with Pages: Edit, and CLOUDFLARE_ACCOUNT_ID)"
   exit 1
 fi
 
@@ -50,7 +51,6 @@ fi
 } >>dist/_headers
 
 # --force keeps a new project on Pages when an agent runs this (wrangler would create a Worker).
-PROJECTS="$(npx --yes "$WRANGLER" pages project list --json)"
 if ! PROJECT="$PROJECT" node -e '
   const list = JSON.parse(require("node:fs").readFileSync(0, "utf8"));
   process.exit(list.some((p) => p["Project Name"] === process.env.PROJECT) ? 0 : 1);
