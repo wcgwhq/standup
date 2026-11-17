@@ -1,0 +1,268 @@
+---
+// The one question the site asks: may Clarity set a cookie. Shown only while the answer is
+// missing (data-consent="ask" on <html>, set by the script in BaseLayout's head, which also
+// applies a stored answer). Without JavaScript it never shows and no cookie is ever set.
+//
+// The cookie is a moulded character like the voices': amber, lit from the top, with graphite
+// chips. It is nervous, loses a bite when you reach for "yes", and smiles when you reach for
+// "no". Its colours are fixed, like the printer's.
+interface Props {
+  label: string;
+  body: string;
+  yes: string;
+  no: string;
+}
+const { label, body, yes, no } = Astro.props;
+const amberDark = 'color-mix(in srgb, var(--color-lamp-amber) 62%, var(--color-printer-dark))';
+---
+
+<aside class="consent-note" aria-label={label}>
+  <svg class="cookie" viewBox="0 0 48 48" aria-hidden="true">
+    <g class="cookie-body">
+      <circle fill={amberDark} cx="26.5" cy="26" r="18"></circle>
+      <circle fill="var(--color-lamp-amber)" cx="23.5" cy="25" r="18"></circle>
+      <ellipse fill="#fff" opacity=".4" cx="15" cy="13.5" rx="5" ry="2.4" transform="rotate(-32 15 13.5)"></ellipse>
+      <g fill="var(--color-gear-dark)">
+        <rect x="11" y="18" width="4.4" height="3.6" rx="1.4" transform="rotate(-18 13 20)"></rect>
+        <rect x="30" y="13" width="4.2" height="3.4" rx="1.3" transform="rotate(24 32 15)"></rect>
+        <rect x="32" y="29" width="4.8" height="3.8" rx="1.5" transform="rotate(-12 34 31)"></rect>
+        <rect x="12.5" y="32" width="3.6" height="3" rx="1.2" transform="rotate(30 14 33)"></rect>
+        <rect x="23" y="37" width="3.4" height="2.8" rx="1.1"></rect>
+        <g class="cookie-eyes">
+          <circle cx="19" cy="23.5" r="2"></circle>
+          <circle cx="28" cy="23.5" r="2"></circle>
+        </g>
+        <circle class="cookie-gasp" cx="23.5" cy="31" r="2.4"></circle>
+      </g>
+      <g fill="none" stroke="var(--color-gear-dark)" stroke-width="1.5" stroke-linecap="round">
+        <path class="cookie-worry" d="M19.5 30.500q1.300-1.500 2.700 0t2.700 0 2.700 0"></path>
+        <path class="cookie-smile" d="M19.500 29q4 4 8 0"></path>
+      </g>
+      <g class="cookie-bite" fill="var(--color-paper)">
+        <circle cx="41" cy="11" r="8.500"></circle>
+        <circle cx="32.500" cy="7.500" r="3.400"></circle>
+        <circle cx="42.500" cy="20" r="3.400"></circle>
+      </g>
+    </g>
+    <path
+      class="cookie-sweat"
+      fill="var(--color-accent)"
+      d="M42 6c1.500 2.200 2.200 3.300 2.200 4.300a2.200 2.200 0 0 1-4.400 0c0-1 .7-2.100 2.200-4.300z"></path>
+  </svg>
+  <div>
+    <p>{body}</p>
+    <div class="consent-note-keys">
+      <button type="button" class="key" data-consent-answer="yes">{yes}</button>
+      <button type="button" class="key" data-consent-answer="no">{no}</button>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .consent-note {
+    position: fixed;
+    /* Sits just above the sun dial: its arc, half the sun and the rail. */
+    inset: auto 1rem calc(min(30rem, 100vw - 5.5rem) * 0.18 + 4.75rem + env(safe-area-inset-bottom)) auto;
+    z-index: 41;
+    display: none;
+    grid-template-columns: 3.75rem 1fr;
+    gap: 0.85rem;
+    align-items: start;
+    width: min(23rem, 100vw - 2rem);
+    padding: 1rem 1rem 1rem 0.9rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 0.9rem;
+    background: var(--color-paper);
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.06),
+      0 12px 32px -12px rgb(0 0 0 / 0.28);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+    transition:
+      opacity 0.3s ease-in,
+      translate 0.3s ease-in;
+  }
+  :global(html[data-consent='ask']) .consent-note {
+    display: grid;
+  }
+  .consent-note.is-leaving {
+    opacity: 0;
+    translate: 0 0.75rem;
+    transition-delay: 0.45s;
+  }
+  /* The About page's "Change your answer" only makes sense where the question can be asked. */
+  :global([data-consent-reset]) {
+    display: none;
+  }
+  :global(html[data-consent] [data-consent-reset]) {
+    display: inline;
+  }
+  .consent-note-keys {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .consent-note .key {
+    color: var(--color-ink);
+  }
+
+  /* The cookie. Three faces: worried (at rest), bitten (yes), relieved (no). */
+  .cookie {
+    width: 3.75rem;
+    height: 3.75rem;
+    margin-top: 0.1rem;
+    overflow: visible;
+  }
+  .cookie-body {
+    transform-origin: 24px 28px;
+  }
+  .cookie-bite,
+  .cookie-gasp,
+  .cookie-smile {
+    opacity: 0;
+  }
+  .cookie-eyes {
+    transform-origin: 23.5px 24px;
+    transition: scale 0.15s ease-out;
+  }
+  .cookie-sweat {
+    transform-origin: 42px 6px;
+  }
+  .consent-note:is(:has([data-consent-answer='yes']:is(:hover, :focus-visible)), [data-answer='yes']) {
+    .cookie-bite,
+    .cookie-gasp {
+      opacity: 1;
+    }
+    .cookie-worry {
+      opacity: 0;
+    }
+    .cookie-eyes {
+      scale: 1.3;
+    }
+    .cookie-sweat {
+      animation: none;
+      opacity: 1;
+    }
+  }
+  .consent-note:is(:has([data-consent-answer='no']:is(:hover, :focus-visible)), [data-answer='no']) {
+    .cookie-smile {
+      opacity: 1;
+    }
+    .cookie-worry {
+      opacity: 0;
+    }
+    .cookie-sweat {
+      animation: none;
+      opacity: 0;
+    }
+  }
+  /* Wide windows have room beside the dial, so the note drops to the corner. */
+  @media (min-width: 80rem) {
+    .consent-note {
+      inset: auto 1.5rem calc(3.25rem + env(safe-area-inset-bottom)) auto;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html[data-consent='ask']) .consent-note {
+      animation: consent-in 0.5s 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) backwards;
+    }
+    .cookie-body {
+      animation: cookie-shiver 3.2s ease-in-out infinite;
+    }
+    .cookie-sweat {
+      animation: cookie-sweat 3.2s ease-in infinite;
+    }
+    /* Reached for: it holds still. Spared: it hops. */
+    .consent-note:has([data-consent-answer]:is(:hover, :focus-visible)) .cookie-body,
+    .consent-note[data-answer] .cookie-body {
+      animation: none;
+    }
+    .consent-note[data-answer='no'] .cookie-body {
+      animation: cookie-hop 0.45s ease-out;
+    }
+    .consent-note[data-answer='yes'] .cookie-body {
+      animation: cookie-chomp 0.3s ease-out;
+    }
+    @keyframes consent-in {
+      from {
+        opacity: 0;
+        translate: 0 0.75rem;
+      }
+    }
+    @keyframes cookie-shiver {
+      0%,
+      70%,
+      100% {
+        rotate: 0deg;
+      }
+      76%,
+      88% {
+        rotate: -4deg;
+      }
+      82%,
+      94% {
+        rotate: 4deg;
+      }
+    }
+    @keyframes cookie-sweat {
+      0%,
+      60% {
+        opacity: 0;
+        translate: 0 -2px;
+      }
+      70% {
+        opacity: 1;
+        translate: 0 0;
+      }
+      100% {
+        opacity: 0;
+        translate: 0 9px;
+      }
+    }
+    @keyframes cookie-hop {
+      40% {
+        translate: 0 -7px;
+        rotate: -8deg;
+      }
+      70% {
+        translate: 0 0;
+        rotate: 3deg;
+      }
+    }
+    @keyframes cookie-chomp {
+      30% {
+        scale: 0.92;
+        rotate: 6deg;
+      }
+    }
+  }
+</style>
+
+<script>
+  // Answering stores the choice, tells Clarity, lets the cookie react, and hides the note.
+  // "Change your answer" on the About page (data-consent-reset) asks again.
+  const root = document.documentElement;
+  const note = document.querySelector<HTMLElement>('.consent-note');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    const answer = target?.closest<HTMLElement>('[data-consent-answer]')?.dataset.consentAnswer;
+    if (answer && note) {
+      try {
+        localStorage.setItem('standup-consent', answer);
+      } catch {}
+      window.clarity?.('consentv2', {
+        ad_Storage: 'denied',
+        analytics_Storage: answer === 'yes' ? 'granted' : 'denied',
+      });
+      note.dataset.answer = answer;
+      note.classList.add('is-leaving');
+      setTimeout(() => (root.dataset.consent = answer), still ? 0 : 800);
+    } else if (target?.closest('[data-consent-reset]') && note) {
+      delete note.dataset.answer;
+      note.classList.remove('is-leaving');
+      root.dataset.consent = 'ask';
+    }
+  });
+</script>

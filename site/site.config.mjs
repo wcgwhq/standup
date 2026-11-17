@@ -45,6 +45,12 @@ export const defaultLocale = 'en';
 /** Content Signals (contentsignals.org) for robots.txt. Flip values here, not in the host. */
 export const contentSignal = 'search=yes, ai-input=yes, ai-train=yes';
 
+/**
+ * Microsoft Clarity project ID (heatmaps and session recordings); '' turns it off.
+ * BaseLayout loads it with consent denied, so it sets no cookies, and only on the canonical host.
+ */
+export const clarityId = 'zf9yzq7m84';
+
 /** ISO date the site first shipped. */
 export const published = '2026-11-11';
 
