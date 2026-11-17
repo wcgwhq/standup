@@ -36,7 +36,7 @@ Pick your agent, run one command, then say "write my standup update".
 | Codex | `codex plugin marketplace add wcgwhq/standup && codex plugin add standup@standup` |
 | Cursor | `cursor-agent plugin marketplace add https://github.com/wcgwhq/standup`, then turn Standup on under Plugins |
 | Gemini CLI | `gemini extensions install https://github.com/wcgwhq/standup` |
-| Grok | `grok plugin install wcgwhq/standup#plugin` |
+| Grok | `grok plugin install wcgwhq/standup#plugin --trust` |
 | opencode | `git clone https://github.com/wcgwhq/standup ~/standup && cp -R ~/standup/plugin/skills/standup ~/.config/opencode/skills/` |
 
 Any other agent that reads `SKILL.md` folders: same as opencode, copied into `~/.agents/skills/`.

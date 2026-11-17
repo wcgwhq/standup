@@ -46,7 +46,7 @@ One repository installs everywhere: it carries the manifest each agent looks for
 | Codex | `codex plugin marketplace add wcgwhq/standup` then `codex plugin add standup@standup` |
 | Cursor | `cursor-agent plugin marketplace add https://github.com/wcgwhq/standup`, then turn Standup on under Plugins |
 | Gemini CLI | `gemini extensions install https://github.com/wcgwhq/standup` |
-| Grok | `grok plugin install wcgwhq/standup#plugin` |
+| Grok | `grok plugin install wcgwhq/standup#plugin --trust` |
 | opencode, and any agent that reads `SKILL.md` folders | `git clone https://github.com/wcgwhq/standup ~/standup`, then copy the `plugin/skills/standup` folder into `~/.config/opencode/skills/` (opencode) or `~/.agents/skills/` |
 
 Then say "write my standup update".

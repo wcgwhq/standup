@@ -1,5 +1,5 @@
 {
-  "_note": "The plugin's repository is wcgwhq/standup. Public since 2026-11-17. One command per agent; {repo} is filled in from `repo`. Each command is that agent's own install route, read from its CLI help on 2026-11-12: Codex and Grok accept the repository's Claude-format manifest (checked with `codex plugin marketplace add` on the local folder and `grok plugin validate`), Gemini CLI loads it as an extension (`gemini-extension.json`, checked with `gemini extensions link`). Cursor's manifest (.cursor-plugin/) follows its docs and has not been run. opencode has no plugin route for skills, so it copies the skill's folder (one skill, standup, since 0.6.0). Since 2026-11-16 the plugin sits in plugin/ of the one Standup repository: the marketplace files at the repository root point at it, Gemini's manifest is at the root with a skills link, and Grok installs the subfolder with #plugin. `slug` is the agent's own page on the site (src/pages/[...locale]/[agent].astro); an agent without one has no page.",
+  "_note": "The plugin's repository is wcgwhq/standup. Public since 2026-11-17. One command per agent; {repo} is filled in from `repo`. Each command is that agent's own install route, read from its CLI help on 2026-11-12: Codex and Grok accept the repository's Claude-format manifest (checked with `codex plugin marketplace add` on the local folder and `grok plugin validate`), Gemini CLI loads it as an extension (`gemini-extension.json`, checked with `gemini extensions link`). On 2026-11-17 each command was run against the public repository and the installed engine passed its self-check in Claude Code, Codex, Gemini CLI, Grok (which refuses without --trust) and opencode; Cursor's marketplace add found the plugin, and turning it on happens in its Plugins screen, which was not driven. opencode has no plugin route for skills, so it copies the skill's folder (one skill, standup, since 0.6.0). Since 2026-11-16 the plugin sits in plugin/ of the one Standup repository: the marketplace files at the repository root point at it, Gemini's manifest is at the root with a skills link, and Grok installs the subfolder with #plugin. `slug` is the agent's own page on the site (src/pages/[...locale]/[agent].astro); an agent without one has no page.",
   "repo": "wcgwhq/standup",
   "command": "/plugin install standup --marketplace wcgwhq/standup",
   "agents": [
@@ -31,7 +31,7 @@
       "id": "grok",
       "name": "Grok",
       "slug": "grok",
-      "command": "grok plugin install {repo}#plugin"
+      "command": "grok plugin install {repo}#plugin --trust"
     },
     {
       "id": "opencode",
