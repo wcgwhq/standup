@@ -4,5 +4,5 @@ name = "standup-site"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-11-01"
 
-# Optional Pages Functions later: only /api/* (see public/_routes.json).
-# Keep the marketing surface static — do not add an SSR adapter for forms.
+# One Pages Function, functions/_middleware.js: markdown for requests that prefer it (see public/_routes.json).
+# Keep the marketing surface static: do not add an SSR adapter for forms.

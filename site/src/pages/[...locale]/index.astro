@@ -1,12 +1,14 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { copy, localePath, localeStaticPaths, siteNameFor } from '@/i18n';
+import { copy, localePath, localeStaticPaths } from '@/i18n';
+import { organizationId } from '@/lib/seo';
 import CodeBlock from '@/components/CodeBlock.astro';
 import AgentIcon from '@/components/AgentIcon.astro';
 import { siteName } from '../../../site.config.mjs';
 import install from '@/data/install.json';
 import report from '@/data/sample-report.json';
 import sources from '@/data/sources.json';
+import plugin from '../../../../plugin/.claude-plugin/plugin.json';
 
 export const getStaticPaths = localeStaticPaths;
 
@@ -28,7 +30,8 @@ const ledes = {
 
 const site = Astro.site!;
 const llms = new URL('/llms.txt', site).href;
-const agentPrompt = ui.agentPrompt.replace('{llms}', llms).replace('{command}', install.command);
+const agentPrompt = ui.agentPrompt.replace('{llms}', llms);
+const repo = `https://github.com/${install.repo}`;
 
 // What the plugin is, for crawlers and agents: free, MIT, runs on the visitor's machine.
 const software = {
@@ -39,7 +42,12 @@ const software = {
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'macOS, Linux',
   softwareRequirements: 'Python 3.9 or later, git',
+  softwareVersion: plugin.version,
   license: 'https://opensource.org/licenses/MIT',
+  isAccessibleForFree: true,
+  downloadUrl: repo,
+  sameAs: repo,
+  author: { '@id': organizationId(site) },
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
 };
 
@@ -107,7 +115,7 @@ const parts = [
 const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFixed(1)) + '%';
 ---
 
-<BaseLayout locale={locale} title={siteNameFor(locale)} description={ui.description} graph={[software]}>
+<BaseLayout locale={locale} title={ui.homeTitle} description={ui.description} graph={[software]}>
   <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16 sm:py-24">
     <header class="motion-rise space-y-5">
       {/* The wordmark: "up" stands one x-height above "stand". */}
@@ -118,8 +126,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
       </p>
       <h1 class="text-2xl text-balance sm:text-3xl">
         {/* From 768px the first sentence stays on one line, even where it runs past the column. */}
-        <span class="md:whitespace-nowrap">{ui.headline}</span>
-        <span class="block">{ui.headlineTurn}</span>
+        <span class="md:whitespace-nowrap">{ui.headline}</span> <span class="block">{ui.headlineTurn}</span>
       </h1>
       <p
         id="lede"
@@ -151,7 +158,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
         ))}
       </fieldset>
       {installs.map((agent) => (
-        <div data-agent={agent.id}>
+        <div data-agent={agent.id} data-md-label={agent.name}>
           <CodeBlock
             code={agent.command}
             labelledby="install-label"
@@ -175,7 +182,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
       <p class="mt-2 flex flex-wrap gap-x-5 text-sm">
         <a class="inline-block py-3" href="/llms.txt">
           {ui.llmsLink}
-        </a>
+        </a>{' '}
         <a class="inline-block py-3" href={localePath(locale, '/') + 'index.md'}>
           {ui.markdownLink}
         </a>
@@ -260,7 +267,9 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                         {index === 1 && n(3)}
                         {' → '}
                         {voices.map((voice) => (
-                          <span data-voice={voice.id}>{item.text[voice.id]}</span>
+                          <span data-voice={voice.id} data-md={voice.id === 'plain' ? undefined : 'skip'}>
+                            {item.text[voice.id]}
+                          </span>
                         ))}
                       </span>
                     </li>
@@ -457,7 +466,10 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
         </svg>
         <ul class="intake-face font-mono text-xs min-[400px]:text-sm">
           {sources.sources.map((source) => (
-            <li class="flex items-center gap-3 py-2">
+            <li
+              class="flex items-center gap-3 py-2"
+              data-md-text={`${source.name}: ${sourceKind[source.kind]}`}
+            >
               <span
                 class="lamp"
                 data-kind={source.kind}
@@ -482,7 +494,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
       {/* Three stubs torn off one report, dropped on the desk. */}
       <ul class="stubs mt-8 grid grid-cols-3 gap-3 font-mono text-xs sm:gap-5 sm:text-sm">
         {stubs.map((stub) => (
-          <li>
+          <li data-md-text={`${stub.group}: ${stub.reader}`}>
             <span class="block px-3 pt-4 pb-3 font-bold">{stub.group}</span>
             <span class="stub-tear block px-3 pt-3 pb-4 text-[var(--color-muted)]">{stub.reader}</span>
           </li>
@@ -501,7 +513,11 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
         data-reveal
       >
         {week.map((day, index) => (
-          <li class="flex flex-col items-center gap-1.5" style={`--i: ${index}`}>
+          <li
+            class="flex flex-col items-center gap-1.5"
+            style={`--i: ${index}`}
+            data-md-text={`${day.label}: ${day.commits ?? '·'}`}
+          >
             <span class="flex h-28 w-full items-end">
               {day.height > 0 ? (
                 <span class="pile" style={`height: ${day.height}%`} />
@@ -562,9 +578,22 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
     <footer class="mt-16 space-y-3 border-t border-[var(--color-rule)] pt-6 text-sm">
       <p class="text-[var(--color-muted)]">{ui.requirements}</p>
       <nav>
-        <a class="inline-block py-3" href={localePath(locale, '/about/')}>
-          {ui.about}
-        </a>
+        <ul class="flex flex-wrap gap-x-5">
+          {installs
+            .filter((agent) => 'slug' in agent)
+            .map((agent) => (
+              <li>
+                <a class="inline-block py-3" href={localePath(locale, `/${agent.slug}/`)}>
+                  {agent.name}
+                </a>
+              </li>
+            ))}
+          <li>
+            <a class="inline-block py-3" href={localePath(locale, '/about/')}>
+              {ui.about}
+            </a>
+          </li>
+        </ul>
       </nav>
     </footer>
   </main>
@@ -632,6 +661,8 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
   /* A segmented control: a recessed track, and the chosen segment raised out of it like a key.
      Always one row. Where the labels do not fit (the voices on a phone) the row scrolls sideways. */
   .picker {
+    /* Holds the hidden radios inside the scrolling row; without it they widen the page on a phone. */
+    position: relative;
     display: flex;
     min-inline-size: 0;
     max-inline-size: 100%;

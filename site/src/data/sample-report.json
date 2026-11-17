@@ -1,5 +1,5 @@
 {
-  "_note": "Radu's own runs for 11 November 2026, read on 12 November with plugin 0.5.0: eod-review for the day, eow-review for 9 to 11 November and for 1 to 11 November (--unit work). Real commits and real token counts, shown on the homepage at his request. Cost is at Anthropic's list prices of 2026-11-03, one price per model; the Codex model has no price row and is shown as unpriced. Each update follows his style file and is also written in the five built-in voices, turned up at his request. The Standup lines are partly from memory: the plugin folder is not a git repository, and the day's footer says so.",
+  "_note": "Radu's own runs for 11 November 2026, read on 12 November with plugin 0.5.0: eod-review for the day, eow-review for 9 to 11 November and for 1 to 11 November (--unit work). Real commits and real token counts, shown on the homepage at his request. Cost is at Anthropic's list prices of 2026-11-03, one price per model; the Codex model has no price row and is shown as unpriced. Each update follows his style file and is also written in the five built-in voices, turned up at his request. The Standup lines are partly from memory: the plugin folder is not a git repository, and the day's footer says so. Two Romanian project names are shown in English (My Pension, pension-meter) so the example reads the same for everyone; nothing else is changed.",
   "periods": [
     {
       "id": "day",
@@ -42,7 +42,7 @@
           }
         },
         {
-          "title": "Cât Vine Pensia",
+          "title": "My Pension",
           "status": "🚧",
           "text": {
             "plain": "site scaffolded, design prototypes and two art rounds",
@@ -98,7 +98,7 @@
       },
       "uncommitted": [
         {
-          "name": "cat-vine-pensia",
+          "name": "my-pension",
           "count": "30 files"
         },
         {
@@ -183,7 +183,7 @@
           }
         },
         {
-          "title": "Cât Vine Pensia, wcgw.fun, wcgw Pipeline",
+          "title": "My Pension, wcgw.fun, wcgw Pipeline",
           "status": "🚧",
           "text": {
             "plain": "about 1,400 agent turns between them, no commit yet",
@@ -219,7 +219,7 @@
       },
       "uncommitted": [
         {
-          "name": "cat-vine-pensia",
+          "name": "my-pension",
           "count": "30 files"
         },
         {
@@ -227,7 +227,7 @@
           "count": "16 files"
         },
         {
-          "name": "pensiometru",
+          "name": "pension-meter",
           "count": "8 files"
         },
         {
@@ -290,9 +290,9 @@
           "title": "Microfoam Index",
           "status": "✅",
           "text": {
-            "plain": "editorial nr. 1 published, print stickers through five rounds, Bucharest on the front page",
+            "plain": "editorial no. 1 published, print stickers through five rounds, Bucharest on the front page",
             "pirate": "the first editorial be published, the stickers went five rounds with the printer and won, and Bucharest flies on the front page",
-            "genz": "published editorial nr. 1. redid the stickers five times. put bucharest on the front page. the stickers have a sheep on them. no further questions",
+            "genz": "published editorial no. 1. redid the stickers five times. put bucharest on the front page. the stickers have a sheep on them. no further questions",
             "corporate": "published our inaugural editorial, completed five rounds of sticker refinement, and elevated Bucharest to the front page. The sheep remains a key brand asset",
             "oneliner": "published one editorial and five rounds of stickers. I know which one took longer",
             "observational": "five rounds on the stickers. Five. There is a sheep on one. The URL had to fit under the sheep. That is a real line from my commit log"
@@ -323,7 +323,7 @@
           }
         },
         {
-          "title": "Cât Vine Pensia, wcgw Pipeline",
+          "title": "My Pension, wcgw Pipeline",
           "status": "🚧",
           "text": {
             "plain": "started, nothing committed",
@@ -367,11 +367,11 @@
       },
       "uncommitted": [
         {
-          "name": "cat-vine-pensia",
+          "name": "my-pension",
           "count": "30 files"
         },
         {
-          "name": "pensiometru",
+          "name": "pension-meter",
           "count": "8 files"
         },
         {

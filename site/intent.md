@@ -20,6 +20,12 @@ The homepage exists to make visitors do **one** thing:
 - Or copy the prompt that has their own agent read the site and install it. Same job, second door.
 - On a phone, where the command cannot run, send it to their computer through the share sheet.
 
+## Pages
+
+- `/`: the homepage, with the one job above.
+- One page per agent Standup installs in (`/claude-code/`, `/codex/`, `/cursor/`, `/gemini-cli/`, `/grok/`, `/opencode/`): what it reads from that agent, and that agent's install command. They exist so a search for "daily standup plugin for Codex" lands on the Codex command. Each says only what is true of its agent; a page with nothing of its own to say is not added.
+- `/about/`.
+
 ## Success looks like
 
 - A visitor can say what Standup writes, and from what, after reading the first screen.
@@ -31,7 +37,7 @@ The homepage exists to make visitors do **one** thing:
 - Accounts, sign-up forms, waitlists and analytics dashboards.
 - Hosted reports or anything that uploads commits or transcripts.
 - Pricing. The plugin is free and MIT licensed.
-- Documentation beyond the homepage. The plugin README is the reference.
+- Documentation beyond the homepage and the agent pages. The plugin README is the reference.
 
 ## Languages
 

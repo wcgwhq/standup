@@ -4,7 +4,7 @@ import SunDial from '@/components/SunDial.astro';
 import WcgwFooter from '@/components/WcgwFooter.astro';
 import { absolute, canonicalUrl, jsonLd, organizationId, websiteId, type GraphNode } from '@/lib/seo';
 import { copy, defaultLocale, locales, meta, pagePath, siteNameFor, versions } from '@/i18n';
-import { darkMode, published, siteName } from '../../site.config.mjs';
+import { darkMode, modified, published, publisher, siteName } from '../../site.config.mjs';
 
 interface Props {
   title: string;
@@ -30,7 +30,7 @@ const {
   pageType = 'WebPage',
   ogImage = '/og-image.png',
   ogAlt,
-  dateModified = published,
+  dateModified = modified,
 } = Astro.props;
 
 if (!Astro.site) throw new Error('Set site in astro.config.mjs before building.');
@@ -62,14 +62,7 @@ const fullGraph: GraphNode[] = [
   {
     '@type': 'Organization',
     '@id': organizationId(site),
-    name: siteName,
-    url: site.href,
-    logo: {
-      '@type': 'ImageObject',
-      url: absolute('/icon-512.png', site),
-      width: 512,
-      height: 512,
-    },
+    ...publisher,
   },
   {
     '@type': pageType,

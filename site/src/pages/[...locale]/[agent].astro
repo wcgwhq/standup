@@ -1,0 +1,98 @@
+---
+/**
+ * One page per agent Standup installs in (`slug` in src/data/install.json): what it reads
+ * from that agent, and that agent's install command. Same column and type as the About page.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CodeBlock from '@/components/CodeBlock.astro';
+import { copy, localePath, localeStaticPaths } from '@/i18n';
+import install from '@/data/install.json';
+
+// getStaticPaths is lifted out of this file, so it reads the data file itself.
+export const getStaticPaths = () =>
+  localeStaticPaths().flatMap(({ params, props }) =>
+    install.agents.flatMap((agent) =>
+      'slug' in agent
+        ? [{ params: { ...params, agent: agent.slug }, props: { ...props, id: agent.id } }]
+        : [],
+    ),
+  );
+
+interface Props {
+  locale: string;
+  id: string;
+}
+
+const { locale, id } = Astro.props;
+const ui = copy(locale);
+const agents = install.agents.flatMap((entry) => ('slug' in entry ? [entry] : []));
+const agent = agents.find((entry) => entry.id === id)!;
+const title = ui[`${id}Title`];
+const command = agent.command.replace('{repo}', install.repo);
+const note =
+  id === 'cursor' ? ui.installCursor : command.startsWith('git clone') ? ui.installCopy : ui.installOther;
+
+const site = Astro.site!;
+const home = new URL(localePath(locale), site).href;
+const breadcrumb = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: ui.backHome, item: home },
+    { '@type': 'ListItem', position: 2, name: title },
+  ],
+};
+---
+
+<BaseLayout locale={locale} title={title} description={ui[`${id}Description`]} graph={[breadcrumb]}>
+  <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16">
+    <p class="mb-3 text-sm">
+      <a class="inline-block py-3" href={localePath(locale)}>
+        {ui.backHome}
+      </a>
+    </p>
+    <article>
+      <h1 class="text-3xl text-balance">{title}</h1>
+      <p class="mt-3 max-w-prose text-pretty text-[var(--color-muted)]">{ui[`${id}Body`]}</p>
+      <p class="mt-3 max-w-prose text-pretty">{ui.readsBody}</p>
+
+      <h2 id="install-label" class="mt-10 text-sm font-medium">
+        {ui.agentInstall.replace('{agent}', agent.name)}
+      </h2>
+      <div class="mt-3">
+        <CodeBlock
+          code={command}
+          labelledby="install-label"
+          copy={ui.copyCommand}
+          copied={ui.copied}
+          send={ui.sendLater}
+          shell
+          mark="standup"
+        />
+      </div>
+      <p class="mt-2 text-sm text-[var(--color-muted)]">{note}</p>
+      <p class="mt-2 text-sm text-[var(--color-muted)]">{ui.installNote}</p>
+      <p class="mt-6 text-sm">
+        <a class="inline-block py-3" href={`${localePath(locale)}#example-title`}>
+          {ui.agentExample}
+        </a>
+      </p>
+    </article>
+
+    <footer class="mt-10 space-y-3 border-t border-[var(--color-rule)] pt-6 text-sm">
+      <p class="text-[var(--color-muted)]">{ui.requirements}</p>
+      <nav aria-label={ui.agentOthers}>
+        <ul class="flex flex-wrap gap-x-5">
+          {agents
+            .filter((other) => other.id !== id)
+            .map((other) => (
+              <li>
+                <a class="inline-block py-3" href={localePath(locale, `/${other.slug}/`)}>
+                  {other.name}
+                </a>
+              </li>
+            ))}
+        </ul>
+      </nav>
+    </footer>
+  </main>
+</BaseLayout>

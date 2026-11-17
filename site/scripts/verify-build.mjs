@@ -104,6 +104,19 @@ for (const url of sitemap.keys()) {
 }
 
 const llms = await read('llms.txt');
+// An agent sent to llms.txt can install without a second fetch.
+const install = JSON.parse(await readFile(new URL('../src/data/install.json', import.meta.url), 'utf8'));
+for (const agent of install.agents) {
+  const command = agent.command.replace('{repo}', install.repo);
+  assert.ok(llms.includes(`\`${command}\``), `llms.txt: the install command for ${agent.name}`);
+  if (agent.slug) assert.ok(exists(`${agent.slug}/index.html`), `${agent.name}: a page at /${agent.slug}/`);
+}
+// The home title says what the site is; the bare name ranks for nothing.
+assert.notEqual(
+  homeHtml.match(/<title>([^<]*)<\/title>/)?.[1],
+  siteName,
+  'home <title> is more than the name',
+);
 for (const [url, page] of pages) {
   if (page.noindex) assert.ok(!llms.includes(`](${url})`), `${page.rel}: noindex, so not in llms.txt`);
 }

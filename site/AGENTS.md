@@ -35,10 +35,11 @@ Write and review copy with the `copywriting` skill in `.claude/skills/copywritin
 ├── astro.config.mjs       ← static · trailingSlash · i18n routing · sitemap filter · 404s · Vite cacheDir split
 ├── site.config.mjs        ← SITE_URL, SITE_NAME, devPort, locales, Content-Signal (.env overrides URL and name)
 ├── wrangler.toml          ← Cloudflare Pages (name=standup-site, dist/)
+├── functions/_middleware.js ← markdown for agents that ask for it (deployed with dist/)
 ├── .npmrc                 ← save-exact=true
 ├── public/
 │   ├── _headers           ← exactly ONE /* block (deploy appends the pages.dev noindex)
-│   ├── _routes.json       ← only /api/* would hit Functions; site stays static
+│   ├── _routes.json       ← pages run through functions/_middleware.js; assets and .md files skip it
 │   ├── favicon.svg · favicon-16/32.png · favicon.ico · apple-touch-icon.png
 │   ├── icon-192.png · icon-512.png
 │   └── og-image.png       ← 1200×630 share card (absolute URL in layout)
@@ -84,7 +85,7 @@ Write and review copy with the `copywriting` skill in `.claude/skills/copywritin
 | React | Islands only; small typed props |
 | Host | **Cloudflare Pages**, Direct Upload of `dist/` |
 | Adapter | **No** `@astrojs/cloudflare` / SSR unless explicitly asked |
-| Functions | Optional later; `_routes.json` keeps only `/api/*` on Workers |
+| Functions | One: `functions/_middleware.js` answers `Accept: text/markdown` with the page's `index.md` twin. Pages stay static files; `_routes.json` keeps assets off it |
 | Dependencies | Exact versions (`.npmrc` save-exact): no `^` / `~`, no casual bumps |
 | Appearance | Light, plus a dark appearance that follows the visitor's system when `darkMode` is true in `site.config.mjs`. Dark tokens sit next to the light ones in `src/styles/global.css`; `dark:` utilities follow the same switch |
 | Class helpers | `clsx` + `tailwind-merge` via `src/lib/cn.ts` |
@@ -163,7 +164,8 @@ rm -rf node_modules/.vite node_modules/.vite-build && npm run dev
 |---|---|
 | Head + one JSON-LD `@graph` | `BaseLayout.astro`, `lib/seo.ts` |
 | Per-page extras | `BaseLayout` props: `graph` (extra JSON-LD nodes, same `@graph`), `noindex`, `ogImage`, `pageType`, `locale` |
-| `llms.txt` · `llms-full.txt` · `index.md` twins | `scripts/markdown-pages.mjs`, generated after the build from the pages actually built |
+| `llms.txt` · `llms-full.txt` · `index.md` twins | `scripts/markdown-pages.mjs`, generated after the build from the pages actually built. `llms.txt` also carries every install command. `data-md`, `data-md-label` and `data-md-text` on an element shape its markdown (see the script's header) |
+| One page per agent | `src/pages/[...locale]/[agent].astro`, one per `slug` in `src/data/install.json`; strings are `<id>Title`, `<id>Description`, `<id>Body` |
 | Sitemap (indexable pages only) · robots (one `*` group) | `astro.config.mjs`, `pages/robots.txt.ts` |
 | Headers (one `/*`) | `public/_headers` |
 | Manifest · theme-color · viewport-fit | `BaseLayout` + `pages/site.webmanifest.ts` |
