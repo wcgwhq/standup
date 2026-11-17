@@ -1,0 +1,64 @@
+---
+/**
+ * The brand bar at the top of every page: the logo mark, the name, a hairline, and three
+ * facts about the plugin in mono (free, its licence, its version). The version is the
+ * plugin's own, read from its manifest. With `href` the mark and the name are the way home.
+ */
+import LogoMark from '@/components/LogoMark.astro';
+import plugin from '../../../plugin/.claude-plugin/plugin.json';
+
+interface Props {
+  /** The three facts, with {version} where the plugin's version goes. */
+  facts: string;
+  /** Link the mark and the name home (every page but the homepage). */
+  href?: string;
+  /** What the link is called for a screen reader. */
+  homeLabel?: string;
+}
+const { facts, href, homeLabel } = Astro.props;
+const Brand = href ? 'a' : 'span';
+---
+
+<p class="brand-bar">
+  <Brand class="brand-bar-name" href={href} aria-label={href ? homeLabel : undefined}>
+    <LogoMark size={36} />
+    <bdi>standup</bdi>
+  </Brand>
+  <span class="brand-bar-rule" aria-hidden="true"></span>
+  <span class="brand-bar-facts">{facts.replace('{version}', plugin.version)}</span>
+</p>
+
+<style>
+  .brand-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .brand-bar-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 1;
+    text-decoration: none;
+  }
+  .brand-bar-rule {
+    flex: 1;
+    min-width: 1rem;
+    height: 1px;
+    background: var(--color-rule);
+  }
+  .brand-bar-facts {
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+  @media (max-width: 23.99rem) {
+    .brand-bar-facts {
+      display: none;
+    }
+  }
+</style>

@@ -5,6 +5,7 @@ import { organizationId } from '@/lib/seo';
 import CodeBlock from '@/components/CodeBlock.astro';
 import AgentIcon from '@/components/AgentIcon.astro';
 import VoiceIcon from '@/components/VoiceIcon.astro';
+import BrandBar from '@/components/BrandBar.astro';
 import { siteName } from '../../../site.config.mjs';
 import install from '@/data/install.json';
 import report from '@/data/sample-report.json';
@@ -20,14 +21,13 @@ interface Props {
 const { locale } = Astro.props;
 const ui = copy(locale);
 
-// One lede per part of the day; SunDial.astro picks by the time on the dial.
-const ledes = {
-  morning: ui.ledeMorning,
-  midmorning: ui.ledeMidmorning,
-  afternoon: ui.ledeAfternoon,
-  evening: ui.ledeEvening,
-  night: ui.ledeNight,
-};
+// One lede per hour of the day, a day in a life; SunDial.astro picks by the hour on the dial.
+const hours = Array.from({ length: 24 }, (_, hour) => String(hour).padStart(2, '0'));
+const ledes: Record<string, string> = Object.fromEntries(
+  hours.map((hour) => [hour, (ui as Record<string, string>)[`lede${hour}`]]),
+);
+// Without JavaScript the page shows the 6pm one.
+const [ledeBefore, ledeAfter] = ledes['18'].split('{time}');
 
 const site = Astro.site!;
 const llms = new URL('/llms.txt', site).href;
@@ -62,6 +62,9 @@ const voices = [
   { id: 'observational', label: ui.voiceObservational },
 ] as const;
 
+// A voice is asked for by its file name in the plugin's voices/ folder.
+const voiceNames: Record<string, string> = { oneliner: 'one-liner' };
+
 const periods = [
   { id: 'day', label: ui.periodDay },
   { id: 'week', label: ui.periodWeek },
@@ -88,13 +91,6 @@ const sourceKind = {
   sessions: ui.sourceSessions,
 } as Record<string, string>;
 
-// Three stubs torn from one report: each group goes to its own reader.
-const stubs = [
-  { group: ui.stubWork, reader: ui.stubToManager },
-  { group: ui.stubConsulting, reader: ui.stubToClient },
-  { group: ui.stubPersonal, reader: ui.stubToNobody },
-];
-
 // The week this page was built, as bars. A day that has not happened has no bar.
 const weekday = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' });
 const busiest = Math.max(...report.week_days.map((day) => day.commits ?? 0));
@@ -119,22 +115,21 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
 <BaseLayout locale={locale} title={ui.homeTitle} description={ui.description} graph={[software]}>
   <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16 sm:py-24">
     <header class="motion-rise space-y-5">
-      {/* The wordmark: "up" stands one x-height above "stand". */}
-      <p class="text-4xl leading-none font-bold tracking-[-0.04em] sm:text-5xl">
-        <bdi>
-          stand<span class="align-[0.52em]">up</span>
-        </bdi>
-      </p>
+      <div class="pb-6">
+        <BrandBar facts={ui.brandFacts} />
+      </div>
       <h1 class="text-2xl text-balance sm:text-3xl">
         {/* From 768px the first sentence stays on one line, even where it runs past the column. */}
         <span class="md:whitespace-nowrap">{ui.headline}</span> <span class="block">{ui.headlineTurn}</span>
       </h1>
       <p
         id="lede"
-        class="max-w-prose text-pretty text-[var(--color-muted)]"
+        class="max-w-prose text-lg leading-relaxed text-pretty sm:text-xl sm:leading-relaxed"
         data-ledes={JSON.stringify(ledes)}
       >
-        {ledes.evening.replace('{time}', '6:21pm')}
+        {ledeBefore}
+        <span class="lede-time">6:21pm</span>
+        {ledeAfter}
       </p>
     </header>
 
@@ -175,14 +170,14 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
       <p class="mt-2 text-sm text-[var(--color-muted)]">{ui.installNote}</p>
 
       {/* One line: the button copies the prompt, and the prompt itself opens in a popover (no JavaScript needed). */}
-      <p class="prompt-row mt-4 flex flex-wrap items-baseline gap-x-5 text-sm">
+      <p class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
         <span id="agent-label" class="text-[var(--color-muted)]">
           {ui.agentPromptLabel}
         </span>{' '}
-        <button type="button" class="code-copy py-3" data-copy={agentPrompt} data-copied={ui.copied} hidden>
-          {ui.copyPrompt}
+        <button type="button" class="code-copy key" data-copy={agentPrompt} data-copied={ui.copied} hidden>
+          <span class="code-copy-label">{ui.copyPrompt}</span>
         </button>{' '}
-        <button type="button" class="py-3" popovertarget="agent-prompt">
+        <button type="button" class="link py-2" popovertarget="agent-prompt">
           {ui.readPrompt}
         </button>
       </p>
@@ -237,7 +232,10 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
           </label>
         ))}
       </fieldset>
-      <fieldset class="picker picker-voices mt-3 mb-5">
+      <p id="voice-label" class="mt-7 text-sm font-medium">
+        {ui.voiceLabel}
+      </p>
+      <fieldset class="picker picker-voices mt-2">
         <legend class="sr-only">{ui.voiceLegend}</legend>
         {voices.map((voice) => (
           <label>
@@ -253,6 +251,32 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
           </label>
         ))}
       </fieldset>
+      {/* What to type to get what is showing: the period and the voice picked above, as one request. */}
+      <p class="ask mt-4 mb-6">
+        <span class="ask-label">{ui.askLabel}</span>{' '}
+        <span class="ask-line">
+          <span class="ask-sign" aria-hidden="true">
+            &gt;
+          </span>
+          <span>
+            <span data-ask-period="day">{ui.askDay}</span>
+            <span data-ask-period="week" data-md="skip">
+              {ui.askWeek}
+            </span>
+            <span data-ask-period="month" data-md="skip">
+              {ui.askMonth}
+            </span>
+            {voices
+              .filter((voice) => voice.id !== 'plain')
+              .map((voice) => (
+                <span data-ask-voice={voice.id} data-md="skip">
+                  {' '}
+                  {ui.askVoice.replace('{voice}', voiceNames[voice.id] ?? voice.id)}
+                </span>
+              ))}
+          </span>
+        </span>
+      </p>
 
       {report.periods.map((period) => {
         // The numbered highlights and their notes explain the day. The week and the month read the same way.
@@ -263,14 +287,16 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
           <div data-period={period.id}>
             <figure class="motion-enter mt-2">
               <figcaption class="text-sm text-[var(--color-muted)]">{ui.updateCaption}</figcaption>
-              <div class="mt-2 border border-[var(--color-rule)] px-4 py-4 text-sm">
-                <p class="font-bold">{period.title}</p>
-                <ul class="mt-2 space-y-1.5">
+              <div class="update mt-3">
+                <p class="update-title">{period.title}</p>
+                {/* Written exactly as it pastes into Slack: a bullet, the project in bold, its status
+                    mark, an arrow and what happened. Only the size and the spacing are ours. */}
+                <ul class="update-list">
                   {period.update.map((item, index) => (
-                    <li class="flex gap-2">
+                    <li>
                       <span aria-hidden="true">•</span>
                       <span>
-                        <span class="font-medium">{item.title}</span>{' '}
+                        <strong class="update-project">{item.title}</strong>{' '}
                         {index === 1 ? <Hi>{item.status}</Hi> : item.status}
                         {index === 1 && n(1)}
                         {' → '}
@@ -283,7 +309,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                     </li>
                   ))}
                 </ul>
-                <p class="mt-3">{period.footer}</p>
+                <p class="update-footer">{period.footer}</p>
               </div>
               {noted && (
                 <ol class="notes mt-3 space-y-1 text-sm text-[var(--color-muted)]">
@@ -293,7 +319,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
               <p class="mt-3 text-sm text-[var(--color-muted)]">{ui.voiceNote}</p>
             </figure>
 
-            <figure class="receipt mt-10" data-tilt>
+            <figure class="receipt mt-10">
               <figcaption class="text-sm text-[var(--color-muted)]">{ui.receiptCaption}</figcaption>
               {/* A chunky thermal printer seen from a little above: lid on top, slot on the front. The receipt feeds out of the slot. */}
               <div class="printer-wrap relative mt-3">
@@ -450,7 +476,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
         {ui.agentsTitle}
       </h2>
       {/* The intake: a graphite panel seen from the printer's angle, one lamp per source. */}
-      <div class="intake tilt mt-5" data-tilt>
+      <div class="intake mt-5">
         <svg class="block w-full" viewBox="0 0 320 34" aria-hidden="true">
           <path class="intake-top" d="M40 4H280a10 10 0 0 1 9 5L314 34H6L31 9a10 10 0 0 1 9-5Z"></path>
           <path class="intake-vents" d="M120 14h80M114 20h92M108 26h104"></path>
@@ -475,22 +501,6 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
         </ul>
       </div>
       <p class="mt-6 max-w-prose text-sm text-pretty text-[var(--color-muted)]">{ui.sourcesNote}</p>
-    </section>
-
-    <section class="motion-enter mt-20" aria-labelledby="projects-title">
-      <h2 id="projects-title" class="text-lg text-balance">
-        {ui.projectsTitle}
-      </h2>
-      <p class="mt-2 max-w-prose text-pretty text-[var(--color-muted)]">{ui.projectsBody}</p>
-      {/* Three stubs torn off one report, dropped on the desk. */}
-      <ul class="stubs mt-8 grid grid-cols-3 gap-3 font-mono text-xs sm:gap-5 sm:text-sm">
-        {stubs.map((stub) => (
-          <li data-md-text={`${stub.group}: ${stub.reader}`}>
-            <span class="block px-3 pt-4 pb-3 font-bold">{stub.group}</span>
-            <span class="stub-tear block px-3 pt-3 pb-4 text-[var(--color-muted)]">{stub.reader}</span>
-          </li>
-        ))}
-      </ul>
     </section>
 
     <section class="motion-enter mt-24" aria-labelledby="week-title">
@@ -531,7 +541,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
       <figure class="mt-5">
         <figcaption class="text-sm text-[var(--color-muted)]">{ui.splitLabel}</figcaption>
         {/* One moulded slab, cut where the tokens went. */}
-        <div class="slab tilt mt-5 flex h-7" aria-hidden="true" data-tilt data-reveal>
+        <div class="slab mt-5 flex h-7" aria-hidden="true" data-reveal>
           {parts.map((part) => (
             <span data-part={part.key} style={`flex: ${part.share} 0 4px`} />
           ))}
@@ -671,7 +681,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
     padding: 3px;
     overflow-x: auto;
     border-radius: 0.75rem;
-    background: color-mix(in srgb, var(--color-ink) 8%, var(--color-paper));
+    background: var(--surface-well);
     box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.14);
     font-size: 0.875rem;
     scrollbar-width: none;
@@ -743,7 +753,7 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
     color: var(--color-ink);
   }
   .picker label:has(:checked) {
-    background: var(--color-paper);
+    background: var(--surface-raised);
     color: var(--color-ink);
     box-shadow:
       0 0 0 1px var(--color-rule),
@@ -757,13 +767,45 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
     outline: 2px solid var(--color-accent);
     outline-offset: 1px;
   }
-  .prompt-row button {
-    text-decoration: underline var(--color-accent);
-    text-underline-offset: 0.18em;
-    cursor: pointer;
+  /* The update: the page's main exhibit, on a card of its own at reading size. The words and
+     their order are Slack's; nothing is rearranged. */
+  .update {
+    padding: 1.5rem 1.5rem 1.35rem;
+    border-radius: 1rem;
+    background: var(--surface-raised);
+    box-shadow:
+      0 0 0 1px var(--color-rule),
+      0 1px 0 1px rgb(0 0 0 / 0.04),
+      0 14px 28px -18px rgb(0 0 0 / 0.35);
   }
-  .prompt-row button:hover {
-    text-decoration-thickness: 2px;
+  .update-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .update-list {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.9rem;
+  }
+  .update-list li {
+    display: grid;
+    grid-template-columns: 0.9rem 1fr;
+    gap: 0.35rem;
+    line-height: 1.5;
+  }
+  .update-project {
+    font-weight: 650;
+    letter-spacing: -0.01em;
+  }
+  .update-footer {
+    margin-top: 0.9rem;
+  }
+  @media (max-width: 29.99rem) {
+    .update {
+      padding: 1.15rem 1.1rem 1.05rem;
+    }
   }
   .prompt-popover {
     inset: 0;
@@ -777,6 +819,47 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
   }
   .prompt-popover::backdrop {
     background: rgb(0 0 0 / 0.4);
+  }
+  /* The request that produces what is showing, set like a line typed to an agent. */
+  .ask {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+  .ask-label {
+    color: var(--color-muted);
+  }
+  .ask-line {
+    display: inline-flex;
+    gap: 0.6rem;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 0.6rem;
+    background: var(--surface-well-soft);
+    font-family: var(--font-mono);
+  }
+  .ask-sign {
+    color: var(--color-muted);
+    user-select: none;
+  }
+  .ask [data-ask-period]:not([data-ask-period='day']),
+  .ask [data-ask-voice] {
+    display: none;
+  }
+  .examples:has([name='period'][value='week']:checked) .ask [data-ask-period='day'],
+  .examples:has([name='period'][value='month']:checked) .ask [data-ask-period='day'] {
+    display: none;
+  }
+  .examples:has([name='period'][value='week']:checked) .ask [data-ask-period='week'],
+  .examples:has([name='period'][value='month']:checked) .ask [data-ask-period='month'],
+  .examples:has([name='voice'][value='pirate']:checked) .ask [data-ask-voice='pirate'],
+  .examples:has([name='voice'][value='genz']:checked) .ask [data-ask-voice='genz'],
+  .examples:has([name='voice'][value='corporate']:checked) .ask [data-ask-voice='corporate'],
+  .examples:has([name='voice'][value='oneliner']:checked) .ask [data-ask-voice='oneliner'],
+  .examples:has([name='voice'][value='observational']:checked) .ask [data-ask-voice='observational'] {
+    display: inline;
   }
   /* The voices are not a second segmented control: an open row of small moulded objects, each over
      its name, with no track. The chosen one is in ink and underlined; on a phone only it
@@ -898,27 +981,6 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
   .printer-window {
     fill: var(--color-printer-deep);
     opacity: 0.85;
-  }
-  /* Hover with a mouse and the objects lean toward the pointer (the script sets --tx and --ty, each -1 to 1). */
-  .tilt,
-  .printer-wrap,
-  .receipt-feed {
-    transition: transform 0.25s ease-out;
-  }
-  .tilt {
-    transform: perspective(900px) rotateX(calc(var(--ty, 0) * -5deg)) rotateY(calc(var(--tx, 0) * 6deg));
-  }
-  /* The printer and its paper share one vanishing point and hinge at the slot, so they lean as one thing. */
-  .receipt {
-    perspective: 900px;
-  }
-  .printer-wrap {
-    transform: rotateX(calc(var(--ty, 0) * -4deg)) rotateY(calc(var(--tx, 0) * 5deg));
-    transform-origin: 50% 61%;
-  }
-  .receipt-feed {
-    transform: rotateX(calc(var(--ty, 0) * -4deg)) rotateY(calc(var(--tx, 0) * 5deg));
-    transform-origin: 50% 0;
   }
   /* The feed key: an invisible 44px button over the drawn key, which sinks when pressed. */
   .printer-press {
@@ -1108,6 +1170,48 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
     border-top: 1px solid rgb(0 0 0 / 0.4);
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07);
   }
+  /* Each source is a unit in the rack. Point at one and it slides out toward you: it grows a
+     little, shows its front edge, catches more light and casts a shadow on the units below. */
+  .intake-face li {
+    position: relative;
+    padding-inline: 0.6rem;
+    border-radius: 0.3rem;
+    margin-inline: -0.6rem;
+    transition:
+      transform 0.16s ease-out,
+      background-color 0.16s ease-out,
+      box-shadow 0.16s ease-out;
+  }
+  .intake-face li::after {
+    position: absolute;
+    inset: 100% 0 auto;
+    height: 5px;
+    border-radius: 0 0 0.3rem 0.3rem;
+    background: linear-gradient(var(--color-gear-dark), #000);
+    content: '';
+    opacity: 0;
+    transition: opacity 0.16s ease-out;
+  }
+  @media (hover: hover) {
+    .intake-face li:hover {
+      z-index: 1;
+      border-top-color: transparent;
+      background: linear-gradient(var(--color-gear-light), var(--color-gear));
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.35),
+        0 12px 14px -6px rgb(0 0 0 / 0.75);
+      transform: translateY(2px) scale(1.035);
+    }
+    .intake-face li:hover + li {
+      border-top-color: transparent;
+    }
+    .intake-face li:hover::after {
+      opacity: 1;
+    }
+    .intake-face li:hover .intake-kind {
+      color: var(--color-gear-ink);
+    }
+  }
   .intake-kind {
     color: var(--color-gear-muted);
   }
@@ -1175,59 +1279,6 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
       opacity: 1;
     }
   }
-  /* Three paper stubs, each a little askew, with a perforation and the notches of a torn ticket. */
-  .stubs li {
-    --tear: 3.1rem;
-    border: 1px solid var(--color-rule);
-    background: var(--color-paper);
-    filter: drop-shadow(0 8px 6px rgb(0 0 0 / 0.25));
-  }
-  .stubs li:nth-child(1) {
-    rotate: -4deg;
-    translate: 0 4px;
-  }
-  .stubs li:nth-child(2) {
-    rotate: 1.5deg;
-  }
-  .stubs li:nth-child(3) {
-    rotate: 5deg;
-    translate: 0 7px;
-  }
-  /* Pick one up: it straightens and lifts off the desk. */
-  .stubs li {
-    transition:
-      rotate 0.2s ease-out,
-      translate 0.2s ease-out,
-      filter 0.2s ease-out;
-  }
-  .stubs li:hover {
-    rotate: 0deg;
-    translate: 0 -8px;
-    filter: drop-shadow(0 18px 10px rgb(0 0 0 / 0.3));
-  }
-  .stub-tear {
-    position: relative;
-    border-top: 1px dashed var(--color-rule);
-  }
-  /* The notches: two half circles of desk showing through at the ends of the perforation. */
-  .stub-tear::before,
-  .stub-tear::after {
-    content: '';
-    position: absolute;
-    top: -6px;
-    width: 11px;
-    height: 11px;
-    border: 1px solid var(--color-rule);
-    border-radius: 50%;
-    background: var(--color-paper);
-    clip-path: inset(0 0 0 50%);
-    left: -7px;
-  }
-  .stub-tear::after {
-    left: auto;
-    right: -7px;
-    clip-path: inset(0 50% 0 0);
-  }
   /* A pile of paper: sheet edges on the front, a top face and a side face. */
   .pile {
     position: relative;
@@ -1290,11 +1341,6 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .tilt,
-    .printer-wrap,
-    .receipt-feed {
-      transform: none;
-    }
     .lamp,
     .printer-halo,
     .printer-roll,
@@ -1414,21 +1460,6 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
     for (const block of document.querySelectorAll('[data-reveal]')) {
       block.classList.add('will-reveal');
       reveal.observe(block);
-    }
-  }
-
-  // With a mouse, the objects lean toward the pointer.
-  if (matchMedia('(hover: hover)').matches && !still) {
-    for (const object of document.querySelectorAll<HTMLElement>('[data-tilt]')) {
-      object.addEventListener('pointermove', (event) => {
-        const box = object.getBoundingClientRect();
-        object.style.setProperty('--tx', (((event.clientX - box.left) / box.width) * 2 - 1).toFixed(2));
-        object.style.setProperty('--ty', (((event.clientY - box.top) / box.height) * 2 - 1).toFixed(2));
-      });
-      object.addEventListener('pointerleave', () => {
-        object.style.removeProperty('--tx');
-        object.style.removeProperty('--ty');
-      });
     }
   }
 </script>

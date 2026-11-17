@@ -1,12 +1,15 @@
 ---
 /**
- * A box of text to copy: a command or a prompt, with a copy button.
+ * A box of text to copy: a command or a prompt, with a small copy key beside it.
  * `shell` marks up a command: the command itself in bold, flags muted,
  * <placeholders> in italics, and the `mark` token on a soft chip.
  * Colour never carries the highlight alone, because the sun dial moves every colour.
- * A command sits beside its button from 640px; a prompt always sits above it.
- * Without JavaScript the button stays hidden and one click still selects the text.
- * A phone cannot run the command, so `send` adds a button there that opens the
+ * One row is one command. A command never wraps: where it is longer than the box the box
+ * scrolls sideways, so a wrapped line is never mistaken for a second command. Commands
+ * joined with && are shown as separate rows, each with its own prompt sign, and are still
+ * copied as the one line that runs them in order.
+ * Without JavaScript the copy key stays hidden and one click still selects the text.
+ * A phone cannot run the command, so `send` adds a key there that opens the
  * share sheet: Reminders, Notes, mail or AirDrop carry it to the computer.
  */
 interface Props {
@@ -34,60 +37,136 @@ const kind = (token: string, index: number) =>
           : '';
 ---
 
-<div
-  class:list={[
-    'code-block flex flex-col border border-[var(--color-rule)]',
-    shell && 'sm:flex-row sm:items-start',
-  ]}
->
-  <p
-    class:list={['min-w-0 flex-1 px-4 py-3 text-sm select-all', shell && 'font-mono']}
-    tabindex="0"
-    aria-labelledby={labelledby}
-  >
-    {shell ? (
-      <code>
-        {code.split(' ').map((token, index) => (
-          <>
-            {index > 0 && ' '}
-            <span class="whitespace-nowrap" data-tok={kind(token, index) || undefined}>
-              {token}
-            </span>
-          </>
-        ))}
-      </code>
-    ) : (
-      // A flag stays whole: "--marketplace" never breaks after its dashes.
-      code
+<div class="code-block">
+  {shell ? (
+    <div class="code-lines" tabindex="0" aria-labelledby={labelledby}>
+      {code.split(' && ').map((line) => (
+        <div class="code-line">
+          {/* A slash command is typed into the agent; anything else into a shell. */}
+          <span class="code-sign" aria-hidden="true">
+            {line.startsWith('/') ? '>' : '$'}
+          </span>
+          <code>
+            {line.split(' ').map((token, index) => (
+              <>
+                {index > 0 && ' '}
+                <span data-tok={kind(token, index) || undefined}>{token}</span>
+              </>
+            ))}
+          </code>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p class="code-prose" tabindex="0" aria-labelledby={labelledby}>
+      {/* A flag stays whole: "--marketplace" never breaks after its dashes. */}
+      {code
         .split(/(--\S+)/)
-        .map((piece) => (piece.startsWith('--') ? <span class="whitespace-nowrap">{piece}</span> : piece))
-    )}
-  </p>
-  <div class="flex shrink-0 flex-wrap justify-end self-end">
+        .map((piece) => (piece.startsWith('--') ? <span class="whitespace-nowrap">{piece}</span> : piece))}
+    </p>
+  )}
+  <div class="code-bar">
     {send && (
-      <button
-        type="button"
-        class="code-send px-4 py-3 text-sm underline decoration-[var(--color-accent)] underline-offset-[0.18em]"
-        data-share={code}
-        hidden
-      >
+      <button type="button" class="code-send key" data-share={code} hidden>
         {send}
       </button>
     )}
-    <button
-      type="button"
-      class="code-copy px-4 py-3 text-sm underline decoration-[var(--color-accent)] underline-offset-[0.18em]"
-      data-copy={code}
-      data-copied={copied}
-      hidden
-    >
-      {copy}
+    <button type="button" class="code-copy key" data-copy={code} data-copied={copied} hidden>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+        <rect class="code-copy-sheets" x="5.500" y="5.500" width="8" height="8" rx="1.500"></rect>
+        <path
+          class="code-copy-sheets"
+          d="M10.500 3.500v-.500a1 1 0 0 0-1-1H3.500a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.500"
+        ></path>
+        <path
+          class="code-copy-tick"
+          d="M3 8.500l3.200 3.200L13 4.800"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></path>
+      </svg>
+      <span class="code-copy-label">{copy}</span>
     </button>
   </div>
   <span class="sr-only" role="status"></span>
 </div>
 
 <style>
+  /* The command and its small key share one row; the key stays at the top right while a long
+     command scrolls sideways beside it. On a phone the keys drop under the command. */
+  .code-block {
+    display: flex;
+    align-items: flex-start;
+    overflow: hidden;
+    border: 1px solid var(--color-rule);
+    border-radius: 0.75rem;
+    background: var(--surface-well-soft);
+  }
+  .code-block:has(.code-prose) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .code-lines {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0.8rem 0 0.8rem 1rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    user-select: all;
+    scrollbar-width: thin;
+  }
+  .code-line {
+    display: flex;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .code-line code {
+    padding-inline-end: 0.75rem;
+  }
+  .code-sign {
+    color: var(--color-muted);
+    user-select: none;
+  }
+  .code-prose {
+    padding: 1rem 1.1rem 0.25rem;
+    font-size: 0.9375rem;
+    user-select: all;
+  }
+  .code-bar {
+    display: flex;
+    flex: none;
+    gap: 0.4rem;
+    justify-content: flex-end;
+    padding: 0.6rem 0.6rem 0.6rem 0.25rem;
+  }
+  /* With no key to show (no JavaScript, or a browser without a clipboard) the bar closes up. */
+  .code-bar:not(:has(button:not([hidden]))) {
+    display: none;
+  }
+  .code-copy-tick,
+  .code-copy[data-state='copied'] .code-copy-sheets {
+    display: none;
+  }
+  .code-copy[data-state='copied'] .code-copy-tick {
+    display: inline;
+  }
+  .code-copy[data-state='copied'] {
+    color: var(--color-ink);
+  }
+  @media (max-width: 39.99rem) {
+    .code-block {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .code-lines {
+      padding-inline-end: 1rem;
+    }
+    .code-bar {
+      padding-top: 0;
+    }
+  }
   [data-tok='cmd'] {
     font-weight: 700;
   }
@@ -96,27 +175,21 @@ const kind = (token: string, index: number) =>
   }
   [data-tok='var'] {
     font-style: italic;
-    text-decoration: underline dotted var(--color-accent);
+    text-decoration: underline dotted var(--color-muted);
     text-underline-offset: 0.25em;
   }
   [data-tok='mark'] {
     background: var(--color-accent-soft);
     box-shadow: 0 0 0 0.2em var(--color-accent-soft);
   }
-  .code-copy,
-  .code-send {
-    cursor: pointer;
-  }
-  .code-copy:hover,
-  .code-send:hover {
-    text-decoration-thickness: 2px;
-  }
 </style>
 
 <script>
   for (const button of document.querySelectorAll<HTMLButtonElement>('.code-copy')) {
     if (!navigator.clipboard) continue;
-    const label = button.textContent;
+    // A key with an icon keeps it: only its word changes, and the icon becomes a tick.
+    const word = button.querySelector('.code-copy-label') ?? button;
+    const label = word.textContent;
     const status = button.closest('.code-block')?.querySelector('[role="status"]');
     let timer = 0;
     button.hidden = false;
@@ -126,11 +199,13 @@ const kind = (token: string, index: number) =>
       } catch {
         return;
       }
-      button.textContent = button.dataset.copied ?? label;
+      word.textContent = button.dataset.copied ?? label;
+      button.dataset.state = 'copied';
       if (status) status.textContent = button.dataset.copied ?? '';
       clearTimeout(timer);
       timer = window.setTimeout(() => {
-        button.textContent = label;
+        word.textContent = label;
+        delete button.dataset.state;
         if (status) status.textContent = '';
       }, 2000);
     });

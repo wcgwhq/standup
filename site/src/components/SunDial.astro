@@ -49,7 +49,7 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
   </div>
 </div>
 
-{/* The frost behind the dial is its own element: inside the dial the blur would see nothing to blur. */}
+{/* The strip of paper the dial stands on. */}
 <div id="sun-dial-frost" class="sun-dial-frost" aria-hidden="true" hidden></div>
 <div id="sun-dial" class="sun-dial" hidden>
   <svg width="0" height="0" class="absolute" aria-hidden="true">
@@ -59,11 +59,38 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
         <stop offset="0.38" stop-color="var(--color-lamp-amber)"></stop>
         <stop offset="1" stop-color="var(--color-printer)"></stop>
       </radialGradient>
+      <radialGradient id="sun-bloom">
+        <stop offset="0.2" stop-color="var(--color-lamp-amber)" stop-opacity="0.5"></stop>
+        <stop offset="0.5" stop-color="var(--color-lamp-amber)" stop-opacity="0.16"></stop>
+        <stop offset="1" stop-color="var(--color-lamp-amber)" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient id="sun-corona">
+        <stop offset="0.68" stop-color="#fff" stop-opacity="0.75"></stop>
+        <stop offset="1" stop-color="var(--color-lamp-amber)" stop-opacity="0"></stop>
+      </radialGradient>
+      <radialGradient id="sun-ember" cx="0.4" cy="0.35" r="0.8">
+        <stop offset="0" stop-color="var(--color-printer-light)" stop-opacity="0.2"></stop>
+        <stop offset="1" stop-color="var(--color-printer-dark)"></stop>
+      </radialGradient>
+      <radialGradient id="moon-bloom">
+        <stop offset="0.25" stop-color="var(--color-gear-ink)" stop-opacity="0.28"></stop>
+        <stop offset="1" stop-color="var(--color-gear-ink)" stop-opacity="0"></stop>
+      </radialGradient>
       <radialGradient id="moon-ball" cx="0.36" cy="0.3" r="0.85">
         <stop offset="0" stop-color="#fff"></stop>
         <stop offset="0.45" stop-color="var(--color-gear-ink)"></stop>
         <stop offset="1" stop-color="var(--color-gear-muted)"></stop>
       </radialGradient>
+      {/* A cloud is a heap of lit spheres over a shaded belly. */}
+      <radialGradient id="cloud-puff" cx="0.36" cy="0.28" r="0.85">
+        <stop offset="0" stop-color="#fff"></stop>
+        <stop offset="0.55" stop-color="var(--color-gear-ink)"></stop>
+        <stop offset="1" stop-color="var(--color-gear-muted)"></stop>
+      </radialGradient>
+      <linearGradient id="cloud-belly" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--color-gear-ink)" stop-opacity="0"></stop>
+        <stop offset="1" stop-color="var(--color-gear-muted)"></stop>
+      </linearGradient>
       <clipPath id="sun-dial-past">
         <rect id="sun-dial-past-rect" x="0" y="0" width="0" height="100"></rect>
       </clipPath>
@@ -98,43 +125,79 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
       <i style="left:95%;top:58%"></i>
     </div>
     <span class="sun-dial-cloud" style="left:27%;bottom:34%">
-      <svg viewBox="0 0 44 22" aria-hidden="true">
-        <ellipse cx="22" cy="17" rx="19" ry="4.5" fill="var(--color-gear-muted)"></ellipse>
-        <path
-          fill="var(--color-gear-ink)"
-          d="M6 16a5.500 5.500 0 0 1 3-10 8 8 0 0 1 15-2.500A6.500 6.500 0 0 1 36 8a4.500 4.500 0 0 1 2 8.500z"
-        ></path>
-        <ellipse cx="17" cy="6" rx="4" ry="1.600" fill="#fff" opacity=".7"></ellipse>
+      <svg viewBox="0 0 64 38" aria-hidden="true">
+        <ellipse cx="32" cy="31.500" rx="21" ry="4.500" fill="var(--color-gear-muted)"></ellipse>
+        <circle cx="12" cy="25" r="7" fill="url(#cloud-puff)"></circle>
+        <circle cx="52" cy="24.500" r="8" fill="url(#cloud-puff)"></circle>
+        <circle cx="20" cy="20" r="10.500" fill="url(#cloud-puff)"></circle>
+        <circle cx="43" cy="18.500" r="11" fill="url(#cloud-puff)"></circle>
+        <circle cx="31" cy="14.500" r="13" fill="url(#cloud-puff)"></circle>
+        <ellipse cx="32" cy="29" rx="19" ry="5" fill="url(#cloud-belly)"></ellipse>
       </svg>
     </span>
     <span class="sun-dial-cloud sun-dial-cloud-far" style="left:69%;bottom:52%">
-      <svg viewBox="0 0 44 22" aria-hidden="true">
-        <ellipse cx="22" cy="17" rx="19" ry="4.5" fill="var(--color-gear-muted)"></ellipse>
-        <path
-          fill="var(--color-gear-ink)"
-          d="M6 16a5.500 5.500 0 0 1 3-10 8 8 0 0 1 15-2.500A6.500 6.500 0 0 1 36 8a4.500 4.500 0 0 1 2 8.500z"
-        ></path>
-        <ellipse cx="17" cy="6" rx="4" ry="1.600" fill="#fff" opacity=".7"></ellipse>
+      <svg viewBox="0 0 64 38" aria-hidden="true">
+        <ellipse cx="32" cy="31.500" rx="21" ry="4.500" fill="var(--color-gear-muted)"></ellipse>
+        <circle cx="12" cy="25" r="7" fill="url(#cloud-puff)"></circle>
+        <circle cx="52" cy="24.500" r="8" fill="url(#cloud-puff)"></circle>
+        <circle cx="20" cy="20" r="10.500" fill="url(#cloud-puff)"></circle>
+        <circle cx="43" cy="18.500" r="11" fill="url(#cloud-puff)"></circle>
+        <circle cx="31" cy="14.500" r="13" fill="url(#cloud-puff)"></circle>
+        <ellipse cx="32" cy="29" rx="19" ry="5" fill="url(#cloud-belly)"></ellipse>
       </svg>
     </span>
     <div id="sun-dial-body" class="sun-dial-body">
       <svg class="sun-dial-shape" viewBox="0 0 48 48" aria-hidden="true">
         <g class="sun-dial-sun">
-          <circle cx="24" cy="24" r="23" fill="var(--color-lamp-amber)" opacity="0.2"></circle>
-          <circle cx="24" cy="24" r="17.500" fill="var(--color-lamp-amber)" opacity="0.28"></circle>
+          {/* Atmosphere first: a wide bloom, a ring of slowly turning rays, a corona. None of it takes the pointer. */}
+          <g class="sun-dial-air">
+            <circle cx="24" cy="24" r="46" fill="url(#sun-bloom)"></circle>
+            <g class="sun-dial-rays" fill="var(--color-lamp-amber)">
+              <path d="M22.1 6.5L24 -7L25.9 6.5Z" transform="rotate(0.0 24 24)"></path>
+              <path d="M22.7 6.5L24 -0.5L25.3 6.5Z" transform="rotate(22.5 24 24)"></path>
+              <path d="M22.1 6.5L24 -7L25.9 6.5Z" transform="rotate(45.0 24 24)"></path>
+              <path d="M22.7 6.5L24 -0.5L25.3 6.5Z" transform="rotate(67.5 24 24)"></path>
+              <path d="M22.1 6.5L24 -7L25.9 6.5Z" transform="rotate(90.0 24 24)"></path>
+              <path d="M22.7 6.5L24 -0.5L25.3 6.5Z" transform="rotate(112.5 24 24)"></path>
+              <path d="M22.1 6.5L24 -7L25.9 6.5Z" transform="rotate(135.0 24 24)"></path>
+              <path d="M22.7 6.5L24 -0.5L25.3 6.5Z" transform="rotate(157.5 24 24)"></path>
+              <path d="M22.1 6.5L24 -7L25.9 6.5Z" transform="rotate(180.0 24 24)"></path>
+              <path d="M22.7 6.5L24 -0.5L25.3 6.5Z" transform="rotate(202.5 24 24)"></path>
+              <path d="M22.1 6.5L24 -7L25.9 6.5Z" transform="rotate(225.0 24 24)"></path>
+              <path d="M22.7 6.5L24 -0.5L25.3 6.5Z" transform="rotate(247.5 24 24)"></path>
+              <path d="M22.1 6.5L24 -7L25.9 6.5Z" transform="rotate(270.0 24 24)"></path>
+              <path d="M22.7 6.5L24 -0.5L25.3 6.5Z" transform="rotate(292.5 24 24)"></path>
+              <path d="M22.1 6.5L24 -7L25.9 6.5Z" transform="rotate(315.0 24 24)"></path>
+              <path d="M22.7 6.5L24 -0.5L25.3 6.5Z" transform="rotate(337.5 24 24)"></path>
+            </g>
+            <circle cx="24" cy="24" r="18.500" fill="url(#sun-corona)"></circle>
+          </g>
           <circle cx="24" cy="24" r="13.500" fill="url(#sun-ball)"></circle>
+          {/* Low in the sky the sun reddens: this layer fades in as it nears the horizon. */}
+          <circle class="sun-dial-ember" cx="24" cy="24" r="13.500" fill="url(#sun-ember)"></circle>
           <ellipse
             cx="19.500"
             cy="18"
             rx="4"
             ry="2.300"
             fill="#fff"
-            opacity="0.75"
+            opacity="0.8"
             transform="rotate(-30 19.500 18)"
           ></ellipse>
+          <circle cx="29" cy="30" r="5" fill="#fff" opacity="0.1"></circle>
         </g>
         <g class="sun-dial-moon">
-          <circle cx="24" cy="24" r="19" fill="var(--color-gear-ink)" opacity="0.12"></circle>
+          <circle class="sun-dial-air" cx="24" cy="24" r="40" fill="url(#moon-bloom)"></circle>
+          <circle
+            class="sun-dial-air"
+            cx="24"
+            cy="24"
+            r="17"
+            fill="none"
+            stroke="var(--color-gear-ink)"
+            stroke-width="0.6"
+            opacity="0.35"
+          ></circle>
           <circle cx="24" cy="24" r="13" fill="url(#moon-ball)"></circle>
           <circle cx="28.500" cy="20" r="2.600" fill="var(--color-gear-muted)" opacity="0.7"></circle>
           <circle cx="21" cy="29" r="1.900" fill="var(--color-gear-muted)" opacity="0.7"></circle>
@@ -189,7 +252,7 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
        --w is its chord; everything along the day is placed between the two --pad margins. */
     --w: min(30rem, 100vw - 5.5rem);
     --pad: calc((100% - var(--w)) / 2);
-    --slab: 0.5rem;
+    --slab: 3px;
     --rail: calc(2rem + env(safe-area-inset-bottom));
     --arc: calc(var(--w) * 0.18);
     --ball: 3rem;
@@ -203,23 +266,28 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
     user-select: none;
     view-transition-name: sun-dial;
   }
-  /* The strip is frosted, not solid: the page shows through it, softened, and its top edge fades out. */
+  /* Behind the dial the page shows through untouched. --dome is how much paper sits behind the
+     arc, as an ellipse that fades at its edge: 0% is none (the choice here), 100% hides the page. */
   .sun-dial-frost {
+    --dome: 0%;
     position: fixed;
-    inset: auto 0 0;
+    inset: auto 0 calc(var(--rail) - 2px);
     z-index: 39;
-    height: calc(var(--rail) + var(--arc) + var(--ball) / 2 + 2rem);
-    pointer-events: none;
-    /* Solid under the rail, where the hours are printed; frosted above it. */
-    background: linear-gradient(
-      to top,
-      var(--color-paper) calc(var(--rail) - var(--slab)),
-      color-mix(in srgb, var(--color-paper) 60%, transparent) calc(var(--rail) - var(--slab))
+    height: calc(var(--arc) + var(--ball) / 2 + 1.25rem);
+    background: radial-gradient(
+      ellipse calc(var(--w) * 0.5 + 1.75rem) 100% at 50% 100%,
+      color-mix(in srgb, var(--color-paper) var(--dome), transparent) 74%,
+      transparent 100%
     );
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    -webkit-mask-image: linear-gradient(to top, #000 calc(100% - 3rem), transparent);
-    mask-image: linear-gradient(to top, #000 calc(100% - 3rem), transparent);
+    pointer-events: none;
+  }
+  /* Below the hairline the page is covered from edge to edge, so no text shows under it. */
+  .sun-dial-frost::after {
+    position: absolute;
+    inset: 100% 0 auto;
+    height: var(--rail);
+    background: var(--color-paper);
+    content: '';
   }
   /* The sky behind the page. --sun-x and --sun-y are where the sun is in the window, and
      --rays is how strong its light is: strongest when it is low, gone at night. */
@@ -307,6 +375,8 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
   }
   .sun-dial-field {
     position: absolute;
+    /* Above the rail, so the sun and the moon pass in front of the line at the horizon. */
+    z-index: 1;
     right: var(--pad);
     bottom: var(--rail);
     left: var(--pad);
@@ -356,15 +426,27 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
   .sun-dial[data-sky='night'] .sun-dial-stars i {
     opacity: 0.75;
   }
+  /* Two clouds drift slowly back and forth, each at its own pace. */
   .sun-dial-cloud {
     position: absolute;
-    width: 2.75rem;
+    width: 3.75rem;
     translate: -50% 0;
     transition: opacity 0.4s ease-out;
+    animation: cloud-drift 46s ease-in-out infinite alternate;
   }
   .sun-dial-cloud-far {
-    width: 2rem;
-    opacity: 0.8;
+    width: 2.6rem;
+    opacity: 0.85;
+    animation-duration: 64s;
+    animation-direction: alternate-reverse;
+  }
+  @keyframes cloud-drift {
+    from {
+      transform: translateX(-2.75rem);
+    }
+    to {
+      transform: translateX(2.75rem);
+    }
   }
   .sun-dial-cloud svg {
     display: block;
@@ -399,6 +481,36 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
   .sun-dial-body:hover .sun-dial-shape,
   .sun-dial.is-dragging .sun-dial-shape {
     scale: 1.12;
+  }
+  /* The sun's air: bloom, rays and corona. The rays turn once in two minutes and breathe. */
+  .sun-dial-air {
+    pointer-events: none;
+  }
+  .sun-dial-rays {
+    opacity: 0.55;
+    transform-box: view-box;
+    transform-origin: 24px 24px;
+    animation:
+      sun-turn 120s linear infinite,
+      sun-breathe 7s ease-in-out infinite alternate;
+  }
+  @keyframes sun-turn {
+    to {
+      rotate: 360deg;
+    }
+  }
+  @keyframes sun-breathe {
+    from {
+      scale: 0.94;
+      opacity: 0.4;
+    }
+    to {
+      scale: 1.05;
+      opacity: 0.65;
+    }
+  }
+  .sun-dial-ember {
+    opacity: calc((1 - var(--h, 1)) * 0.85);
   }
   .sun-dial[data-sky='day'] .sun-dial-moon,
   .sun-dial[data-sky='night'] .sun-dial-sun {
@@ -443,8 +555,8 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
     border: 0;
     background: transparent;
     color: var(--color-muted);
-    text-decoration: underline var(--color-accent);
-    text-underline-offset: 0.18em;
+    text-decoration: underline 1px color-mix(in srgb, currentColor 40%, transparent);
+    text-underline-offset: 0.24em;
     cursor: pointer;
     pointer-events: auto;
   }
@@ -455,26 +567,22 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
     content: '';
   }
   .sun-dial-reset:hover {
-    text-decoration-thickness: 2px;
+    color: var(--color-ink);
+    text-decoration-color: currentColor;
   }
   /* The rail: a graphite slab from edge to edge, lit from above like the printer. Press it anywhere. */
   .sun-dial-rail {
     position: absolute;
     inset: auto 0 0;
     height: var(--rail);
-    background: linear-gradient(
-        to bottom,
-        var(--color-gear-light) 0 2px,
-        var(--color-gear) 2px,
-        var(--color-gear-dark) var(--slab),
-        transparent var(--slab)
-      )
+    /* A hairline from edge to edge; only the day so far has any weight. */
+    background: linear-gradient(to bottom, transparent 1px, var(--color-rule) 1px 2px, transparent 2px)
       no-repeat;
     cursor: pointer;
     pointer-events: auto;
     touch-action: pan-y;
   }
-  /* The day so far, burnt orange along the slab. */
+  /* The day so far, a short orange bar on the hairline. */
   .sun-dial-burn {
     position: absolute;
     top: 0;
@@ -529,10 +637,10 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
       display: none;
     }
     .sun-dial-cloud {
-      width: 2rem;
+      width: 2.75rem;
     }
     .sun-dial-cloud-far {
-      width: 1.5rem;
+      width: 1.9rem;
     }
     :root:has(.sun-dial:not([hidden])) .dial-clearance {
       padding-bottom: calc(9.5rem + env(safe-area-inset-bottom));
@@ -553,6 +661,10 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
     .sun-dial-cloud,
     .sky-stars i {
       transition: none;
+    }
+    .sun-dial-cloud,
+    .sun-dial-rays {
+      animation: none;
     }
     :root[data-sky='night'] .sky-stars .sky-twinkle {
       animation: none;
@@ -645,18 +757,10 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
       const h = Math.floor(m / 60);
       return `${h % 12 || 12}:${String(m % 60).padStart(2, '0')}${h < 12 ? 'am' : 'pm'}`;
     };
-    const part = (h) =>
-      h >= 5 && h < 9
-        ? 'morning'
-        : h >= 9 && h < 12
-          ? 'midmorning'
-          : h >= 12 && h < 17
-            ? 'afternoon'
-            : h >= 17 && h < 21
-              ? 'evening'
-              : 'night';
+    // One lede per hour: the key is the hour, two digits.
+    const part = (h) => String(h).padStart(2, '0');
     // The lede is three nodes: the words before the time, the time, and the rest.
-    // Within one part of the day only the time changes. Across parts the rest is
+    // Within one hour only the time changes. Across hours the rest is
     // reprinted: a short band of scrambled letters runs through it, new text behind
     // it and old text ahead, the way a receipt printer overwrites a line.
     const GLYPHS = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -697,6 +801,7 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
       if (!el || !el.dataset.ledes) return;
       if (!slots) {
         slots = [document.createTextNode(''), document.createElement('span'), document.createElement('span')];
+        slots[1].className = 'lede-time';
         el.replaceChildren(...slots);
       }
       const key = part(Math.floor(m / 60));
@@ -842,22 +947,22 @@ const sky = Array.from({ length: 64 }, (_, index) => ({
     dial.hidden = false;
     document.getElementById('sky-layer').hidden = false;
     document.getElementById('sun-dial-frost').hidden = false;
-    let first = false;
+    // Every time the site is opened, the day runs from 7am to now (from midnight, before 7am):
+    // the page opens at the starting hour, waits half a second, then the sun, the colours and
+    // the clock in the lede move together. Touching the dial stops it. Moving from one page of
+    // the site to another does not replay it, and neither does a time the visitor has chosen.
+    let arriving = true;
     try {
-      first = !sessionStorage.getItem('sun-dial-swept');
-      sessionStorage.setItem('sun-dial-swept', '1');
+      arriving = !document.referrer || new URL(document.referrer).origin !== location.origin;
     } catch {}
-    // On the first page of a visit the day runs from 8am to now (from midnight, before
-    // 8am). The page opens at the starting hour, waits half a second, then the
-    // sun, the colours and the clock in the lede move together. Touching the dial stops it.
     reset.hidden = chosen === null;
     let opening = 0;
-    if (first && chosen === null && !still.matches) {
-      const from = nowMinutes() < 480 ? 0 : 480;
+    if (arriving && chosen === null && !still.matches) {
+      const from = nowMinutes() < 420 ? 0 : 420;
       draw(from);
       opening = setTimeout(() => {
         opening = 0;
-        if (chosen === null && !dragging) travel(from, nowMinutes(), 2000);
+        if (chosen === null && !dragging) travel(from, nowMinutes(), 2400);
       }, 500);
     } else draw(minutes());
     // The lede is further down the page than this script; fill it once it exists.

@@ -31,8 +31,6 @@
   --color-accent-soft: #dbeafe;
   /* The sun on the dial (src/components/SunDial.astro). Not used for text. */
   --color-sun: #d98a00;
-  /* The WCGW arcade's floor (src/components/WcgwFooter.astro). Dark at every hour. */
-  --color-arcade: #0a0a0a;
   /* The receipt printer: moulded orange, a sibling of the sun. Fixed, so the object keeps its own light. */
   --color-printer: #ff5a2b;
   --color-printer-light: #ff8d5e;
@@ -102,7 +100,8 @@
     background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-size: 16px;
+    /* One step up from the browser's 16px: the column, the type and the drawings all scale with it. */
+    font-size: 17px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
@@ -146,16 +145,111 @@
     color: var(--color-ink);
   }
 
-  /* Ink text passes AA on paper for every accent; the accent lives in the underline. */
-  a {
-    color: inherit;
-    text-decoration-line: underline;
-    text-decoration-color: var(--color-accent);
-    text-underline-offset: 0.18em;
+  @media (min-width: 40rem) {
+    html {
+      font-size: 18px;
+    }
   }
 
-  a:hover {
-    text-decoration-thickness: 2px;
+  /* A link is ink on a hairline of its own colour, and the line fills in when pointed at.
+     The accent is kept for focus and for highlights. `.link` gives a button the same look. */
+  a,
+  .link {
+    color: inherit;
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in srgb, currentColor 32%, transparent);
+    text-underline-offset: 0.24em;
+    transition: text-decoration-color 0.15s ease-out;
+  }
+
+  a:hover,
+  .link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .link {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  /* Control surfaces are tints, not paints, so they take the hour's light: the sky and the
+     sun's rays show through them. A well is pressed into the page (pickers, command boxes); a
+     raised surface sits on it (the chosen segment, keys, the update's card). The well's shade
+     leans toward the sun's colour. */
+  :root {
+    --well-shade: color-mix(in srgb, var(--color-ink), var(--color-sun) 35%);
+    --surface-well: color-mix(in srgb, var(--well-shade) 9%, transparent);
+    --surface-well-soft: color-mix(in srgb, var(--well-shade) 5%, transparent);
+    --surface-raised: light-dark(rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.07));
+  }
+
+  /* A key: anything that does something when pressed. Small and quiet: a hairline box in the
+     paper's own tone that takes ink when pointed at and goes down when pressed. */
+  .key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-height: 1.85rem;
+    padding: 0 0.6rem;
+    border: 1px solid var(--color-rule);
+    border-radius: 0.45rem;
+    background: var(--surface-raised);
+    color: var(--color-muted);
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      color 0.12s ease-out,
+      border-color 0.12s ease-out,
+      translate 0.1s ease-out;
+  }
+
+  .key:hover {
+    border-color: color-mix(in srgb, var(--color-ink) 45%, var(--color-rule));
+    color: var(--color-ink);
+  }
+
+  .key:active {
+    translate: 0 1px;
+  }
+
+  .key svg {
+    flex: none;
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+
+  /* A finger needs 44px; the box stays small and the target grows around it. */
+  @media (pointer: coarse) {
+    .key {
+      position: relative;
+    }
+    .key::after {
+      position: absolute;
+      inset: -0.5rem -0.25rem;
+      content: '';
+    }
+  }
+
+  /* The clock in the lede: the one number the sun dial moves, set like a readout. */
+  .lede-time {
+    padding: 0.08em 0.4em;
+    border-radius: 0.4em;
+    background: color-mix(in srgb, var(--color-sun) 26%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 
   /* Every picker accent is at least 3:1 against paper (orange is the lowest at 3.19). */
