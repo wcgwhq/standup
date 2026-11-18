@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Build and upload dist/ to Cloudflare Pages (Direct Upload, static, no SSR adapter).
 # Needs `npx wrangler@4.158.0 login` once, or CLOUDFLARE_API_TOKEN with Pages: Edit plus CLOUDFLARE_ACCOUNT_ID.
-# Refuses a localhost SITE_URL and a build that still has the placeholder sentence, and creates
-# the Pages project on first deploy (name from wrangler.toml, or CLOUDFLARE_PAGES_PROJECT).
+# Refuses a localhost SITE_URL, a build that still has the placeholder sentence, and one with
+# analytics on and the privacy text unwritten. Creates the Pages project on first deploy (name
+# from wrangler.toml, or CLOUDFLARE_PAGES_PROJECT). .github/workflows/deploy.yml runs this on
+# every push to main once the repository has its Cloudflare secrets.
 #
 #   npm run deploy -- https://example.com           # SITE_URL for this build, branch main
 #   npm run deploy -- https://example.com preview   # any other branch is a preview deploy
@@ -13,6 +15,7 @@ set -euo pipefail
 
 WRANGLER=wrangler@4.158.0
 PLACEHOLDER='fill the one-sentence intent'
+PRIVACY_PLACEHOLDER='Privacy text to write'
 
 cd "$(dirname "$0")/.."
 
@@ -42,6 +45,11 @@ npm run build
 
 if grep -rqsF "$PLACEHOLDER" dist; then
   echo "dist/ still has the placeholder intent. Find it with: grep -rlF '$PLACEHOLDER' src public"
+  exit 1
+fi
+
+if grep -rqsF "$PRIVACY_PLACEHOLDER" dist; then
+  echo "Analytics are on and /privacy/ is unwritten. Write privacyBody in every src/i18n/<code>.json."
   exit 1
 fi
 

@@ -1,0 +1,43 @@
+---
+// The site's tokens and type on one page, at /dev/styleguide/ under `npm run dev` only.
+// Add each shared component here as it appears, so a change to one is checked in one place.
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { colors } from '@/lib/theme';
+import { defaultLocale } from '../../site.config.mjs';
+
+const tokens = ['paper', 'ink', 'muted', 'rule', 'accent', 'accent-soft'];
+---
+
+<BaseLayout locale={defaultLocale} title="Styleguide" description="Tokens and type." noindex>
+  <main id="main" class="mx-auto w-full max-w-xl flex-1 space-y-12 px-6 py-16">
+    <section class="space-y-3">
+      <h2 class="text-sm text-[var(--color-muted)]">Color</h2>
+      <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {tokens.map((name) => (
+          <li class="text-sm">
+            <span
+              class="block h-16 border border-[var(--color-rule)]"
+              style={`background: var(--color-${name})`}
+            />
+            {name}
+            <span class="block text-[var(--color-muted)]">{colors(name).join(' · ')}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+    <section class="space-y-3">
+      <h2 class="text-sm text-[var(--color-muted)]">Type</h2>
+      <h1 class="text-3xl">Heading one</h1>
+      <p>
+        Body text, with <a href="#main">a link</a> in it.
+      </p>
+      <p class="text-sm text-[var(--color-muted)]">Small muted text.</p>
+    </section>
+    <section class="space-y-3">
+      <h2 class="text-sm text-[var(--color-muted)]">Button</h2>
+      <button type="button" class="min-h-11 cursor-pointer border border-[var(--color-ink)] px-3">
+        Button
+      </button>
+    </section>
+  </main>
+</BaseLayout>

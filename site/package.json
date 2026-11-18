@@ -10,6 +10,7 @@
     "dev": "env -u CLAUDECODE -u AGENT -u AI_AGENT astro dev",
     "domain": "node scripts/local-domain.mjs",
     "build": "astro check && astro build && node scripts/markdown-pages.mjs && node scripts/lint-copy.mjs && node scripts/verify-build.mjs",
+    "verify": "node scripts/verify.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "format": "prettier --write .",

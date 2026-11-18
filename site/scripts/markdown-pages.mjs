@@ -1,13 +1,12 @@
 // Post-build: write index.md beside every indexable index.html, then llms.txt and
 // llms-full.txt from those same pages, grouped by language. llms.txt also carries what an
 // agent needs to act without a second fetch: what the plugin is, and every install command.
+// A request that prefers text/markdown gets a page's index.md from functions/_middleware.js.
 //
-// Three attributes in a page shape its markdown without changing what a visitor sees:
+// Three attributes shape an element's markdown without changing what a visitor sees:
 //   data-md="skip"        left out (the voices a picker hides)
 //   data-md-label="Codex" a bold line before the element (which agent a command is for)
-//   data-md-text="a: b"   the element's whole text (a row drawn as separate columns) Agents that send
-// Accept: text/markdown can read the words without the markup once a Cloudflare
-// Transform Rule rewrites /path/ → /path/index.md (free; paid Markdown-for-Agents not required).
+//   data-md-text="a: b"   the element's whole text (a row drawn as separate columns)
 import { readFileSync } from 'node:fs';
 import { readFile, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';

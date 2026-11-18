@@ -3,7 +3,15 @@ import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
-import { darkMode, defaultLocale, locales, siteName, siteUrl } from '../site.config.mjs';
+import {
+  clarityId,
+  darkMode,
+  defaultLocale,
+  locales,
+  publisher,
+  siteName,
+  siteUrl,
+} from '../site.config.mjs';
 import { catalog, dist, distFiles, isNoindex, localeOf } from './shared.mjs';
 
 const site = new URL(siteUrl);
@@ -40,8 +48,14 @@ assert.ok(exists('llms-full.txt'), 'llms-full.txt');
 assert.ok(exists('robots.txt'), 'robots.txt');
 assert.ok(exists('sitemap-index.xml'), 'sitemap-index.xml');
 assert.ok(exists('_headers'), '_headers copied into dist');
-assert.ok(exists('_routes.json'), '_routes.json (Pages Functions gate)');
-assert.ok(exists('og-image.png'), 'og-image.png 1200×630');
+// Pages run through functions/_middleware.js (markdown on request); assets and the twins skip it.
+const routes = JSON.parse(await read('_routes.json'));
+assert.deepEqual(routes.include, ['/*'], '_routes.json sends pages through the markdown function');
+assert.ok(
+  routes.exclude.includes('/_astro/*') && routes.exclude.includes('/*.md'),
+  '_routes.json skips assets',
+);
+assert.ok(existsSync(new URL('../functions/_middleware.js', import.meta.url)), 'functions/_middleware.js');
 assert.ok(exists('favicon.svg'), 'favicon.svg');
 assert.ok(exists('apple-touch-icon.png'), 'apple-touch-icon');
 assert.ok(exists('icon-192.png') && exists('icon-512.png'), 'PWA icons');
@@ -88,6 +102,19 @@ for (const rel of await distFiles('index.html')) {
   });
 }
 const indexable = [...pages].filter(([, page]) => !page.noindex);
+
+// Clarity is the one analytics tool (clarityId in site.config.mjs), and a page that loads it asks
+// about cookies (ConsentNote).
+for (const [, { rel, html }] of pages) {
+  assert.ok(!html.includes('googletagmanager.com'), `${rel}: no Google tag`);
+  assert.equal(html.includes('clarity.ms'), Boolean(clarityId), `${rel}: Clarity tag`);
+  assert.equal(html.includes('consent-note'), Boolean(clarityId), `${rel}: the cookie question`);
+}
+// The cookie question links to /privacy/ in every language.
+for (const code of locales) {
+  const rel = `${code === defaultLocale ? '' : `${code}/`}privacy/index.html`;
+  assert.ok(exists(rel), `${rel}: the privacy page`);
+}
 const hreflangLinks = (page) => page.links.filter((l) => l.rel === 'alternate' && l.hreflang);
 
 const sitemap = new Map();
@@ -134,6 +161,10 @@ for (const [url, page] of indexable) {
   );
   const content = (property) => metas.filter((m) => m.property === property).map((m) => m.content);
   assert.ok(content('og:image')[0]?.startsWith(`${site.origin}/`), `${rel}: absolute og:image`);
+  assert.ok(
+    exists(decodeURIComponent(new URL(content('og:image')[0]).pathname.slice(1))),
+    `${rel}: og:image ${content('og:image')[0]} is not in dist/`,
+  );
   assert.deepEqual(content('og:locale'), [ogLocale], `${rel}: og:locale`);
   assert.ok(
     links.some((l) => l.rel === 'manifest' && l.href === '/site.webmanifest'),
@@ -157,6 +188,11 @@ for (const [url, page] of indexable) {
   const webPage = ld['@graph'].find((n) => n['@id'] === `${url}#webpage`);
   assert.ok(webPage, `${rel}: JSON-LD page node is ${url}#webpage`);
   assert.equal(node('WebSite').name, siteName, `${rel}: JSON-LD WebSite name is the site name`);
+  assert.equal(
+    node('Organization').name,
+    publisher.name || siteName,
+    `${rel}: JSON-LD Organization is the publisher`,
+  );
   assert.equal(webPage.inLanguage, hreflang, `${rel}: page inLanguage`);
   assert.deepEqual(
     node('WebSite').inLanguage,
@@ -213,6 +249,33 @@ for (const [url, page] of indexable) {
 
 assert.ok(indexable.length >= 1, 'at least one public page');
 
+// Each public page has its own title and description within its language.
+for (const [what, text] of [
+  ['title', (page) => page.html.match(/<title>([^<]*)<\/title>/)?.[1]],
+  // A description may hold '>' (a name like <Lab>), where tags() stops: read up to the closing quote.
+  ['description', (page) => page.html.match(/<meta name="description" content="([^"]*)"/)?.[1]],
+]) {
+  const seen = new Map();
+  for (const [, page] of indexable) {
+    const key = `${page.locale} ${text(page)}`;
+    assert.ok(text(page), `${page.rel}: ${what}`);
+    assert.ok(!seen.has(key), `${page.rel}: same ${what} as ${seen.get(key)}`);
+    seen.set(key, page.rel);
+  }
+}
+
+// Every internal link on a public page lands on something that was built.
+for (const [, page] of indexable) {
+  for (const { href } of tags(page.html, 'a')) {
+    if (!href?.startsWith('/') || href.startsWith('//')) continue;
+    const path = decodeURI(href.split(/[?#]/)[0]);
+    assert.ok(
+      exists(path.endsWith('/') ? `${path}index.html` : path),
+      `${page.rel}: links to ${href}, which was not built`,
+    );
+  }
+}
+
 const wrangler = await readFile(new URL('../wrangler.toml', import.meta.url), 'utf8');
 assert.match(wrangler, /pages_build_output_dir\s*=\s*"dist"/, 'wrangler Pages dist/');
 // Ignore comments — the stub documents that we do *not* use the SSR adapter.
@@ -224,5 +287,5 @@ assert.ok(!/@astrojs\/cloudflare/.test(wranglerCode), 'no SSR adapter binding in
 assert.ok(!/^\s*adapter\s*=/m.test(wranglerCode), 'no adapter key in wrangler');
 
 console.log(
-  `verify-build: ok (${indexable.length} public page(s) in ${locales.length} language(s); hreflang, sitemap, llms.txt, 404s, CF/OG/icons)`,
+  `verify-build: ok (${indexable.length} public page(s) in ${locales.length} language(s); hreflang, sitemap, llms.txt, links, 404s, CF/OG/icons)`,
 );

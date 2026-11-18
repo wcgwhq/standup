@@ -4,8 +4,9 @@ import ConsentNote from '@/components/ConsentNote.astro';
 import SunDial from '@/components/SunDial.astro';
 import WcgwFooter from '@/components/WcgwFooter.astro';
 import { absolute, canonicalUrl, jsonLd, organizationId, websiteId, type GraphNode } from '@/lib/seo';
+import { colors } from '@/lib/theme';
 import { copy, defaultLocale, localePath, locales, meta, pagePath, siteNameFor, versions } from '@/i18n';
-import { clarityId, darkMode, modified, published, publisher, siteName } from '../../site.config.mjs';
+import { clarityId, darkMode, kit, modified, published, publisher, siteName } from '../../site.config.mjs';
 
 interface Props {
   title: string;
@@ -16,7 +17,7 @@ interface Props {
   /** Extra nodes for the page's single JSON-LD @graph. */
   graph?: GraphNode[];
   pageType?: 'WebPage' | 'AboutPage';
-  /** Path under /public for the share card (prefer PNG 1200×630). */
+  /** Path under /public for the share card, 1200×630, PNG or JPEG. */
   ogImage?: string;
   ogAlt?: string;
   dateModified?: string;
@@ -44,6 +45,7 @@ const is404 = path === '/404/';
 const indexable = !noindex && !is404;
 const pageTitle = title.includes(siteName) ? title : `${title} · ${siteNameFor(locale)}`;
 const og = absolute(ogImage, site);
+const [accent, accentDark = accent] = colors('accent');
 
 // Every locale's version of this page (a 404 points each language at its home page).
 const translations = locales.length > 1 ? versions(is404 ? '/' : path) : [];
@@ -63,7 +65,18 @@ const fullGraph: GraphNode[] = [
   {
     '@type': 'Organization',
     '@id': organizationId(site),
-    ...publisher,
+    name: publisher.name || siteName,
+    url: publisher.url || site.href,
+    ...(publisher.sameAs.length > 0 && { sameAs: publisher.sameAs }),
+    // The icon is the site's own: it is the publisher's logo only when the site publishes itself.
+    ...(!publisher.name && {
+      logo: {
+        '@type': 'ImageObject',
+        url: absolute('/icon-512.png', site),
+        width: 512,
+        height: 512,
+      },
+    }),
   },
   {
     '@type': pageType,
@@ -96,13 +109,14 @@ const fullGraph: GraphNode[] = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
+    {kit && <meta name="wcgw" content={kit} />}
     <meta name="color-scheme" content={darkMode ? 'light dark' : 'light'} />
     <meta
       name="theme-color"
-      content="#155dfc"
+      content={accent}
       media={darkMode ? '(prefers-color-scheme: light)' : undefined}
     />
-    {darkMode && <meta name="theme-color" content="#51a2ff" media="(prefers-color-scheme: dark)" />}
+    {darkMode && <meta name="theme-color" content={accentDark} media="(prefers-color-scheme: dark)" />}
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'} />
@@ -130,7 +144,7 @@ const fullGraph: GraphNode[] = [
     <meta property="og:description" content={description} />
     {!is404 && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={og} />
-    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:type" content={/\.jpe?g$/.test(ogImage) ? 'image/jpeg' : 'image/png'} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={ogAlt ?? ui.ogAlt} />

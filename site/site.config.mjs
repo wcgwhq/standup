@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { loadEnvFile } from 'node:process';
 
 // Astro evaluates config before loading .env. Read the local file explicitly.
@@ -25,6 +25,10 @@ export const siteUrl = url.href;
 /** Human-facing site name. */
 // prettier-ignore
 export const siteName = process.env.SITE_NAME || 'Standup';
+
+/** The wcgw kit version this site was made with, or last upgraded to. The kit writes wcgw.json. */
+// (Read from the working directory: in a build this module no longer sits in the site's root.)
+export const kit = existsSync('wcgw.json') ? JSON.parse(readFileSync('wcgw.json', 'utf8')).kit : '';
 
 /** Dev server port, fixed per project so the local URL never changes. PORT=<n> npm run dev overrides it. */
 export const devPort = 4817;

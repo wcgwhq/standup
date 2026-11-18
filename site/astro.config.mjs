@@ -1,5 +1,5 @@
 // @ts-check
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { rename, rmdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { defineConfig } from 'astro/config';
@@ -54,6 +54,24 @@ const busyPort = {
   },
 };
 
+/** Pages in src/dev/ exist under `npm run dev` only, at /dev/<name>/. A build never ships them. */
+/** @type {import('astro').AstroIntegration} */
+const devPages = {
+  name: 'dev-pages',
+  hooks: {
+    'astro:config:setup': ({ command, injectRoute }) => {
+      const folder = new URL('src/dev/', import.meta.url);
+      if (command !== 'dev' || !existsSync(folder)) return;
+      for (const file of readdirSync(folder).filter((name) => name.endsWith('.astro'))) {
+        injectRoute({
+          pattern: `/dev/${file.slice(0, -'.astro'.length)}`,
+          entrypoint: new URL(file, folder),
+        });
+      }
+    },
+  },
+};
+
 export default defineConfig({
   site: siteUrl,
   output: 'static',
@@ -64,6 +82,7 @@ export default defineConfig({
     react(),
     notFoundPages,
     busyPort,
+    devPages,
     sitemap({
       filter: indexable,
       // With more than one locale, each URL lists the same alternates as its HTML head, x-default included.

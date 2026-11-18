@@ -23,7 +23,7 @@ npm run generate:og      # public/og-image.png (1200×630)
 npm run generate:icons   # favicons + apple-touch + PWA icons
 ```
 
-Both need Google Chrome or Chromium. `generate:og` can use puppeteer instead (`npm i -D puppeteer`); `generate:icons` also needs Python Pillow (`pip install pillow`).
+Both need Google Chrome or Chromium.
 
 ## Ship (Cloudflare Pages)
 
@@ -33,8 +33,10 @@ npm run deploy -- https://your-domain
 
 Direct Upload of `dist/`, no SSR adapter. What it checks first is at the top of `scripts/deploy.sh`.
 
+A push to `main` deploys by itself once the GitHub repository has the secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` and the variable `SITE_URL` (`.github/workflows/deploy.yml`). Until then the run skips. Delete the workflow to deploy by hand only.
+
 ## Agents
 
-Read **`AGENTS.md` → `design.md` → `intent.md` → `docs/`**. `AGENTS.md` → Agent apps lists the app config files in this folder and what Claude Code may run.
+Read **`AGENTS.md` → `design.md` → `intent.md` → `docs/`**. `docs/kit/agent-apps.md` lists the app config files in this folder and what Claude Code may run.
 
 A commit that changes `src/i18n/` or `src/content/` waits for a copy review: run `/copywriting` (or ask any agent to follow `.claude/skills/copywriting/SKILL.md`). `npm install` turns the hook on; `git commit --no-verify` skips it for a typo fix.

@@ -1,0 +1,21 @@
+{
+  "kit": "0.2.0",
+  "commit": "d34bab1eac3629842b6a32ab2de392da5811cc26",
+  "answers": {
+    "projectName": "standup-site",
+    "siteName": "Standup",
+    "oneSentence": "Standup reads your git commits and agent sessions and writes your end-of-day update, so you stop piecing the day together from memory.",
+    "siteUrl": "http://localhost:4321/",
+    "accentId": "blue",
+    "defaultLocale": "en",
+    "locales": [
+      "en"
+    ],
+    "apps": [
+      "claude"
+    ],
+    "darkMode": true
+  },
+  "devPort": 4817,
+  "published": "2026-11-11"
+}

@@ -1,9 +1,8 @@
 // Node-side helpers for astro.config.mjs and the scripts in this folder.
 // Pages and layouts read the language files through src/i18n/index.ts instead.
-import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { defaultLocale, locales } from '../site.config.mjs';
 
 export const dist = fileURLToPath(new URL('../dist/', import.meta.url));
@@ -32,24 +31,3 @@ export const cssColor = (name) =>
   readFileSync(new URL('../src/styles/global.css', import.meta.url), 'utf8')
     .match(new RegExp(`--color-${name}:\\s*([^;{}<]+);`))?.[1]
     .trim();
-
-/** Screenshots a local HTML file with headless Chrome or Chromium. False when neither is installed. */
-export function chromeScreenshot(page, shot, width, height) {
-  const chrome = [
-    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-    '/Applications/Chromium.app/Contents/MacOS/Chromium',
-    'google-chrome',
-    'chromium',
-  ].find((c) => spawnSync(c, ['--version']).status === 0);
-  if (!chrome) return false;
-  spawnSync(chrome, [
-    '--headless=new',
-    '--disable-gpu',
-    '--hide-scrollbars',
-    '--force-device-scale-factor=1',
-    `--window-size=${width},${height}`,
-    `--screenshot=${shot}`,
-    pathToFileURL(page).href,
-  ]);
-  return true;
-}
