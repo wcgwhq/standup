@@ -11,7 +11,7 @@ The repository is `wcgwhq/standup` on GitHub, created private on 16 November 202
 5. ~~Remove the "Not published yet" note~~ Done on 17 November: the line now states one fact about the scripts. Originally: remove `ui.installNote` from `site/src/i18n/en.json` ("Not published yet") and the two lines that print it (`index.astro`, `[agent].astro`), and redeploy the site. `llms.txt` drops the line by itself.
 6. ~~Run one real install in each agent~~ Done on 17 November from the public repository: Claude Code, Codex, Gemini CLI, Grok and opencode each installed 0.6.0 and the installed engine passed `--check`. Grok refuses without `--trust`, so the command now carries it. Cursor's `marketplace add` found the plugin; turning it on is a click in its Plugins screen and was not driven. A headless Claude Code session ("write my standup update with Slack markup") picked the skill and wrote the update.
 7. ~~Old skills.~~ Done on 17 November: `~/.claude/skills/eod-review` and `eow-review` were moved to the Trash once the plugin was installed.
-8. Then the listings, in the order in `marketplaces.md`.
+8. Then the listings, in the order in `marketplaces.md`. Anthropic's directory is out: it refuses scripts from an organisation that is not Verified (18 November).
 
 ## Checks to re-run after touching any manifest
 

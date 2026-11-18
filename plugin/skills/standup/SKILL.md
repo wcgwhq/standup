@@ -1,6 +1,7 @@
 ---
 name: standup
 description: Writes the user's standup update, what they and their coding agents did, from git commits and agent sessions, with token usage and an estimated cost, for today, a week, a month or any date range. Use when the user says "standup", "write my standup update", "what have we done today", "what have you worked on today", "what did I work on this week", "what did we ship this month", asks for an EOD, an EOW, a daily summary or a week recap, or asks "how many tokens did we use". Works on a git branch, a worktree path or a predefined named unit. Reads Claude Code, Codex, Grok, Claude Cowork, Gemini CLI and opencode (session counts for Cursor and Antigravity), including work run in orchestrator worktrees (Superconductor, Conductor). Personal projects the user lists are kept separate from the work totals. Designed to run cold in a fresh session with no prior chat context.
+allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/standup.py *), Bash(python3 ${CLAUDE_SKILL_DIR}/standup.py), Bash(python3 ${CLAUDE_SKILL_DIR}/standup_week.py *), Bash(python3 ${CLAUDE_SKILL_DIR}/standup_week.py)
 ---
 
 # Standup

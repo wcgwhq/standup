@@ -24,7 +24,7 @@ Everything else is a file in this repository or a pull request, and can be prepa
 1. Create the GitHub organisation and push this repository to it, public.
 2. Add the GitHub topic `gemini-cli-extension`. Gemini's gallery lists it by itself.
 3. Run `npx skills add <owner>/<repo>` once. skills.sh lists a repository the first time someone installs from it.
-4. Submit to Anthropic's directory.
+4. ~~Submit to Anthropic's directory.~~ Blocked on 18 November 2026: see its section below.
 5. Submit to Cursor's marketplace.
 6. Open the pull request to xAI's catalog.
 7. Submit to OpenAI's catalog. It asks for the most: more manifest fields, icons and a privacy-policy URL.
@@ -46,7 +46,8 @@ Everything else is a file in this repository or a pull request, and can be prepa
   - data-handling questions, four acknowledgements, and the Software Directory Terms and Policy.
 - **Review:** an automated validation and security scan on every version, and a person reviews each new listing. "Review time isn't fixed." ([publish](https://claude.com/docs/directory/publish))
 - **Cost:** none stated beyond the paid plan. Icon size: not found.
-- **Where Standup stands:** the plugin passes `claude plugin validate`. A script that `SKILL.md` only tells Claude to run is not held for review, and that is how the engine is called. Our own check also asked for a square PNG icon of 512 to 2048 px, set once at first submission; `plugin/.claude-plugin/icon.png` is 512 px.
+- **Blocked (18 November 2026):** the portal's validator refused the plugin three times. It takes scripts, any `allowed-tools` beyond Read, Grep, Glob and LS, and SVG files only from Verified organisations, and nothing public says how to become one. The engine is two Python scripts, so the listing is not possible; Claude Code installs from the repository instead. The checklist linked above still says the opposite about skill-run scripts and SVG.
+- **Before that:** the plugin passes `claude plugin validate`. A script that `SKILL.md` only tells Claude to run is not held for review, and that is how the engine is called. Our own check also asked for a square PNG icon of 512 to 2048 px, set once at first submission; `plugin/.claude-plugin/icon.png` is 512 px.
 
 ### OpenAI: ChatGPT and Codex
 

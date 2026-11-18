@@ -128,14 +128,11 @@ For "how can we test this" or "anything the reviewer should know".
 
 ## Vendor by vendor
 
-### Anthropic (claude.ai/directory/manage → Submit new → Plugin bundle)
+### Anthropic (claude.ai/directory/manage)
 
-- Name `standup`, description: the **Medium** text. If the field is one line, use **One line**.
-- Publisher is read from `author.name`: What Could Go Wrong.
-- Icon: `plugin/.claude-plugin/icon.png`.
-- Data-handling questions: the table above.
-- The directory's validator (run on 18 November 2026) refuses two things from an organisation that is not Verified, and both are removed: any `allowed-tools` beyond Read, Grep, Glob and LS in `SKILL.md`, and any file that is not Markdown, text, JSON, YAML or a PNG, JPEG, GIF, WebP or ICO image (the SVG logo was one). Its wording also covers scripts, and the engine is two Python files that cannot be removed. If a re-validation names them, the listing waits for the organisation to be Verified.
-- The plugin sits in `plugin/` of the repository; the marketplace file at the root points at it.
+Not possible, as of 18 November 2026. The directory's validator accepts scripts only from Verified organisations, and the plugin's engine is two Python files. There is no application to become Verified; the public docs do not describe one. Claude Code users install from the repository instead, which needs no listing. Do not work around the rule by hiding the scripts in other file types.
+
+If Anthropic ever verifies the organisation, three things must change before validating: remove `allowed-tools` from `SKILL.md` (anything beyond Read, Grep, Glob and LS is refused), keep every image a PNG, JPEG, GIF, WebP or ICO, and use the **Medium** description. The question to send through the portal's "Contact Anthropic" is how an organisation becomes Verified, and whether Python scripts that `SKILL.md` tells Claude to run are accepted without it, since the pre-submission checklist says they are not part of the check.
 
 ### Cursor (cursor.com/marketplace/publish)
 
