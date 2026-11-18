@@ -1,0 +1,48 @@
+{
+  "_note": "The plugin's release history, newest first, shown on /changelog/. One entry per version in the manifests; `date` is the day it reached main. Groups are added, changed and fixed, each a list of plain sentences; backticks become inline code. Add the entry in the same commit that bumps the version (CI checks the newest entry matches the manifests).",
+  "releases": [
+    {
+      "version": "0.6.1",
+      "date": "2026-11-18",
+      "added": [
+        "A Slack markup style: bold names, identifiers in inline code and, when you ask for the numbers, one code block. Say “with Slack markup”.",
+        "A manifest for OpenAI’s plugin catalog."
+      ],
+      "changed": [
+        "The Gen Z and observational voices are sharper. Both aim at the writer, the work and the industry, never at a named person.",
+        "The plugin’s logo is a PNG, so every agent’s plugin screen can show it."
+      ],
+      "fixed": [
+        "The Grok install command now ends in `--trust`. Grok refuses to install without it."
+      ]
+    },
+    {
+      "version": "0.6.0",
+      "date": "2026-11-17",
+      "added": [
+        "Asking in the product’s own words: “write my standup update”, “what have we done today”. EOD and EOW still work.",
+        "Each update ends with “Try next”, three requests you have not just made."
+      ],
+      "changed": [
+        "One skill, `standup`, replaces `eod-review` and `eow-review`. It writes a day, a week, a month or any range.",
+        "The title line reads “Standup EOD Tuesday, November 17th, 2026”.",
+        "Settings moved from `~/.claude/eod-review/` to `~/.claude/standup/`."
+      ],
+      "fixed": []
+    },
+    {
+      "version": "0.5.0",
+      "date": "2026-11-16",
+      "added": [
+        "The first public version, in one repository with the website, under MIT.",
+        "Updates for a day, a week or a month, written from git commits and the session files of eight agents.",
+        "Token counts and an estimated cost at API list prices, with models that have no listed price counted and marked unpriced.",
+        "Five voices: pirate, Gen Z, corporate, one-liner and observational.",
+        "Groups, so work, consulting and personal projects each get their own totals.",
+        "Install manifests for Claude Code, Codex, Cursor, Gemini CLI and Grok."
+      ],
+      "changed": [],
+      "fixed": []
+    }
+  ]
+}

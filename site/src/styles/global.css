@@ -334,3 +334,84 @@
     navigation: auto;
   }
 }
+
+/* Reading pages (privacy, questions, changelog): one column of muted text under ink headings. */
+@layer components {
+  .doc {
+    max-width: 65ch;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+  .doc h1,
+  .doc h2 {
+    color: var(--color-ink);
+  }
+  .doc h2 {
+    margin-top: 2.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  .doc h3 {
+    margin-top: 1.5rem;
+    color: var(--color-ink);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .doc h3 + p,
+  .doc h3 + ul {
+    margin-top: 0.35rem;
+  }
+  .doc p,
+  .doc ul,
+  .doc-table {
+    margin-top: 0.75rem;
+  }
+  .doc-lede {
+    color: var(--color-ink);
+    font-size: 1.125rem;
+  }
+  .doc h2.doc-version {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+  }
+  .doc h2.doc-version + .doc-meta {
+    margin-top: 0.15rem;
+  }
+  .doc-meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .doc ul {
+    padding-left: 1.1rem;
+    list-style: disc;
+  }
+  .doc li + li {
+    margin-top: 0.4rem;
+  }
+  .doc-table {
+    overflow-x: auto;
+  }
+  .doc table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    text-align: left;
+  }
+  .doc th,
+  .doc td {
+    padding: 0.5rem 0.75rem 0.5rem 0;
+    border-bottom: 1px solid var(--color-rule);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .doc thead th {
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .doc code {
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+}

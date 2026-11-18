@@ -112,6 +112,7 @@ The scripts open no network connection. The report they print goes to your agent
 ## More
 
 - [`plugin/README.md`](plugin/README.md): settings, groups, date ranges, pricing and how each number is counted.
+- [Questions](https://standup.wcgw.fun/faq/) and the [changelog](https://standup.wcgw.fun/changelog/) are on the website.
 - [`site/`](site/): the website. [`docs/`](docs/): the code review, the publishing steps and the marketplace notes. [`archive/`](archive/): earlier copies of the skills, kept for reference.
 
 MIT licensed; see [`LICENSE`](LICENSE). Published by [What Could Go Wrong](https://wcgw.fun).

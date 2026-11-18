@@ -1,8 +1,8 @@
 # Submission copy
 
-Ready-to-paste text for listing Standup in each vendor's directory. Where to submit and what each vendor requires is in `marketplaces.md`; re-open the vendor's page before pasting, because forms change. Written on 18 November 2026 for plugin 0.6.0.
+Ready-to-paste text for listing Standup in each vendor's directory. Where to submit and what each vendor requires is in `marketplaces.md`; re-open the vendor's page before pasting, because forms change. Written on 18 November 2026 for plugin 0.6.1.
 
-Every statement here is true of 0.6.0. If the engine changes what it reads or sends, change this file with it.
+Every statement here is true of 0.6.1. If the engine changes what it reads or sends, change this file with it.
 
 ## The basics
 
@@ -11,7 +11,7 @@ Every statement here is true of 0.6.0. If the engine changes what it reads or se
 | Name | `standup` |
 | Display name | Standup |
 | Publisher / developer | What Could Go Wrong |
-| Version | 0.6.0 |
+| Version | 0.6.1 |
 | Licence | MIT |
 | Price | Free |
 | Repository | https://github.com/wcgwhq/standup |
@@ -100,7 +100,7 @@ For questionnaires. Answer each question as the form asks it; these are the fact
 | Does it make network requests? | No. Its scripts open no network connection. |
 | What does it read? | Local files only: git history of the repositories you point it at, and the session files that coding agents write on your disk (Claude Code, Codex, Grok, Gemini CLI, opencode, Cowork, Cursor, Antigravity). |
 | What does it write? | Nothing outside its own settings folder, `~/.claude/standup/`, which holds your groups, style and pricing. |
-| What reaches the model provider? | The report the script prints becomes part of your conversation with your agent, so it reaches your model provider like anything else you say: folder paths, commit subjects, names of changed files and token counts. No file contents and no session transcripts. |
+| What reaches the model provider? | The report the script prints becomes part of your conversation with your agent, so it reaches your model provider like anything else you say: folder paths, commit subjects, names of changed files, token counts and, when a repository has commits by someone else, their email address. No file contents and no session transcripts. |
 | Does it run code? | Yes, two Python scripts in the skill's folder, run by the agent when you ask for an update. No lifecycle hooks, no background process, no MCP server. |
 | Does it need credentials? | No. No API keys, tokens or logins. |
 | Third-party services | None. |
@@ -143,28 +143,28 @@ If Anthropic ever verifies the organisation, three things must change before val
 
 ### xAI Grok (pull request to xai-org/plugin-marketplace)
 
-Entry for `.grok-plugin/marketplace.json`. Pin `sha` to the commit you want listed; this is `main` on 18 November 2026. Check the exact shape against the entries already in that file before opening the pull request.
+Checked on 18 November 2026 against their `CONTRIBUTING.md`: fork, add one entry at the end of `.grok-plugin/marketplace.json`, run `python3 scripts/generate-plugin-index.py`, then `python3 scripts/validate-catalog.py` and `python3 scripts/generate-plugin-index.py --check`. This entry passed all three in a local copy, as a 14-line addition. Scripts are allowed; their review rejects remote code, secret reading and undeclared network calls, none of which the plugin does.
+
+Pin `sha` to the commit to list (`git ls-remote https://github.com/wcgwhq/standup.git HEAD`). Their guide asks for brand-scoped `keywords` and `domains`, not generic words, so "standup" alone is left out.
 
 ```json
 {
   "name": "standup",
-  "description": "Writes your standup update from your git commits and your coding agents' sessions, on your disk.",
+  "description": "Writes your standup update for a day, a week or a month from your git commits and your coding agents' sessions, with token counts and an estimated cost. Runs on your own disk and opens no network connection.",
+  "category": "productivity",
   "source": {
-    "source": "github",
-    "repo": "wcgwhq/standup",
-    "path": "plugin",
-    "sha": "4aee10cce57de5e62510f0ed86c19cb478b977c9"
-  }
+    "source": "url",
+    "url": "https://github.com/wcgwhq/standup.git",
+    "sha": "<40-character commit>",
+    "path": "plugin"
+  },
+  "homepage": "https://standup.wcgw.fun",
+  "keywords": ["wcgw standup"],
+  "domains": ["standup.wcgw.fun"]
 }
 ```
 
-Pull request title: `Add standup`
-
-Pull request body:
-
-> Standup writes a standup update for a day, a week or a month from local git commits and coding agents' session files, with token counts and an estimated cost. One skill, two Python scripts, no dependencies, no network calls, MIT.
->
-> Repository: https://github.com/wcgwhq/standup (the plugin is in `plugin/`). `grok plugin validate plugin` passes, and `grok plugin install wcgwhq/standup#plugin --trust` installs it.
+Pull request title: `Add standup`. In their template: remote source, the URL and pinned SHA above, homepage https://standup.wcgw.fun, owned by What Could Go Wrong and published under its GitHub organisation `wcgwhq`, MIT. Security section: no remote code, no secrets read, no network calls; the two Python scripts read local git history and agents' session files and print a report.
 
 ### OpenAI (platform.openai.com/plugins → Upload plugin)
 
@@ -173,7 +173,7 @@ OpenAI takes a ZIP of the plugin folder, and reads the listing from `plugin/plug
 Make the ZIP from the committed tree, so nothing stray gets in:
 
 ```sh
-git archive --format=zip -o standup-0.6.0.zip HEAD:plugin
+git archive --format=zip -o standup-0.6.1.zip HEAD:plugin
 ```
 
 | Field | Value | Limit |

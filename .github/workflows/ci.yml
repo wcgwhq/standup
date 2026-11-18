@@ -39,12 +39,13 @@ jobs:
     container: python:3.9-slim
     steps:
       - uses: actions/checkout@v7
-      # Every manifest an agent installs from carries the same version.
+      # Every manifest an agent installs from carries the same version, and the changelog has an entry for it.
       - run: |
           python3 - <<'PY'
           import json, sys
           files = ["plugin/plugin.json", "plugin/.claude-plugin/plugin.json", "plugin/.cursor-plugin/plugin.json", "gemini-extension.json"]
           versions = {f: json.load(open(f))["version"] for f in files}
+          versions["site/src/data/changelog.json (newest entry)"] = json.load(open("site/src/data/changelog.json"))["releases"][0]["version"]
           print(versions)
           sys.exit(len(set(versions.values())) != 1)
           PY

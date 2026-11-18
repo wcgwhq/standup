@@ -32,10 +32,10 @@ const cookies = [
     <div class="mb-10">
       <BrandBar facts={ui.brandFacts} href={localePath(locale)} homeLabel={ui.backHome} />
     </div>
-    <article class="privacy">
+    <article class="doc">
       <h1 class="text-3xl">{ui.privacyTitle}</h1>
-      <p class="privacy-lede">{ui.privacyLede}</p>
-      <p class="privacy-date">
+      <p class="doc-lede">{ui.privacyLede}</p>
+      <p class="doc-meta">
         {ui.privacyUpdated}{' '}<time datetime={updated}>{updatedLabel}</time>
       </p>
 
@@ -49,7 +49,7 @@ const cookies = [
 
       <h2>{ui.privacyCookiesTitle}</h2>
       <p>{ui.privacyCookiesBody}</p>
-      <div class="privacy-table">
+      <div class="doc-table">
         <table>
           <thead>
             <tr>
@@ -108,66 +108,3 @@ const cookies = [
     </article>
   </main>
 </BaseLayout>
-
-<style>
-  .privacy {
-    max-width: 65ch;
-    color: var(--color-muted);
-    text-wrap: pretty;
-  }
-  .privacy h1,
-  .privacy h2 {
-    color: var(--color-ink);
-  }
-  .privacy h2 {
-    margin-top: 2.5rem;
-    font-size: 1.125rem;
-    font-weight: 600;
-  }
-  .privacy p,
-  .privacy ul,
-  .privacy-table {
-    margin-top: 0.75rem;
-  }
-  .privacy-lede {
-    color: var(--color-ink);
-    font-size: 1.125rem;
-  }
-  .privacy-date {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-  }
-  .privacy ul {
-    padding-left: 1.1rem;
-    list-style: disc;
-  }
-  .privacy li + li {
-    margin-top: 0.4rem;
-  }
-  .privacy-table {
-    overflow-x: auto;
-  }
-  .privacy table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-    text-align: left;
-  }
-  .privacy th,
-  .privacy td {
-    padding: 0.5rem 0.75rem 0.5rem 0;
-    border-bottom: 1px solid var(--color-rule);
-    vertical-align: top;
-    font-weight: 400;
-  }
-  .privacy thead th {
-    color: var(--color-ink);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-  }
-  .privacy code {
-    color: var(--color-ink);
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-  }
-</style>

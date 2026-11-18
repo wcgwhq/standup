@@ -1,0 +1,72 @@
+---
+import BrandBar from '@/components/BrandBar.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { copy, localePath, localeStaticPaths } from '@/i18n';
+import changelog from '@/data/changelog.json';
+
+export const getStaticPaths = localeStaticPaths;
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const ui = copy(locale);
+
+const day = (iso: string) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString(locale, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+
+const kinds = [
+  ['added', ui.changelogAdded],
+  ['changed', ui.changelogChanged],
+  ['fixed', ui.changelogFixed],
+] as const;
+
+/** Backticks in an entry are inline code. */
+const parts = (text: string) => text.split('`');
+---
+
+<BaseLayout locale={locale} title={ui.changelogTitle} description={ui.changelogDescription}>
+  <main id="main" class="mx-auto w-full max-w-xl flex-1 px-6 py-16">
+    <div class="mb-10">
+      <BrandBar facts={ui.brandFacts} href={localePath(locale)} homeLabel={ui.backHome} />
+    </div>
+    <article class="doc">
+      <h1 class="text-3xl">{ui.changelogTitle}</h1>
+      <p class="doc-lede">
+        {ui.changelogLede}{' '}
+        <a href="https://github.com/wcgwhq/standup/commits/main/plugin" rel="noopener">{ui.changelogSource}</a>
+      </p>
+      {
+        changelog.releases.map((release) => (
+          <section>
+            <h2 id={`v${release.version}`} class="doc-version">
+              {release.version}
+            </h2>
+            <p class="doc-meta">
+              <time datetime={release.date}>{day(release.date)}</time>
+            </p>
+            {kinds.map(
+              ([kind, label]) =>
+                release[kind].length > 0 && (
+                  <>
+                    <h3>{label}</h3>
+                    <ul>
+                      {release[kind].map((entry) => (
+                        <li>{parts(entry).map((part, index) => (index % 2 ? <code>{part}</code> : part))}</li>
+                      ))}
+                    </ul>
+                  </>
+                ),
+            )}
+          </section>
+        ))
+      }
+    </article>
+  </main>
+</BaseLayout>
