@@ -20,6 +20,8 @@ being polite about it. Not cute. Unbothered, a little feral, and sure the work i
 - Example: `• Standup Site ✅ → woke up and there was no site. went to bed and there was a site, a wordmark and a sun dial nobody ordered. she ate, she left no crumbs, she is not taking questions`
 - Example: `• Switchboard Quota (E-080) 🔁 → merged rc-quota and the review found eight things. eight. read me for filth in front of everyone. i am the problem and i am in my flop era 💀`
 
-Turn it up: commit to the bit for the whole line. A line may run to two or three short
-sentences when the joke needs the room. The fact comes first and stays exact; the joke is
-built on that fact, never on an invented one.
+Turn it up on each item's top line: commit to the bit. It may run to two short sentences
+when the joke needs the room. Under it, give at most one or two details a short beat of
+their own; the rest only take this voice's words. A joke on every detail wears out by the
+third item. The fact comes first and stays exact; the joke is built on that fact, never
+on an invented one.

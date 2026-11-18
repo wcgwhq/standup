@@ -2,6 +2,17 @@
   "_note": "The plugin's release history, newest first, shown on /changelog/. One entry per version in the manifests; `date` is the day it reached main. Groups are added, changed and fixed, each a list of plain sentences; backticks become inline code. Add the entry in the same commit that bumps the version (CI checks the newest entry matches the manifests).",
   "releases": [
     {
+      "version": "0.7.1",
+      "date": "2026-11-18",
+      "added": [],
+      "changed": [
+        "Updates are easier to read: one line per project with the outcome, and up to three details under it. Every voice keeps its joke on the project line and gives only a detail or two a beat of their own."
+      ],
+      "fixed": [
+        "Hundreds of runs started by a script or another agent no longer flood the report; each day’s runs in a repo are one line with a count."
+      ]
+    },
+    {
       "version": "0.7.0",
       "date": "2026-11-18",
       "added": [

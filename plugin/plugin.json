@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "standup",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Writes your standup update from your git commits and your coding agents' sessions, on your disk.",
   "author": {
     "name": "What Could Go Wrong",

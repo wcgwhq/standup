@@ -6,14 +6,20 @@ paste cleanly into Slack.
 Read by the standup skill before writing a report. Overrides their generic
 formatting guidance.
 
-**Per-item format** — every item is exactly:
+**Per-item format** — every item is a line, and details go under it:
 
 ```
-[task or milestone achieved][status emoji] → [short concise description]
+• [project or milestone] [status emoji] → [the outcome, a few words]
+   ◦ [one detail]
+   ◦ [one more, at most three]
 ```
 
 - Status emoji sits right after the title: `✅` done, `🚧` in progress, `🔁` integrated / others' work.
-- Then the actual `→` glyph, then one short, concise description. Lead with the outcome.
+- Then the actual `→` glyph, then the outcome in a few words. Read top lines alone, the
+  update still says the day out loud.
+- Details are `◦` (U+25E6) after three spaces, at most three per item, a few words each.
+  Give an item details only when it has more than one thing to say; otherwise it stays
+  one line.
 
 **Arrows & dashes:**
 
@@ -46,7 +52,8 @@ Slack's composer, which by DEFAULT does NOT re-parse markdown on paste:
 - **Honor a requested grouping verbatim.** If the user names buckets (e.g. "New UI" and
   "Creative Studio"), use exactly those as the section headers, in that order, and sort
   every commit into one of them — don't invent your own theme names alongside them.
-- Group commits into 4-6 user-facing themes, not one bullet per commit.
+- Group commits into 4-6 user-facing themes, not one bullet per commit. Details under a
+  theme are its parts, never one per commit.
 - Team / boss-facing updates: no commit hashes, no token/cost numbers.
 - **Don't claim others' work.** Call out merges and integrations explicitly (`🔁`), not as
   something built here, so the update reads honestly.

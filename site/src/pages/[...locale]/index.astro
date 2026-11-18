@@ -52,6 +52,9 @@ const software = {
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
 };
 
+// Backticks in the sample are Slack's inline code.
+const slack = (text: string) => text.split('`').map((part, index) => ({ part, code: index % 2 === 1 }));
+
 // The update is written once per voice; radio buttons pick which one shows (CSS only).
 const voices = [
   { id: 'plain', label: ui.voicePlain },
@@ -290,25 +293,38 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
               <div class="update mt-3">
                 <p class="update-title">{period.title}</p>
                 {/* Written exactly as it pastes into Slack: a bullet, the project in bold, its status
-                    mark, an arrow and what happened. Only the size and the spacing are ours. */}
+                    mark, an arrow and what happened, then up to three details under it. Only the
+                    size and the spacing are ours. */}
                 <ul class="update-list">
                   {period.update.map((item, index) => (
                     <li>
                       <span aria-hidden="true">•</span>
-                      <span>
+                      <div>
                         <strong class="update-project">{item.title}</strong>{' '}
                         {index === 1 ? <Hi>{item.status}</Hi> : item.status}
                         {index === 1 && n(1)}
                         {' → '}
                         {voices.map((voice) => (
                           <span data-voice={voice.id} data-md={voice.id === 'plain' ? undefined : 'skip'}>
-                            {/* Backticks in the sample are Slack's inline code. */}
-                            {item.text[voice.id]
-                              .split('`')
-                              .map((part, index) => (index % 2 ? <code>{part}</code> : part))}
+                            {slack(item.text[voice.id]).map(({ part, code }) => (code ? <code>{part}</code> : part))}
                           </span>
                         ))}
-                      </span>
+                        {item.details &&
+                          voices.map((voice) => (
+                            <ul
+                              class="update-details"
+                              data-voice={voice.id}
+                              data-md={voice.id === 'plain' ? undefined : 'skip'}
+                            >
+                              {item.details[voice.id].map((detail) => (
+                                <li>
+                                  <span aria-hidden="true">◦</span>
+                                  <span>{slack(detail).map(({ part, code }) => (code ? <code>{part}</code> : part))}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          ))}
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -692,7 +708,8 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
   .examples:has([value='corporate']:checked) [data-voice='corporate'],
   .examples:has([value='oneliner']:checked) [data-voice='oneliner'],
   .examples:has([value='observational']:checked) [data-voice='observational'] {
-    display: inline;
+    /* Back to the element's own display: inline for a line, block for its details. */
+    display: revert;
   }
   /* A segmented control: a recessed track, and the chosen segment raised out of it like a key.
      Always one row. Where the labels do not fit (the voices on a phone) the row scrolls sideways. */
@@ -819,6 +836,12 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
     grid-template-columns: 0.9rem 1fr;
     gap: 0.35rem;
     line-height: 1.5;
+  }
+  .update-details {
+    margin-top: 0.25rem;
+  }
+  .update-details li + li {
+    margin-top: 0.15rem;
   }
   .update-project {
     font-weight: 650;

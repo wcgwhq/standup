@@ -7,14 +7,16 @@ Use this only if your Slack reads markup when you paste. That is a setting:
 Preferences → Advanced → "Format messages with markup". With it off, the asterisks and
 backticks below show up as plain characters; use `style.example.md` instead.
 
-It keeps every rule of `style.example.md` (the `•` bullet, the status mark, the `→` arrow,
-the title line, four to six lines, no em dashes) and adds three things.
+It keeps every rule of `style.example.md` (the `•` bullet, the `◦` details under it, the
+status mark, the `→` arrow, the title line, four to six items, no em dashes) and adds three
+things.
 
 **1. Bold the name of each item.** One pair of asterisks, Slack's own bold, around the
 title only:
 
 ```
-• *Switchboard Quota* 🔁 → `rc-quota` merged, eight review findings fixed (`E-080`)
+• *Switchboard Quota* 🔁 → `rc-quota` merged (`E-080`)
+   ◦ eight review findings fixed
 ```
 
 - Slack bold is a single `*`, not Markdown's `**`. Never write `**`.
@@ -45,5 +47,5 @@ Estimate        ≈ $133   at API list prices
 - Only when asked ("with the numbers", "with cost"). Team and boss-facing updates leave
   token and cost figures out, as `style.example.md` says.
 
-A voice ("in pirate voice") still rewords each line. The bold, the code spans and the
+A voice ("in pirate voice") still rewords each line and detail. The bold, the code spans and the
 numbers stay exactly as they are.

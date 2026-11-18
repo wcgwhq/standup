@@ -365,7 +365,8 @@ When a voice is chosen, read its file, then write the report under these rules:
 - Every fact stays literal and unchanged: titles of work, repo and branch names,
   ticket ids, dates, counts, token and cost figures, and the status marks.
 - Same lines, same order, same layout as the plain report. `style.md` still
-  decides the layout; the voice only rewords the description in each line.
+  decides the layout; the voice only rewords the description in each line and each
+  detail under it. The voice file says how much of it goes into the details.
 - The first line stays the plain title with the date, so the update can be found later.
 - Jokes are about the work, the day or the writer. Never about a named person,
   a client or a group of people.

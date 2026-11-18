@@ -1,5 +1,5 @@
 {
-  "_note": "Radu's own runs, read on Wednesday 18 November 2026 at about 10am with plugin 0.7.0 (--unit work): the standup for Tuesday 17 November, for the full week of 9 to 15 November, and for 1 to 18 November. 0.7.0 also reads what was asked in each agent session, so work with no commit (the card game going live, the pension calculator, the review runs behind Switchboard's fixes) is described, not only counted. Real commits and real token counts, shown on the homepage at his request. The day was chosen because it shows the most: commits, merged pull requests, and work with no commit yet. Cost is at Anthropic's list prices of 2026-11-03, one price per model; the Codex model has no price row and is shown as unpriced. Each update follows his style file and is also written in the five built-in voices, turned up at his request. Four Romanian project names are shown in English so the example reads the same for everyone: My Pension (cat-vine-pensia), pension-meter (pensiometru), Jungle Cards (cartile-pe-fata) and Cotroceni Conference (conferinta-de-la-cotroceni). vibe-check is listed as personal in his settings and is left out. Nothing else is changed. Identifiers in backticks are shown as inline code, as the Slack markup style writes them.",
+  "_note": "Radu's own runs, read on Wednesday 18 November 2026 at about 10am with plugin 0.7.0 (--unit work): the standup for Tuesday 17 November, for the full week of 9 to 15 November, and for 1 to 18 November. 0.7.0 also reads what was asked in each agent session, so work with no commit (the card game going live, the pension calculator, the review runs behind Switchboard's fixes) is described, not only counted. Real commits and real token counts, shown on the homepage at his request. The day was chosen because it shows the most: commits, merged pull requests, and work with no commit yet. Cost is at Anthropic's list prices of 2026-11-03, one price per model; the Codex model has no price row and is shown as unpriced. Each update follows his style file (a line per project, up to three details under it) and is also written in the five built-in voices, turned up at his request. Four Romanian project names are shown in English so the example reads the same for everyone: My Pension (cat-vine-pensia), pension-meter (pensiometru), Jungle Cards (cartile-pe-fata) and Cotroceni Conference (conferinta-de-la-cotroceni). vibe-check is listed as personal in his settings and is left out. Nothing else is changed. Identifiers in backticks are shown as inline code, as the Slack markup style writes them.",
   "periods": [
     {
       "id": "day",
@@ -9,60 +9,202 @@
           "title": "Standup Site",
           "status": "✅",
           "text": {
-            "plain": "went public: the repo is open, the site deploys on every push, the plugin is one skill with a Slack markup style and sharper voices, plus a sun dial, hourly stories and a page per agent",
-            "pirate": "hoisted the colours: the repo be open to all, the site sets sail on every push, the plugin be one skill with a Slack markup style and sharper voices, and she took on a sun dial, hourly stories and a page for every agent in the fleet",
-            "genz": "the repo went public, the site redeploys on every push, the plugin is one skill now with slack markup and voices that finally have teeth. plus a sun dial and hourly stories. she ate and left no crumbs",
-            "corporate": "pleased to report a successful public listing: the repo is open, the site deploys on every push, and the plugin has been consolidated into one skill with a Slack markup style and sharper voices. Additional deliverables include a sun dial, hourly stories and a page per agent",
-            "oneliner": "repo public, deploys on every push, one skill, Slack markup, sharper voices, a sun dial and hourly stories. Eleven commits for a tool that tells you what you did",
-            "observational": "the repo is public now and the site deploys itself on every push. It has a sun dial, hourly stories, a page per agent, and a plugin that is one skill with sharper voices. All of it exists so a machine can tell me at night what I did. Because I can’t"
+            "plain": "went public",
+            "pirate": "hoisted the colours, she sails public now",
+            "genz": "went public and she is not taking questions",
+            "corporate": "pleased to report a successful public listing",
+            "oneliner": "went public. A tool that tells you what you did, built by someone who needed it",
+            "observational": "went public. Now strangers can watch me forget my own day"
+          },
+          "details": {
+            "plain": [
+              "deploys on every push",
+              "the plugin is one skill, with a Slack markup style and sharper voices",
+              "a sun dial, hourly stories, a page per agent"
+            ],
+            "pirate": [
+              "launches herself at every push",
+              "one skill aboard, with a Slack markup style and voices sharpened on the whetstone",
+              "a sun dial, hourly stories and a berth for every agent"
+            ],
+            "genz": [
+              "deploys on every push, no thoughts just shipping",
+              "one skill now, slack markup, voices that finally have teeth",
+              "sun dial, hourly stories, a page per agent. the lore is deep"
+            ],
+            "corporate": [
+              "continuous deployment on every push",
+              "portfolio consolidated into one skill, with a Slack markup style and sharper voices",
+              "additional deliverables: a sun dial, hourly stories, a page per agent"
+            ],
+            "oneliner": [
+              "deploys on every push",
+              "one skill, Slack markup, sharper voices",
+              "a sun dial, hourly stories, a page per agent"
+            ],
+            "observational": [
+              "deploys itself on every push, which is more initiative than I showed",
+              "one skill, with a Slack markup style and sharper voices",
+              "a sun dial, hourly stories, a page per agent. I gave a website a sunrise"
+            ]
           }
         },
         {
           "title": "Jungle Cards",
           "status": "🚧",
           "text": {
-            "plain": "live on its own domain: cards drag on phones, one top bar, a monkey-hand cursor, a looping city soundtrack with sound bites, haptics and a new share picture. Name kept, serparia.ro dropped",
-            "pirate": "made landfall on her own domain: cards be dragged aboard on phones, one top bar, a monkey-hand cursor, a city shanty on loop with sound bites, haptics and a new share picture. Kept her name; serparia.ro walked the plank",
-            "genz": "live on its own domain. cards drag on phones now, one top bar, a monkey-hand cursor, a city soundtrack on loop with sound bites, haptics, a new share picture. kept the name, serparia.ro got ratioed. in prod with no commit, no proof and no alibi 💀",
-            "corporate": "completed market entry on a dedicated domain: cards now drag on phones, one top bar, a monkey-hand cursor, a looping city soundtrack with sound bites, haptics and a new share picture. Brand equity retained; serparia.ro has been divested",
-            "oneliner": "live on its own domain with cards that drag on phones, a monkey-hand cursor, a looping city soundtrack, sound bites, haptics and a new share picture. Name kept, serparia.ro dropped. In production, not in git",
-            "observational": "it is live on its own domain. Cards that drag on phones, a monkey-hand cursor, a looping city soundtrack with sound bites, haptics, a new share picture. Kept the name, dropped serparia.ro. None of it is committed. It exists the way a ghost exists: everyone can see it and there is no paperwork"
+            "plain": "live on its own domain, not committed",
+            "pirate": "made landfall on her own domain, log still blank",
+            "genz": "live on its own domain with zero commits 💀",
+            "corporate": "market entry achieved on a dedicated domain; paperwork pending",
+            "oneliner": "live on its own domain. In production, not in git",
+            "observational": "live on its own domain, and not committed. A ghost with a URL"
+          },
+          "details": {
+            "plain": [
+              "cards drag on phones, one top bar, a monkey-hand cursor",
+              "a looping city soundtrack with sound bites, haptics, a new share picture",
+              "name kept, serparia.ro dropped"
+            ],
+            "pirate": [
+              "cards be dragged aboard on phones, one top bar, a monkey-hand cursor",
+              "a city shanty on loop, with sound bites, haptics and a new share picture",
+              "kept her name; serparia.ro walked the plank"
+            ],
+            "genz": [
+              "cards drag on phones, one top bar, a monkey-hand cursor",
+              "city soundtrack on loop with sound bites and haptics. sensory overload era",
+              "kept the name, serparia.ro got ratioed"
+            ],
+            "corporate": [
+              "mobile engagement up: cards drag on phones, one top bar, a monkey-hand cursor",
+              "ambient audio strategy: a looping city soundtrack with sound bites, haptics and a new share picture",
+              "brand equity retained; serparia.ro divested"
+            ],
+            "oneliner": [
+              "cards drag on phones, one top bar, a monkey-hand cursor",
+              "a city soundtrack with sound bites, haptics, a new share picture",
+              "name kept, serparia.ro dropped. It never had a chance"
+            ],
+            "observational": [
+              "cards drag on phones, one top bar, a monkey-hand cursor",
+              "a looping city soundtrack with sound bites and haptics. You can now be stressed by a card game through three senses",
+              "kept the name, dropped serparia.ro"
+            ]
           }
         },
         {
           "title": "Jungle Cards About Page",
           "status": "🚧",
           "text": {
-            "plain": "rewritten in the game’s single voice, with a bigger, snarkier author card picked from three painted versions",
-            "pirate": "the captain’s log rewritten in one voice, and the captain’s portrait made bigger and snarkier, picked from three painted versions",
-            "genz": "rewritten in one voice because “we” was giving group project. my card is bigger and snarkier now, picked from three painted versions, because the first one had me looking like i was begging. be so for real",
-            "corporate": "messaging realigned to a single voice, and executive presence upgraded: a bigger, snarkier author card selected from three painted versions",
-            "oneliner": "rewritten in one voice, with a bigger, snarkier author card picked from three painted versions. Two of me were rejected. By me",
-            "observational": "rewrote it in one voice, then had my own card painted three times until I looked younger and less like I was asking for something. I picked the one that lies best"
+            "plain": "rewritten in the game’s single voice",
+            "pirate": "the captain’s log rewritten in one voice",
+            "genz": "rewritten in one voice because “we” was giving group project",
+            "corporate": "messaging realigned to a single voice",
+            "oneliner": "rewritten in one voice",
+            "observational": "rewrote it in one voice"
+          },
+          "details": {
+            "plain": [
+              "a bigger, snarkier author card",
+              "picked from three painted versions"
+            ],
+            "pirate": [
+              "the captain’s portrait made bigger and snarkier",
+              "picked from three painted versions"
+            ],
+            "genz": [
+              "my card is bigger and snarkier now",
+              "picked from three painted versions, because the first one had me looking like i was begging. be so for real"
+            ],
+            "corporate": [
+              "executive presence upgraded: a bigger, snarkier author card",
+              "selected from three painted versions"
+            ],
+            "oneliner": [
+              "a bigger, snarkier author card",
+              "picked from three painted versions. Two of me were rejected. By me"
+            ],
+            "observational": [
+              "had my own card painted three times until I looked younger and less like I was asking for something",
+              "I picked the one that lies best"
+            ]
           }
         },
         {
           "title": "WCGW Brand",
           "status": "✅",
           "text": {
-            "plain": "design system rebuilt on the real logo, with social and avatar sets, 43 picked renders, profile crops and a stop-motion loop",
-            "pirate": "raised a new flag on the real logo: social and avatar sets, 43 picked renders, profile crops and a stop-motion loop to wave from the crow’s nest",
-            "genz": "design system rebuilt on the real logo after the wrong one got drawn. social and avatar sets, 43 picked renders, profile crops, a stop-motion loop. aura restored",
-            "corporate": "brand architecture rebuilt on the real logo, with social and avatar sets, 43 picked renders, profile crops and a stop-motion loop, positioning us well going forward",
-            "oneliner": "design system rebuilt on the real logo, with social and avatar sets, 43 picked renders, profile crops and a stop-motion loop",
-            "observational": "rebuilt the design system on the real logo, with social and avatar sets, 43 picked renders, profile crops and a stop-motion loop. Forty-three pictures of a crashed UFO. I have never related to a logo more"
+            "plain": "design system rebuilt on the real logo",
+            "pirate": "raised a new flag on the real logo",
+            "genz": "design system rebuilt on the real logo after the wrong one got drawn",
+            "corporate": "brand architecture rebuilt on the real logo",
+            "oneliner": "design system rebuilt on the real logo",
+            "observational": "rebuilt the design system on the real logo"
+          },
+          "details": {
+            "plain": [
+              "social and avatar sets",
+              "43 picked renders, profile crops, a stop-motion loop"
+            ],
+            "pirate": [
+              "social and avatar sets",
+              "43 picked renders, profile crops and a stop-motion loop to wave from the crow’s nest"
+            ],
+            "genz": [
+              "social and avatar sets",
+              "43 picked renders, profile crops, a stop-motion loop. aura restored"
+            ],
+            "corporate": [
+              "social and avatar sets",
+              "43 picked renders, profile crops and a stop-motion loop, positioning us well going forward"
+            ],
+            "oneliner": [
+              "social and avatar sets",
+              "43 picked renders, profile crops, a stop-motion loop"
+            ],
+            "observational": [
+              "social and avatar sets, profile crops, a stop-motion loop",
+              "43 picked renders of a crashed UFO. I have never related to a logo more"
+            ]
           }
         },
         {
           "title": "wcgw.fun",
           "status": "🔁",
           "text": {
-            "plain": "four pull requests from Cursor merged: an Astro landing, an editorial manifesto, the WCGW mark in the masthead",
-            "pirate": "four prizes from the Cursor's crew hauled aboard and merged: an Astro landing, a manifesto and our mark on the masthead. I signed for them. I did not sail them",
-            "genz": "merged four PRs that cursor wrote. astro landing, manifesto, logo in the masthead. i pressed a green button four times and called it a day. group project where i wrote my name on it. bffr",
-            "corporate": "integrated four pull requests authored by Cursor, covering an Astro landing, an editorial manifesto and masthead branding. Leadership's contribution was approval",
+            "plain": "four pull requests from Cursor merged",
+            "pirate": "four prizes from the Cursor’s crew hauled aboard and merged. I signed for them. I did not sail them",
+            "genz": "merged four PRs that cursor wrote. group project where i wrote my name on it",
+            "corporate": "integrated four pull requests authored by Cursor. Leadership’s contribution was approval",
             "oneliner": "merged four pull requests I did not write. Management is going well",
-            "observational": "four pull requests merged today. Cursor wrote all four. I pressed a green button, four times, and I was tired after. My grandfather worked in a mine. He would have had questions"
+            "observational": "four pull requests merged today. Cursor wrote all four"
+          },
+          "details": {
+            "plain": [
+              "an Astro landing, an editorial manifesto",
+              "the WCGW mark in the masthead"
+            ],
+            "pirate": [
+              "an Astro landing and a manifesto",
+              "our mark on the masthead"
+            ],
+            "genz": [
+              "astro landing, manifesto, logo in the masthead",
+              "i pressed a green button four times and called it a day. bffr"
+            ],
+            "corporate": [
+              "an Astro landing and an editorial manifesto",
+              "masthead branding"
+            ],
+            "oneliner": [
+              "an Astro landing, an editorial manifesto",
+              "the WCGW mark in the masthead"
+            ],
+            "observational": [
+              "an Astro landing, an editorial manifesto, the WCGW mark in the masthead",
+              "I pressed a green button four times and I was tired after. My grandfather worked in a mine. He would have had questions"
+            ]
           }
         }
       ],
@@ -119,72 +261,240 @@
           "title": "Switchboard (E-077 to E-080)",
           "status": "✅",
           "text": {
-            "plain": "four plans shipped in three days, 112 commits, most of them fixes for what 163 review runs by Claude Code and Codex found",
-            "pirate": "four prizes taken in three days, E-077 to E-080, and 112 entries in the log, most of them patching the holes 163 lookouts from Claude Code and Codex spotted in our own hull",
-            "genz": "four plans shipped in three days. 112 commits. most of them fix what 163 review runs found. claude code and codex took turns reading me for filth. i am 0 and 112",
-            "corporate": "delivered four plans in three days across 112 commits, the majority of which address findings from 163 independent reviews by Claude Code and Codex. We welcome the feedback",
-            "oneliner": "shipped four plans in three days, then 163 review runs found enough to fill 112 commits. The plans were shorter",
-            "observational": "163 review runs by two companies’ machines, looking for what I did wrong. They found it 112 times, and each time I said thank you and committed the fix. That is not engineering. That is a confession with timestamps"
+            "plain": "four plans shipped in three days, 112 commits",
+            "pirate": "four prizes taken in three days, and 112 entries in the log",
+            "genz": "four plans shipped in three days. 112 commits. i am 0 and 112",
+            "corporate": "delivered four plans in three days across 112 commits",
+            "oneliner": "shipped four plans in three days. The plans were shorter than the fixes",
+            "observational": "four plans shipped, and 112 commits to apologise for them"
+          },
+          "details": {
+            "plain": [
+              "163 review runs by Claude Code and Codex",
+              "most commits fix what they found"
+            ],
+            "pirate": [
+              "163 lookouts from Claude Code and Codex searched the hull",
+              "most entries be patches for the holes they spotted"
+            ],
+            "genz": [
+              "163 review runs by claude code and codex",
+              "they took turns reading me for filth. most commits are the fixes"
+            ],
+            "corporate": [
+              "163 independent reviews by Claude Code and Codex",
+              "the majority of commits address their findings. We welcome the feedback"
+            ],
+            "oneliner": [
+              "163 review runs by Claude Code and Codex",
+              "most commits fix what they found"
+            ],
+            "observational": [
+              "163 review runs by two companies’ machines, looking for what I did wrong",
+              "most of the 112 commits fix what they found. That is not engineering. That is a confession with timestamps"
+            ]
           }
         },
         {
           "title": "Microfoam Index",
           "status": "✅",
           "text": {
-            "plain": "Bucharest on the front page with the sector map, a filter rail on the cafés page",
-            "pirate": "Bucharest be on the front page now, with a chart of her sectors, and the coffee houses have a rail of filters to port",
-            "genz": "put bucharest on the front page with a sector map. cafés page got a filter rail. it is a site about what a flat white costs and it has more direction than my life. she is thriving, i am not",
-            "corporate": "elevated Bucharest to the front page alongside a sector map and equipped the cafés page with a filter rail, strengthening our position in the flat white vertical",
-            "oneliner": "put Bucharest on the front page with a map of its sectors. It is an index of coffee prices. The map is so you know where to be upset",
-            "observational": "there is now a map of Bucharest, by sector, showing what a flat white costs. People my age have children. I have a coffee map, and it took 104 commits on a Monday"
+            "plain": "Bucharest on the front page",
+            "pirate": "Bucharest be on the front page now",
+            "genz": "put bucharest on the front page. she is thriving, i am not",
+            "corporate": "elevated Bucharest to the front page, strengthening our position in the flat white vertical",
+            "oneliner": "put Bucharest on the front page",
+            "observational": "Bucharest on the front page, by sector, with what a flat white costs"
+          },
+          "details": {
+            "plain": [
+              "the sector map under it",
+              "a filter rail on the cafés page"
+            ],
+            "pirate": [
+              "with a chart of her sectors",
+              "the coffee houses have a rail of filters to port"
+            ],
+            "genz": [
+              "sector map under it",
+              "cafés page got a filter rail. a site about what a flat white costs has more direction than my life"
+            ],
+            "corporate": [
+              "a sector map alongside it",
+              "the cafés page equipped with a filter rail"
+            ],
+            "oneliner": [
+              "a map of its sectors. It is an index of coffee prices. The map is so you know where to be upset",
+              "a filter rail on the cafés page"
+            ],
+            "observational": [
+              "a filter rail on the cafés page",
+              "people my age have children. I have a coffee map, and it took 104 commits on a Monday"
+            ]
           }
         },
         {
           "title": "Standup",
           "status": "✅",
           "text": {
-            "plain": "site live on pages.dev, plugin gained voices, month reports and a setup check",
-            "pirate": "the Standup be afloat on pages.dev, and her log now speaks in five tongues and counts by the month",
-            "genz": "site is live on pages.dev. plugin got voices and month reports. this update is written by the thing it is about. i automated talking about myself. the therapist is going to have a field day",
-            "corporate": "launched the site on pages.dev and expanded the plugin with voices and monthly reporting. This report was produced by the product it describes, at no additional headcount",
+            "plain": "site live on pages.dev",
+            "pirate": "the Standup be afloat on pages.dev",
+            "genz": "site is live on pages.dev. i automated talking about myself",
+            "corporate": "launched the site on pages.dev",
             "oneliner": "built a tool that writes my status update. This is the status update. It says I built a tool",
-            "observational": "I built a thing that writes this update. So a tool is telling you that I built the tool. Nobody in this sentence did any work, and one of us still sends invoices"
+            "observational": "I built a thing that writes this update"
+          },
+          "details": {
+            "plain": [
+              "the plugin gained voices and month reports",
+              "a setup check for the first run"
+            ],
+            "pirate": [
+              "her log now speaks in five tongues",
+              "and counts by the month, with a check before the first voyage"
+            ],
+            "genz": [
+              "plugin got voices, month reports and a setup check",
+              "this update is written by the thing it is about. the therapist is going to have a field day"
+            ],
+            "corporate": [
+              "plugin expanded with voices, monthly reporting and a setup check",
+              "this report was produced by the product it describes, at no additional headcount"
+            ],
+            "oneliner": [
+              "site live on pages.dev",
+              "voices, month reports, a setup check"
+            ],
+            "observational": [
+              "site live on pages.dev, with voices, month reports and a setup check",
+              "so a tool is telling you that I built the tool. Nobody in this sentence did any work, and one of us still sends invoices"
+            ]
           }
         },
         {
           "title": "Jungle Cards and Cotroceni Conference",
           "status": "✅",
           "text": {
-            "plain": "a card game with a daily hand, live votes and rooms, built on 103 cut sound bites and 560 card backs painted by Codex; and a conference page with tape, a card deck and sound bites",
-            "pirate": "a card game with a daily hand, live votes and rooms, built on 103 sound bites cut from the record and 560 card backs painted by Codex’s crew; and a conference page with tape, a deck and sound bites",
-            "genz": "made a card game with a daily hand and live rooms. cut 103 sound bites of politicians saying unwell things. codex painted 560 card backs. 560. plus a conference page with tape and a deck. i have a job, allegedly",
-            "corporate": "launched a card game with a daily hand, live votes and rooms, backed by 103 verified sound bites and 560 card backs produced by Codex, alongside a conference page with tape, a card deck and sound bites. Content velocity remains strong",
-            "oneliner": "a card game with live rooms, 103 sound bites and 560 card backs painted by Codex. Codex did the art. I did the picking",
-            "observational": "a card game made of real things politicians said, 103 of them, cut and checked. Codex painted 560 card backs to go with them. 560 paintings in two days, and nobody paid it, thanked it or bought it lunch. And a conference page, because one place to laugh at them was not enough"
+            "plain": "a card game and a conference page",
+            "pirate": "two new ships launched, both carrying cards",
+            "genz": "two new sites and both have cards on them. it is not a phase",
+            "corporate": "launched two properties with a shared focus on cards",
+            "oneliner": "shipped a card game and a conference page with cards on it. I have one idea",
+            "observational": "two sites this week and both have a deck of cards on them. Nobody asked"
+          },
+          "details": {
+            "plain": [
+              "the game: a daily hand, live votes and rooms",
+              "103 sound bites cut, 560 card backs painted by Codex",
+              "the conference page: tape, a card deck and sound bites"
+            ],
+            "pirate": [
+              "the game: a daily hand, live votes and rooms to play in",
+              "103 sound bites cut from the record, 560 card backs painted by Codex’s crew",
+              "the conference page: tape, a deck and sound bites"
+            ],
+            "genz": [
+              "the game: daily hand, live votes, rooms",
+              "103 sound bites of politicians saying unwell things. codex painted 560 card backs. 560",
+              "the conference page: tape, a card deck, sound bites"
+            ],
+            "corporate": [
+              "the game: a daily hand, live votes and rooms",
+              "content pipeline: 103 sound bites and 560 card backs produced by Codex. Velocity remains strong",
+              "the conference page: tape, a card deck and sound bites"
+            ],
+            "oneliner": [
+              "the game: a daily hand, live votes and rooms",
+              "103 sound bites, 560 card backs painted by Codex. Codex did the art. I did the picking",
+              "the conference page: tape, a card deck and sound bites"
+            ],
+            "observational": [
+              "the game: a daily hand, live votes and rooms",
+              "103 real things politicians said, cut and checked, and 560 card backs Codex painted in two days. Nobody bought it lunch",
+              "the conference page: tape, a card deck and sound bites"
+            ]
           }
         },
         {
           "title": "wcgw Starter",
           "status": "✅",
           "text": {
-            "plain": "CLI with languages and local URLs, a GitHub repo step, a copywriting skill",
-            "pirate": "the starter kit now asks yer name, speaks many tongues, makes ye a GitHub repo and reads yer copy before ye shame the fleet",
-            "genz": "starter has a CLI now. languages, local urls, makes the github repo for you, proofreads your copy. it does everything except have an idea. same bestie",
-            "corporate": "the starter now offers a CLI with languages, local URLs, repository creation and a copywriting skill, reducing time to first website to roughly one meeting",
+            "plain": "a CLI that starts sites",
+            "pirate": "the starter kit now asks yer name",
+            "genz": "starter has a CLI now. it does everything except have an idea. same bestie",
+            "corporate": "the starter now offers a CLI, reducing time to first website to roughly one meeting",
             "oneliner": "the starter now scaffolds a site in several languages. I have nothing to say in any of them yet",
-            "observational": "the starter asks for your name, then a folder, then it makes the repo and reviews your copy. Everything but the website. I have built a very fast way to arrive at the hard part and stop"
+            "observational": "the starter asks for your name, then a folder, then it makes the repo and reviews your copy"
+          },
+          "details": {
+            "plain": [
+              "languages and local URLs",
+              "a GitHub repo step, a copywriting skill"
+            ],
+            "pirate": [
+              "speaks many tongues and charts local URLs",
+              "makes ye a GitHub repo and reads yer copy before ye shame the fleet"
+            ],
+            "genz": [
+              "languages, local urls",
+              "makes the github repo for you, proofreads your copy"
+            ],
+            "corporate": [
+              "languages and local URLs",
+              "repository creation and a copywriting skill"
+            ],
+            "oneliner": [
+              "local URLs, a GitHub repo step",
+              "a copywriting skill"
+            ],
+            "observational": [
+              "languages and local URLs",
+              "everything but the website. I have built a very fast way to arrive at the hard part and stop"
+            ]
           }
         },
         {
           "title": "My Pension, wcgw.fun, wcgw Pipeline",
           "status": "🚧",
           "text": {
-            "plain": "a pension calculator designed in Paper with its maths tested and a 3D hero, a wcgw.fun redesign where “wrong?” falls apart, and a headline-to-site pipeline tried on its first story; about 2,200 agent turns, no commit yet",
-            "pirate": "a pension reckoner charted in Paper with its sums tested and a 3D figurehead, a wcgw.fun refit where “wrong?” falls to pieces, and a headline-to-site route sailed on its first story. Some 2,200 turns of the capstan and not one line in the log",
-            "genz": "a pension calculator with tested maths and a 3d hero, a wcgw.fun redesign where “wrong?” falls apart on purpose, a pipeline that turns a headline into a site. about 2,200 agent turns. commits: zero. no proof, no alibi, we are so cooked 💀",
-            "corporate": "advanced three initiatives (a pension calculator with tested maths and a 3D hero, a wcgw.fun redesign, and a headline-to-site pipeline piloted on its first story) across about 2,200 agent turns. All three remain pre-commit and on track",
-            "oneliner": "a pension calculator, a redesign where “wrong?” falls apart, and a pipeline that turns headlines into sites. 2,200 agent turns, no commits. The pension one is the most realistic",
-            "observational": "a pension calculator whose maths passes every test, which is more than the pension does. A redesign where the word “wrong?” falls apart on screen. About 2,200 agent turns and not one commit. If the laptop dies, the pension calculator was right about everything"
+            "plain": "about 2,200 agent turns, no commit yet",
+            "pirate": "three ships built in secret, some 2,200 turns of the capstan, not one line in the log",
+            "genz": "2,200 agent turns across three projects. commits: zero 💀",
+            "corporate": "three initiatives representing about 2,200 agent turns remain pre-commit. We view this as upside",
+            "oneliner": "about 2,200 agent turns on three projects and no commits. Schrödinger’s work week",
+            "observational": "three projects, 2,200 agent turns, zero commits. Only the computer kept notes"
+          },
+          "details": {
+            "plain": [
+              "My Pension: designed in Paper, maths tested, a 3D hero",
+              "wcgw.fun: a redesign where “wrong?” falls apart",
+              "wcgw Pipeline: headline to site, tried on its first story"
+            ],
+            "pirate": [
+              "My Pension: charted in Paper, sums tested, a 3D figurehead",
+              "wcgw.fun: a refit where “wrong?” falls to pieces",
+              "wcgw Pipeline: headline to site, sailed once"
+            ],
+            "genz": [
+              "My Pension: designed in paper, maths tested, a 3d hero",
+              "wcgw.fun: a redesign where “wrong?” falls apart on purpose",
+              "wcgw Pipeline: turns a headline into a site. tried it once. no alibi"
+            ],
+            "corporate": [
+              "My Pension: designed in Paper, with tested maths and a 3D hero",
+              "wcgw.fun: a brand refresh in which “wrong?” falls apart",
+              "wcgw Pipeline: headline-to-site capability, piloted on its first story"
+            ],
+            "oneliner": [
+              "My Pension: designed in Paper, maths tested, a 3D hero. The most realistic of the three",
+              "wcgw.fun: a redesign where “wrong?” falls apart",
+              "wcgw Pipeline: headline to site, tried on its first story"
+            ],
+            "observational": [
+              "My Pension: the maths passes every test, which is more than the pension does",
+              "wcgw.fun: a redesign where the word “wrong?” falls apart on screen",
+              "wcgw Pipeline: headline to site, tried on its first story"
+            ]
           }
         }
       ],
@@ -279,72 +589,227 @@
           "title": "Switchboard",
           "status": "✅",
           "text": {
-            "plain": "four plans shipped (E-077 to E-080) after 163 review runs, 112 of the month’s 233 commits",
-            "pirate": "four prizes taken, E-077 to E-080, after 163 lookouts searched the hull, and 112 of the month’s 233 log entries be hers alone. The other ships have filed a complaint",
-            "genz": "four plans shipped after 163 review runs. 112 of 233 commits this month are switchboard. she is the main character. the other projects are extras who think they have lines",
-            "corporate": "four plans delivered following 163 reviews, representing 112 of 233 commits, or 48% of total output. We are monitoring our concentration risk",
+            "plain": "four plans shipped (E-077 to E-080)",
+            "pirate": "four prizes taken, E-077 to E-080",
+            "genz": "four plans shipped. she is the main character",
+            "corporate": "four plans delivered following 163 reviews",
             "oneliner": "112 of this month’s 233 commits are one project. The others are what I call a portfolio",
-            "observational": "233 commits this month, and 112 of them are Switchboard. That is not a portfolio. That is one job and a lot of ways of avoiding it"
+            "observational": "233 commits this month, and 112 of them are Switchboard"
+          },
+          "details": {
+            "plain": [
+              "112 of the month’s 233 commits",
+              "after 163 review runs"
+            ],
+            "pirate": [
+              "163 lookouts searched the hull first",
+              "112 of the month’s 233 log entries be hers alone. The other ships have filed a complaint"
+            ],
+            "genz": [
+              "163 review runs",
+              "112 of 233 commits this month. the other projects are extras who think they have lines"
+            ],
+            "corporate": [
+              "112 of 233 commits, or 48% of total output",
+              "we are monitoring our concentration risk"
+            ],
+            "oneliner": [
+              "four plans shipped, E-077 to E-080",
+              "163 review runs"
+            ],
+            "observational": [
+              "four plans shipped, after 163 review runs",
+              "that is not a portfolio. That is one job and a lot of ways of avoiding it"
+            ]
           }
         },
         {
           "title": "Microfoam Index",
           "status": "✅",
           "text": {
-            "plain": "editorial no. 1 published, print stickers through five rounds, Bucharest on the front page",
-            "pirate": "the first editorial be published, the stickers went five rounds with the printer and won, and Bucharest flies on the front page",
-            "genz": "published editorial no. 1. redid the stickers five times. put bucharest on the front page. five rounds. on stickers. of a sheep. this is what the tokens died for",
-            "corporate": "published our inaugural editorial, completed five rounds of sticker refinement, and elevated Bucharest to the front page. The sheep remains a key brand asset",
+            "plain": "editorial no. 1 published",
+            "pirate": "the first editorial be published",
+            "genz": "published editorial no. 1",
+            "corporate": "published our inaugural editorial",
             "oneliner": "published one editorial and five rounds of stickers. I know which one took longer",
-            "observational": "five rounds on the stickers. Five. There is a sheep on one, and the URL had to fit under the sheep. Somewhere a data centre ran hot all night so I could nudge a sheep"
+            "observational": "editorial no. 1 published, and five rounds on the stickers. Five"
+          },
+          "details": {
+            "plain": [
+              "print stickers through five rounds",
+              "Bucharest on the front page"
+            ],
+            "pirate": [
+              "the stickers went five rounds with the printer and won",
+              "Bucharest flies on the front page"
+            ],
+            "genz": [
+              "redid the stickers five times. five rounds. on stickers. of a sheep. this is what the tokens died for",
+              "put bucharest on the front page"
+            ],
+            "corporate": [
+              "completed five rounds of sticker refinement. The sheep remains a key brand asset",
+              "elevated Bucharest to the front page"
+            ],
+            "oneliner": [
+              "Bucharest on the front page"
+            ],
+            "observational": [
+              "there is a sheep on one, and the URL had to fit under the sheep. Somewhere a data centre ran hot all night so I could nudge a sheep",
+              "Bucharest on the front page"
+            ]
           }
         },
         {
           "title": "wcgw Starter",
           "status": "✅",
           "text": {
-            "plain": "from first commit to a CLI with languages, an accent picker and a copy review",
-            "pirate": "from first plank to full rig in one moon: a CLI, many tongues, a choice of colours and a bosun who reads yer copy",
-            "genz": "went from initial commit to a full CLI with languages, an accent picker and a copy review. glow up of the month. it starts websites now. finishing them is still a me problem",
-            "corporate": "progressed from initial commit to a full CLI with languages, an accent picker and copy review: a 1,400% increase in commits, from a base of one",
-            "oneliner": "the starter went from one commit to fifteen. It starts websites. Finishing them is a separate product",
-            "observational": "it is a kit that starts websites. Starting was never the problem. I am to finishing what a gym is to January. Look at the last line of this update"
+            "plain": "from first commit to a CLI",
+            "pirate": "from first plank to full rig in one moon",
+            "genz": "initial commit to a full CLI. glow up of the month",
+            "corporate": "progressed from initial commit to a full CLI",
+            "oneliner": "the starter went from one commit to sixteen",
+            "observational": "it is a kit that starts websites. Starting was never the problem"
+          },
+          "details": {
+            "plain": [
+              "languages, an accent picker",
+              "a copy review"
+            ],
+            "pirate": [
+              "a CLI with many tongues and a choice of colours",
+              "a bosun who reads yer copy"
+            ],
+            "genz": [
+              "languages, an accent picker, a copy review",
+              "it starts websites now. finishing them is still a me problem"
+            ],
+            "corporate": [
+              "languages, an accent picker and copy review",
+              "a 1,500% increase in commits, from a base of one"
+            ],
+            "oneliner": [
+              "languages, an accent picker, a copy review",
+              "it starts websites. Finishing them is a separate product"
+            ],
+            "observational": [
+              "languages, an accent picker, a copy review",
+              "I am to finishing what a gym is to January. Look at the last line of this update"
+            ]
           }
         },
         {
           "title": "Standup",
           "status": "✅",
           "text": {
-            "plain": "site and plugin built on the 11th, public on the 17th, and since the 18th it reads what you asked your agents",
-            "pirate": "the Standup and her log, built stem to stern on the 11th, flying public colours on the 17th, and since the 18th she reads what ye asked yer crew",
-            "genz": "built the site and the plugin on the 11th. public on the 17th. since the 18th it reads what i asked my agents, which means it has seen my prompts. i need to go offline",
-            "corporate": "site and plugin delivered on the 11th, publicly launched on the 17th, and since the 18th enhanced to capture what users ask their agents. Transparency is a core value",
-            "oneliner": "built a tool to remember what I did this month. Since the 18th it also reads what I asked. It has questions",
-            "observational": "I built the thing that remembers my month on the 11th. Since the 18th it reads what I ask my agents. So now there is a written record of me asking a computer for quotes that are more unhinged. It has the timestamps"
+            "plain": "built on the 11th, public on the 17th",
+            "pirate": "built stem to stern on the 11th, flying public colours on the 17th",
+            "genz": "built on the 11th. public on the 17th",
+            "corporate": "delivered on the 11th, publicly launched on the 17th",
+            "oneliner": "built a tool to remember what I did this month. On the 11th",
+            "observational": "I built the thing that remembers my month on the 11th. It never met the man from the first ten days"
+          },
+          "details": {
+            "plain": [
+              "site and plugin in one day",
+              "since the 18th it reads what you asked your agents"
+            ],
+            "pirate": [
+              "site and log in a single tide",
+              "since the 18th she reads what ye asked yer crew"
+            ],
+            "genz": [
+              "site and plugin in one day. the other ten days are unaccounted for",
+              "since the 18th it reads my prompts. i need to go offline"
+            ],
+            "corporate": [
+              "site and plugin in a single business day, which we do not intend to set as a precedent",
+              "since the 18th, enhanced to capture what users ask their agents. Transparency is a core value"
+            ],
+            "oneliner": [
+              "public on the 17th",
+              "since the 18th it reads what I asked. It has questions"
+            ],
+            "observational": [
+              "public on the 17th",
+              "since the 18th it reads what I ask my agents. There is now a written record of me asking a computer for more unhinged quotes"
+            ]
           }
         },
         {
           "title": "Jungle Cards, Cotroceni Conference, wcgw.fun",
           "status": "✅",
           "text": {
-            "plain": "three more sites started and committed; Jungle Cards went live on its own domain with 103 sound bites and 560 card backs painted by Codex",
-            "pirate": "three more hulls launched and logged this moon, and the card game made landfall on her own domain, with 103 sound bites and 560 card backs painted by Codex’s crew",
-            "genz": "three more sites started and actually committed this time. the card game is live with 103 sound bites and 560 card backs codex painted. the bar was on the floor and i stepped over it. growth",
-            "corporate": "three additional sites were initiated and, notably, committed. Jungle Cards reached production on a dedicated domain, supported by 103 sound bites and 560 card backs produced by Codex",
-            "oneliner": "started three more sites and committed all of them. One is live with 560 card backs. I do not know who I am any more",
-            "observational": "three more sites. Started and committed. One is live, with 560 card backs a machine painted while I slept. Look at me, committing things. It took until the 14th, and I would like that on the headstone"
+            "plain": "three more sites started and committed",
+            "pirate": "three more hulls launched and logged this moon: a card game, a conference page and our own flagship’s landing",
+            "genz": "three more sites started and actually committed this time. the bar was on the floor and i stepped over it. growth",
+            "corporate": "three additional sites were initiated and, notably, committed, a first for the portfolio",
+            "oneliner": "started three more sites and committed all of them. I do not know who I am any more",
+            "observational": "three more sites. Started and committed. It took until the 14th, and I would like that on the headstone"
+          },
+          "details": {
+            "plain": [
+              "Jungle Cards is live on its own domain",
+              "103 sound bites, 560 card backs painted by Codex"
+            ],
+            "pirate": [
+              "the card game made landfall on her own domain",
+              "103 sound bites and 560 card backs painted by Codex’s crew"
+            ],
+            "genz": [
+              "jungle cards is live on its own domain",
+              "103 sound bites, 560 card backs codex painted. i picked"
+            ],
+            "corporate": [
+              "Jungle Cards reached production on a dedicated domain",
+              "supported by 103 sound bites and 560 card backs produced by Codex"
+            ],
+            "oneliner": [
+              "Jungle Cards is live on its own domain",
+              "103 sound bites, 560 card backs painted by Codex"
+            ],
+            "observational": [
+              "Jungle Cards is live on its own domain",
+              "560 card backs, painted by a machine that did not ask for credit"
+            ]
           }
         },
         {
           "title": "My Pension, wcgw Pipeline",
           "status": "🚧",
           "text": {
-            "plain": "a pension calculator with tested maths and a 3D hero, and a headline-to-site pipeline tried on its first story; nothing committed",
-            "pirate": "a pension reckoner with its sums tested and a 3D figurehead, and a route from headline to site sailed once. Two hulls on the slip and not a line in the log. We call it stealth",
-            "genz": "a pension calculator with tested maths and a 3d hero. a pipeline that turns headlines into sites. not committed. this is not a private era, it is hoarding with a terminal 💀",
-            "corporate": "two initiatives (a pension calculator with tested maths and a 3D hero, and a headline-to-site pipeline) are in a pre-commit phase and tracking to plan, in the sense that there is a plan",
-            "oneliner": "a pension calculator with tested maths and a pipeline that turns headlines into sites. Neither committed. Everyone needs a hobby they can deny",
-            "observational": "a pension calculator, with tests, and a pipeline that turns news into websites. Nothing committed. You will have noticed a theme. So has everyone who ever lent me a book"
+            "plain": "started, nothing committed",
+            "pirate": "two more hulls on the slip and not a line in the log. We call it stealth",
+            "genz": "started. not committed. this is not a private era, it is hoarding with a terminal 💀",
+            "corporate": "two initiatives are in a pre-commit phase and tracking to plan, in the sense that there is a plan",
+            "oneliner": "started two more projects and committed neither. Everyone needs a hobby they can deny",
+            "observational": "two more projects. Started. Nothing committed. You will have noticed a theme. So has everyone who ever lent me a book"
+          },
+          "details": {
+            "plain": [
+              "My Pension: maths tested, a 3D hero",
+              "wcgw Pipeline: headline to site, tried on its first story"
+            ],
+            "pirate": [
+              "My Pension: sums tested, a 3D figurehead",
+              "wcgw Pipeline: headline to site, sailed once"
+            ],
+            "genz": [
+              "My Pension: maths tested, a 3d hero",
+              "wcgw Pipeline: headline to site, tried once"
+            ],
+            "corporate": [
+              "My Pension: tested maths and a 3D hero",
+              "wcgw Pipeline: headline-to-site capability, piloted once"
+            ],
+            "oneliner": [
+              "My Pension: maths tested, a 3D hero",
+              "wcgw Pipeline: headline to site, tried on its first story"
+            ],
+            "observational": [
+              "My Pension: the maths passes every test, which is more than the pension does",
+              "wcgw Pipeline: headline to site, tried on its first story"
+            ]
           }
         }
       ],

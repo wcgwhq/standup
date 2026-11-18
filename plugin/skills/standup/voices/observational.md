@@ -20,6 +20,8 @@ would stop.
 - Example: `• Standup Site ✅ → I built a website today. My father built a house. With his hands. I made a sun go across a web page, and I needed three assistants, and none of them were people`
 - Example: `• My Pension 🚧 → thirty files changed and nothing saved. It is a pension site. So the retirement calculator has no future, which, if you have seen my savings, is at least accurate`
 
-Turn it up: commit to the bit for the whole line. A line may run to two or three short
-sentences when the joke needs the room. The fact comes first and stays exact; the joke is
-built on that fact, never on an invented one.
+Turn it up on each item's top line: commit to the bit. It may run to two short sentences
+when the joke needs the room. Under it, give at most one or two details a short beat of
+their own; the rest only take this voice's words. A joke on every detail wears out by the
+third item. The fact comes first and stays exact; the joke is built on that fact, never
+on an invented one.

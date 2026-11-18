@@ -49,11 +49,23 @@ Four to six lines you can say out loud. Paste them into Slack, say them at stand
 
 > **Standup EOD Tuesday, November 17th, 2026**
 >
-> - **Standup Site** ✅ → went public: the repo is open, the site deploys on every push, the plugin is one skill with a Slack markup style and sharper voices, plus a sun dial, hourly stories and a page per agent
-> - **Jungle Cards** 🚧 → live on its own domain: cards drag on phones, one top bar, a monkey-hand cursor, a looping city soundtrack with sound bites, haptics and a new share picture. Name kept, serparia.ro dropped
-> - **Jungle Cards About Page** 🚧 → rewritten in the game's single voice, with a bigger, snarkier author card picked from three painted versions
-> - **WCGW Brand** ✅ → design system rebuilt on the real logo, with social and avatar sets, 43 picked renders, profile crops and a stop-motion loop
-> - **wcgw.fun** 🔁 → four pull requests from Cursor merged: an Astro landing, an editorial manifesto, the WCGW mark in the masthead
+> - **Standup Site** ✅ → went public
+>   - deploys on every push
+>   - the plugin is one skill, with a Slack markup style and sharper voices
+>   - a sun dial, hourly stories, a page per agent
+> - **Jungle Cards** 🚧 → live on its own domain, not committed
+>   - cards drag on phones, one top bar, a monkey-hand cursor
+>   - a looping city soundtrack with sound bites, haptics, a new share picture
+>   - name kept, serparia.ro dropped
+> - **Jungle Cards About Page** 🚧 → rewritten in the game’s single voice
+>   - a bigger, snarkier author card
+>   - picked from three painted versions
+> - **WCGW Brand** ✅ → design system rebuilt on the real logo
+>   - social and avatar sets
+>   - 43 picked renders, profile crops, a stop-motion loop
+> - **wcgw.fun** 🔁 → four pull requests from Cursor merged
+>   - an Astro landing, an editorial manifesto
+>   - the WCGW mark in the masthead
 >
 > Jungle Cards went live with no commit that day. Read the next morning, so the day is complete.
 
@@ -72,13 +84,13 @@ Behind the update are the numbers: commits per repo, projects with work and no c
 
 ### In another voice
 
-Ask for "EOD in pirate voice". Facts, numbers and status marks stay as they are; only the wording changes. The first line above, three more ways:
+Ask for "EOD in pirate voice". Facts, numbers and status marks stay as they are; only the wording changes. The first item above, three more ways:
 
 | Voice | Line |
 | --- | --- |
-| `pirate` | hoisted the colours: the repo be open to all, the site sets sail on every push, the plugin be one skill with a Slack markup style and sharper voices, and she took on a sun dial, hourly stories and a page for every agent in the fleet |
-| `corporate` | pleased to report a successful public listing: the repo is open, the site deploys on every push, and the plugin has been consolidated into one skill with a Slack markup style and sharper voices. Additional deliverables include a sun dial, hourly stories and a page per agent |
-| `one-liner` | repo public, deploys on every push, one skill, Slack markup, sharper voices, a sun dial and hourly stories. Eleven commits for a tool that tells you what you did |
+| `pirate` | hoisted the colours, she sails public now<br>◦ launches herself at every push<br>◦ one skill aboard, with a Slack markup style and voices sharpened on the whetstone<br>◦ a sun dial, hourly stories and a berth for every agent |
+| `corporate` | pleased to report a successful public listing<br>◦ continuous deployment on every push<br>◦ portfolio consolidated into one skill, with a Slack markup style and sharper voices<br>◦ additional deliverables: a sun dial, hourly stories, a page per agent |
+| `one-liner` | went public. A tool that tells you what you did, built by someone who needed it<br>◦ deploys on every push<br>◦ one skill, Slack markup, sharper voices<br>◦ a sun dial, hourly stories, a page per agent |
 
 Also built in: `genz` and `observational`. You can add your own.
 
