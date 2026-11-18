@@ -306,7 +306,9 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                         {' → '}
                         {voices.map((voice) => (
                           <span data-voice={voice.id} data-md={voice.id === 'plain' ? undefined : 'skip'}>
-                            {slack(item.text[voice.id]).map(({ part, code }) => (code ? <code>{part}</code> : part))}
+                            {slack(item.text[voice.id]).map(({ part, code }) =>
+                              code ? <code>{part}</code> : part,
+                            )}
                           </span>
                         ))}
                         {item.details &&
@@ -319,7 +321,11 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                               {item.details[voice.id].map((detail) => (
                                 <li>
                                   <span aria-hidden="true">◦</span>
-                                  <span>{slack(detail).map(({ part, code }) => (code ? <code>{part}</code> : part))}</span>
+                                  <span>
+                                    {slack(detail).map(({ part, code }) =>
+                                      code ? <code>{part}</code> : part,
+                                    )}
+                                  </span>
                                 </li>
                               ))}
                             </ul>

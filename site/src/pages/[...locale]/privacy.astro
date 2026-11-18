@@ -36,7 +36,7 @@ const cookies = [
       <h1 class="text-3xl">{ui.privacyTitle}</h1>
       <p class="doc-lede">{ui.privacyLede}</p>
       <p class="doc-meta">
-        {ui.privacyUpdated}{' '}<time datetime={updated}>{updatedLabel}</time>
+        {ui.privacyUpdated} <time datetime={updated}>{updatedLabel}</time>
       </p>
 
       <h2>{ui.privacyPluginTitle}</h2>
@@ -59,17 +59,15 @@ const cookies = [
             </tr>
           </thead>
           <tbody>
-            {
-              cookies.map((cookie) => (
-                <tr>
-                  <th scope="row">
-                    <code>{cookie.name}</code>
-                  </th>
-                  <td>{cookie.purpose}</td>
-                  <td>{cookie.life}</td>
-                </tr>
-              ))
-            }
+            {cookies.map((cookie) => (
+              <tr>
+                <th scope="row">
+                  <code>{cookie.name}</code>
+                </th>
+                <td>{cookie.purpose}</td>
+                <td>{cookie.life}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -78,7 +76,9 @@ const cookies = [
       <h2>{ui.privacyChoiceTitle}</h2>
       <p>
         {ui.privacyChoiceBody}{' '}
-        <button type="button" class="link" data-consent-reset>{ui.consentReset}</button>
+        <button type="button" class="link" data-consent-reset>
+          {ui.consentReset}
+        </button>
       </p>
 
       <h2>{ui.privacyWhoTitle}</h2>
@@ -86,11 +86,15 @@ const cookies = [
       <ul>
         <li>
           {ui.privacyWhoMicrosoft}{' '}
-          <a href="https://www.microsoft.com/privacy/privacystatement" rel="noopener">{ui.privacyMicrosoftLink}</a>
+          <a href="https://www.microsoft.com/privacy/privacystatement" rel="noopener">
+            {ui.privacyMicrosoftLink}
+          </a>
         </li>
         <li>
           {ui.privacyWhoCloudflare}{' '}
-          <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">{ui.privacyCloudflareLink}</a>
+          <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">
+            {ui.privacyCloudflareLink}
+          </a>
         </li>
       </ul>
 
@@ -103,7 +107,9 @@ const cookies = [
       <h2>{ui.privacyContactTitle}</h2>
       <p>
         {ui.privacyContactBody}{' '}
-        <a href="https://github.com/wcgwhq/standup/issues" rel="noopener">{ui.privacyContactLink}</a>
+        <a href="https://github.com/wcgwhq/standup/issues" rel="noopener">
+          {ui.privacyContactLink}
+        </a>
       </p>
     </article>
   </main>

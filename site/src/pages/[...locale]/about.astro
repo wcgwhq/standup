@@ -21,9 +21,11 @@ const ui = copy(locale);
     <article class="space-y-3">
       <h1 class="text-3xl">{ui.aboutTitle}</h1>
       <p class="max-w-prose text-pretty text-[var(--color-muted)]">{ui.aboutBody}</p>
-      <p class="max-w-prose text-pretty text-[var(--color-muted)]">{ui.aboutPrivacy}{' '}
-        <a href={localePath(locale, '/privacy/')}>{ui.privacy}</a>{' '}
-        <button type="button" class="link" data-consent-reset>{ui.consentReset}</button>
+      <p class="max-w-prose text-pretty text-[var(--color-muted)]">
+        {ui.aboutPrivacy} <a href={localePath(locale, '/privacy/')}>{ui.privacy}</a>{' '}
+        <button type="button" class="link" data-consent-reset>
+          {ui.consentReset}
+        </button>
       </p>
     </article>
   </main>

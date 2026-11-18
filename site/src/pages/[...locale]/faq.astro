@@ -13,7 +13,13 @@ const { locale } = Astro.props;
 const ui = copy(locale);
 
 /** Each group's heading key and its questions: `faq<n>Q` and `faq<n>A` in src/i18n. */
-const groups: [string, number[]][] = [['faqBasics', [1, 2, 3, 4]], ['faqUsing', [5, 6, 7, 8, 9]], ['faqNumbers', [10, 11, 12]], ['faqPrivacy', [13, 14]], ['faqInstall', [15, 16, 17]]];
+const groups: [string, number[]][] = [
+  ['faqBasics', [1, 2, 3, 4]],
+  ['faqUsing', [5, 6, 7, 8, 9]],
+  ['faqNumbers', [10, 11, 12]],
+  ['faqPrivacy', [13, 14]],
+  ['faqInstall', [15, 16, 17]],
+];
 const privacyQuestions = [13];
 
 /** Backticks in an answer are inline code. */
@@ -41,29 +47,29 @@ const faqPage = {
       <h1 class="text-3xl">{ui.faqTitle}</h1>
       <p class="doc-lede">
         {ui.faqLede}{' '}
-        <a href="https://github.com/wcgwhq/standup/blob/main/plugin/README.md" rel="noopener">{ui.faqReference}</a>
+        <a href="https://github.com/wcgwhq/standup/blob/main/plugin/README.md" rel="noopener">
+          {ui.faqReference}
+        </a>
       </p>
-      {
-        groups.map(([heading, ids]) => (
-          <section>
-            <h2>{ui[heading]}</h2>
-            {ids.map((id) => (
-              <>
-                <h3 id={`q${id}`}>{ui[`faq${id}Q`]}</h3>
-                <p>
-                  {parts(ui[`faq${id}A`]).map((part, index) => (index % 2 ? <code>{part}</code> : part))}
-                  {privacyQuestions.includes(id) && (
-                    <>
-                      {' '}
-                      <a href={localePath(locale, '/privacy/')}>{ui.faqPrivacyLink}</a>
-                    </>
-                  )}
-                </p>
-              </>
-            ))}
-          </section>
-        ))
-      }
+      {groups.map(([heading, ids]) => (
+        <section>
+          <h2>{ui[heading]}</h2>
+          {ids.map((id) => (
+            <>
+              <h3 id={`q${id}`}>{ui[`faq${id}Q`]}</h3>
+              <p>
+                {parts(ui[`faq${id}A`]).map((part, index) => (index % 2 ? <code>{part}</code> : part))}
+                {privacyQuestions.includes(id) && (
+                  <>
+                    {' '}
+                    <a href={localePath(locale, '/privacy/')}>{ui.faqPrivacyLink}</a>
+                  </>
+                )}
+              </p>
+            </>
+          ))}
+        </section>
+      ))}
     </article>
   </main>
 </BaseLayout>

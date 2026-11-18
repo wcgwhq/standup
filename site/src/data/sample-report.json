@@ -105,10 +105,7 @@
             "observational": "rewrote it in one voice"
           },
           "details": {
-            "plain": [
-              "a bigger, snarkier author card",
-              "picked from three painted versions"
-            ],
+            "plain": ["a bigger, snarkier author card", "picked from three painted versions"],
             "pirate": [
               "the captain’s portrait made bigger and snarkier",
               "picked from three painted versions"
@@ -143,10 +140,7 @@
             "observational": "rebuilt the design system on the real logo"
           },
           "details": {
-            "plain": [
-              "social and avatar sets",
-              "43 picked renders, profile crops, a stop-motion loop"
-            ],
+            "plain": ["social and avatar sets", "43 picked renders, profile crops, a stop-motion loop"],
             "pirate": [
               "social and avatar sets",
               "43 picked renders, profile crops and a stop-motion loop to wave from the crow’s nest"
@@ -159,10 +153,7 @@
               "social and avatar sets",
               "43 picked renders, profile crops and a stop-motion loop, positioning us well going forward"
             ],
-            "oneliner": [
-              "social and avatar sets",
-              "43 picked renders, profile crops, a stop-motion loop"
-            ],
+            "oneliner": ["social and avatar sets", "43 picked renders, profile crops, a stop-motion loop"],
             "observational": [
               "social and avatar sets, profile crops, a stop-motion loop",
               "43 picked renders of a crashed UFO. I have never related to a logo more"
@@ -181,26 +172,14 @@
             "observational": "four pull requests merged today. Cursor wrote all four"
           },
           "details": {
-            "plain": [
-              "an Astro landing, an editorial manifesto",
-              "the WCGW mark in the masthead"
-            ],
-            "pirate": [
-              "an Astro landing and a manifesto",
-              "our mark on the masthead"
-            ],
+            "plain": ["an Astro landing, an editorial manifesto", "the WCGW mark in the masthead"],
+            "pirate": ["an Astro landing and a manifesto", "our mark on the masthead"],
             "genz": [
               "astro landing, manifesto, logo in the masthead",
               "i pressed a green button four times and called it a day. bffr"
             ],
-            "corporate": [
-              "an Astro landing and an editorial manifesto",
-              "masthead branding"
-            ],
-            "oneliner": [
-              "an Astro landing, an editorial manifesto",
-              "the WCGW mark in the masthead"
-            ],
+            "corporate": ["an Astro landing and an editorial manifesto", "masthead branding"],
+            "oneliner": ["an Astro landing, an editorial manifesto", "the WCGW mark in the masthead"],
             "observational": [
               "an Astro landing, an editorial manifesto, the WCGW mark in the masthead",
               "I pressed a green button four times and I was tired after. My grandfather worked in a mine. He would have had questions"
@@ -269,10 +248,7 @@
             "observational": "four plans shipped, and 112 commits to apologise for them"
           },
           "details": {
-            "plain": [
-              "163 review runs by Claude Code and Codex",
-              "most commits fix what they found"
-            ],
+            "plain": ["163 review runs by Claude Code and Codex", "most commits fix what they found"],
             "pirate": [
               "163 lookouts from Claude Code and Codex searched the hull",
               "most entries be patches for the holes they spotted"
@@ -285,10 +261,7 @@
               "163 independent reviews by Claude Code and Codex",
               "the majority of commits address their findings. We welcome the feedback"
             ],
-            "oneliner": [
-              "163 review runs by Claude Code and Codex",
-              "most commits fix what they found"
-            ],
+            "oneliner": ["163 review runs by Claude Code and Codex", "most commits fix what they found"],
             "observational": [
               "163 review runs by two companies’ machines, looking for what I did wrong",
               "most of the 112 commits fix what they found. That is not engineering. That is a confession with timestamps"
@@ -307,22 +280,13 @@
             "observational": "Bucharest on the front page, by sector, with what a flat white costs"
           },
           "details": {
-            "plain": [
-              "the sector map under it",
-              "a filter rail on the cafés page"
-            ],
-            "pirate": [
-              "with a chart of her sectors",
-              "the coffee houses have a rail of filters to port"
-            ],
+            "plain": ["the sector map under it", "a filter rail on the cafés page"],
+            "pirate": ["with a chart of her sectors", "the coffee houses have a rail of filters to port"],
             "genz": [
               "sector map under it",
               "cafés page got a filter rail. a site about what a flat white costs has more direction than my life"
             ],
-            "corporate": [
-              "a sector map alongside it",
-              "the cafés page equipped with a filter rail"
-            ],
+            "corporate": ["a sector map alongside it", "the cafés page equipped with a filter rail"],
             "oneliner": [
               "a map of its sectors. It is an index of coffee prices. The map is so you know where to be upset",
               "a filter rail on the cafés page"
@@ -345,10 +309,7 @@
             "observational": "I built a thing that writes this update"
           },
           "details": {
-            "plain": [
-              "the plugin gained voices and month reports",
-              "a setup check for the first run"
-            ],
+            "plain": ["the plugin gained voices and month reports", "a setup check for the first run"],
             "pirate": [
               "her log now speaks in five tongues",
               "and counts by the month, with a check before the first voyage"
@@ -361,10 +322,7 @@
               "plugin expanded with voices, monthly reporting and a setup check",
               "this report was produced by the product it describes, at no additional headcount"
             ],
-            "oneliner": [
-              "site live on pages.dev",
-              "voices, month reports, a setup check"
-            ],
+            "oneliner": ["site live on pages.dev", "voices, month reports, a setup check"],
             "observational": [
               "site live on pages.dev, with voices, month reports and a setup check",
               "so a tool is telling you that I built the tool. Nobody in this sentence did any work, and one of us still sends invoices"
@@ -427,26 +385,14 @@
             "observational": "the starter asks for your name, then a folder, then it makes the repo and reviews your copy"
           },
           "details": {
-            "plain": [
-              "languages and local URLs",
-              "a GitHub repo step, a copywriting skill"
-            ],
+            "plain": ["languages and local URLs", "a GitHub repo step, a copywriting skill"],
             "pirate": [
               "speaks many tongues and charts local URLs",
               "makes ye a GitHub repo and reads yer copy before ye shame the fleet"
             ],
-            "genz": [
-              "languages, local urls",
-              "makes the github repo for you, proofreads your copy"
-            ],
-            "corporate": [
-              "languages and local URLs",
-              "repository creation and a copywriting skill"
-            ],
-            "oneliner": [
-              "local URLs, a GitHub repo step",
-              "a copywriting skill"
-            ],
+            "genz": ["languages, local urls", "makes the github repo for you, proofreads your copy"],
+            "corporate": ["languages and local URLs", "repository creation and a copywriting skill"],
+            "oneliner": ["local URLs, a GitHub repo step", "a copywriting skill"],
             "observational": [
               "languages and local URLs",
               "everything but the website. I have built a very fast way to arrive at the hard part and stop"
@@ -597,10 +543,7 @@
             "observational": "233 commits this month, and 112 of them are Switchboard"
           },
           "details": {
-            "plain": [
-              "112 of the month’s 233 commits",
-              "after 163 review runs"
-            ],
+            "plain": ["112 of the month’s 233 commits", "after 163 review runs"],
             "pirate": [
               "163 lookouts searched the hull first",
               "112 of the month’s 233 log entries be hers alone. The other ships have filed a complaint"
@@ -613,10 +556,7 @@
               "112 of 233 commits, or 48% of total output",
               "we are monitoring our concentration risk"
             ],
-            "oneliner": [
-              "four plans shipped, E-077 to E-080",
-              "163 review runs"
-            ],
+            "oneliner": ["four plans shipped, E-077 to E-080", "163 review runs"],
             "observational": [
               "four plans shipped, after 163 review runs",
               "that is not a portfolio. That is one job and a lot of ways of avoiding it"
@@ -635,10 +575,7 @@
             "observational": "editorial no. 1 published, and five rounds on the stickers. Five"
           },
           "details": {
-            "plain": [
-              "print stickers through five rounds",
-              "Bucharest on the front page"
-            ],
+            "plain": ["print stickers through five rounds", "Bucharest on the front page"],
             "pirate": [
               "the stickers went five rounds with the printer and won",
               "Bucharest flies on the front page"
@@ -651,9 +588,7 @@
               "completed five rounds of sticker refinement. The sheep remains a key brand asset",
               "elevated Bucharest to the front page"
             ],
-            "oneliner": [
-              "Bucharest on the front page"
-            ],
+            "oneliner": ["Bucharest on the front page"],
             "observational": [
               "there is a sheep on one, and the URL had to fit under the sheep. Somewhere a data centre ran hot all night so I could nudge a sheep",
               "Bucharest on the front page"
@@ -672,14 +607,8 @@
             "observational": "it is a kit that starts websites. Starting was never the problem"
           },
           "details": {
-            "plain": [
-              "languages, an accent picker",
-              "a copy review"
-            ],
-            "pirate": [
-              "a CLI with many tongues and a choice of colours",
-              "a bosun who reads yer copy"
-            ],
+            "plain": ["languages, an accent picker", "a copy review"],
+            "pirate": ["a CLI with many tongues and a choice of colours", "a bosun who reads yer copy"],
             "genz": [
               "languages, an accent picker, a copy review",
               "it starts websites now. finishing them is still a me problem"
@@ -710,14 +639,8 @@
             "observational": "I built the thing that remembers my month on the 11th. It never met the man from the first ten days"
           },
           "details": {
-            "plain": [
-              "site and plugin in one day",
-              "since the 18th it reads what you asked your agents"
-            ],
-            "pirate": [
-              "site and log in a single tide",
-              "since the 18th she reads what ye asked yer crew"
-            ],
+            "plain": ["site and plugin in one day", "since the 18th it reads what you asked your agents"],
+            "pirate": ["site and log in a single tide", "since the 18th she reads what ye asked yer crew"],
             "genz": [
               "site and plugin in one day. the other ten days are unaccounted for",
               "since the 18th it reads my prompts. i need to go offline"
@@ -726,10 +649,7 @@
               "site and plugin in a single business day, which we do not intend to set as a precedent",
               "since the 18th, enhanced to capture what users ask their agents. Transparency is a core value"
             ],
-            "oneliner": [
-              "public on the 17th",
-              "since the 18th it reads what I asked. It has questions"
-            ],
+            "oneliner": ["public on the 17th", "since the 18th it reads what I asked. It has questions"],
             "observational": [
               "public on the 17th",
               "since the 18th it reads what I ask my agents. There is now a written record of me asking a computer for more unhinged quotes"
@@ -794,10 +714,7 @@
               "My Pension: sums tested, a 3D figurehead",
               "wcgw Pipeline: headline to site, sailed once"
             ],
-            "genz": [
-              "My Pension: maths tested, a 3d hero",
-              "wcgw Pipeline: headline to site, tried once"
-            ],
+            "genz": ["My Pension: maths tested, a 3d hero", "wcgw Pipeline: headline to site, tried once"],
             "corporate": [
               "My Pension: tested maths and a 3D hero",
               "wcgw Pipeline: headline-to-site capability, piloted once"

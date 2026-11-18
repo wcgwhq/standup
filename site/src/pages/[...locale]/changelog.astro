@@ -40,33 +40,33 @@ const parts = (text: string) => text.split('`');
       <h1 class="text-3xl">{ui.changelogTitle}</h1>
       <p class="doc-lede">
         {ui.changelogLede}{' '}
-        <a href="https://github.com/wcgwhq/standup/commits/main/plugin" rel="noopener">{ui.changelogSource}</a>
+        <a href="https://github.com/wcgwhq/standup/commits/main/plugin" rel="noopener">
+          {ui.changelogSource}
+        </a>
       </p>
-      {
-        changelog.releases.map((release) => (
-          <section>
-            <h2 id={`v${release.version}`} class="doc-version">
-              {release.version}
-            </h2>
-            <p class="doc-meta">
-              <time datetime={release.date}>{day(release.date)}</time>
-            </p>
-            {kinds.map(
-              ([kind, label]) =>
-                release[kind].length > 0 && (
-                  <>
-                    <h3>{label}</h3>
-                    <ul>
-                      {release[kind].map((entry) => (
-                        <li>{parts(entry).map((part, index) => (index % 2 ? <code>{part}</code> : part))}</li>
-                      ))}
-                    </ul>
-                  </>
-                ),
-            )}
-          </section>
-        ))
-      }
+      {changelog.releases.map((release) => (
+        <section>
+          <h2 id={`v${release.version}`} class="doc-version">
+            {release.version}
+          </h2>
+          <p class="doc-meta">
+            <time datetime={release.date}>{day(release.date)}</time>
+          </p>
+          {kinds.map(
+            ([kind, label]) =>
+              release[kind].length > 0 && (
+                <>
+                  <h3>{label}</h3>
+                  <ul>
+                    {release[kind].map((entry) => (
+                      <li>{parts(entry).map((part, index) => (index % 2 ? <code>{part}</code> : part))}</li>
+                    ))}
+                  </ul>
+                </>
+              ),
+          )}
+        </section>
+      ))}
     </article>
   </main>
 </BaseLayout>

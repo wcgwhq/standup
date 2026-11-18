@@ -6,3 +6,5 @@ package-lock.json
 public
 .cache
 wcgw.json
+.claude/settings.local.json
+.impeccable

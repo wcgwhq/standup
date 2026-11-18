@@ -158,24 +158,32 @@ const fullGraph: GraphNode[] = [
       type="application/ld+json"
       set:html={jsonLd({ '@context': 'https://schema.org', '@graph': fullGraph })}
     />
-    {
-      clarityId && (
-        <script is:inline define:vars={{ clarityId, host: site.hostname }}>
-          if (location.hostname === host) {
-            (function (c, l, a, r, i, t, y) {
-              c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
-              t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
-              y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
-            })(window, document, 'clarity', 'script', clarityId);
-            // No cookie until the visitor says yes (ConsentNote); a stored answer is applied here.
-            var answer = null;
-            try { answer = localStorage.getItem('standup-consent'); } catch (e) {}
-            document.documentElement.dataset.consent = answer === 'yes' || answer === 'no' ? answer : 'ask';
-            window.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: answer === 'yes' ? 'granted' : 'denied' });
-          }
-        </script>
-      )
-    }
+    {clarityId && <script is:inline define:vars={{ clarityId, host: site.hostname }}>
+      if (location.hostname === host) {
+        (function (c, l, a, r, i, t, y) {
+          c[a] =
+            c[a] ||
+            function () {
+              (c[a].q = c[a].q || []).push(arguments);
+            };
+          t = l.createElement(r);
+          t.async = 1;
+          t.src = 'https://www.clarity.ms/tag/' + i;
+          y = l.getElementsByTagName(r)[0];
+          y.parentNode.insertBefore(t, y);
+        })(window, document, 'clarity', 'script', clarityId);
+        // No cookie until the visitor says yes (ConsentNote); a stored answer is applied here.
+        var answer = null;
+        try {
+          answer = localStorage.getItem('standup-consent');
+        } catch (e) {}
+        document.documentElement.dataset.consent = answer === 'yes' || answer === 'no' ? answer : 'ask';
+        window.clarity('consentv2', {
+          ad_Storage: 'denied',
+          analytics_Storage: answer === 'yes' ? 'granted' : 'denied',
+        });
+      }
+    </script>}
   </head>
   <body>
     <a
@@ -192,14 +200,16 @@ const fullGraph: GraphNode[] = [
       hours={[ui.dialDawn, ui.dialNoon, ui.dialDusk]}
     />
     <slot />
-    {clarityId && <ConsentNote
-          label={ui.consentLabel}
-          body={ui.consentBody}
-          yes={ui.consentYes}
-          no={ui.consentNo}
-          more={ui.consentMore}
-          moreHref={localePath(locale, '/privacy/')}
-        />}
+    {clarityId && (
+      <ConsentNote
+        label={ui.consentLabel}
+        body={ui.consentBody}
+        yes={ui.consentYes}
+        no={ui.consentNo}
+        more={ui.consentMore}
+        moreHref={localePath(locale, '/privacy/')}
+      />
+    )}
     <WcgwFooter />
     {translations.length > 0 && (
       <footer class="mx-auto w-full max-w-xl px-6 pb-10">

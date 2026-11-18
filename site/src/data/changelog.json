@@ -35,9 +35,7 @@
         "The Gen Z and observational voices are sharper. Both aim at the writer, the work and the industry, never at a named person.",
         "The plugin’s logo is a PNG, so every agent’s plugin screen can show it."
       ],
-      "fixed": [
-        "The Grok install command now ends in `--trust`. Grok refuses to install without it."
-      ]
+      "fixed": ["The Grok install command now ends in `--trust`. Grok refuses to install without it."]
     },
     {
       "version": "0.6.0",
