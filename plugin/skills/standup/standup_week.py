@@ -58,6 +58,9 @@ try:
         render_sessions,
         render_groups,
         summarize_activity,
+        collect_worked_on,
+        worked_on_agents,
+        render_worked_on,
         render_activity,
     )
 except Exception as exc:  # pragma: no cover - import guard
@@ -157,6 +160,7 @@ def render_text(report: dict) -> str:
 
     render_token_block(lines, report["tokens"], "TOKENS", sources_note(report))
     render_activity(lines, report)
+    render_worked_on(lines, report)
     render_groups(lines, report)
     render_sessions(lines, report)
     render_personal(lines, report)
@@ -269,6 +273,8 @@ def main() -> None:
         "sessions": sessions,
         "activity": summarize_activity(unit, commits, personal_commits, start, end),
     }
+    report["worked_on"], report["worked_on_trimmed"] = collect_worked_on(
+        unit, start, end, worked_on_agents(args))
     if by_group:
         report["by_group"] = by_group
 

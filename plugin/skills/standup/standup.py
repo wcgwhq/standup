@@ -709,6 +709,400 @@ def render_activity(lines: list, report: dict) -> None:
         lines.append(f"  {tag + r['repo']:<28} {r['turns']:>5} Claude Code turns   {why}")
 
 
+# ------------------------ what the sessions were about ---------------------- #
+
+# Commit subjects say what shipped. What was asked in each agent session, and the
+# agent's last answer to it, say what was worked on: research, decisions, dead
+# ends, work not committed yet. Read from every agent that keeps the text on disk,
+# then trimmed so one report stays a readable size.
+WORKED_ON_BUDGET = 100_000  # characters of session text in one report (~25K tokens)
+# Tried in order until the window fits: (ask chars, reply chars, asks per session).
+WORKED_ON_LADDER = ((300, 500, 16), (220, 320, 10), (160, 200, 6), (120, 0, 4), (100, 0, 2))
+
+_DROPPED_BLOCKS = re.compile(
+    r"<(system-reminder|local-command-stdout|local-command-caveat|command-message)\b[^>]*>.*?</\1>", re.S)
+_PASTED = re.compile(r"<pasted_content\b[^>]*>.*?</pasted_content>", re.S)
+_IMAGE = re.compile(r"\[Image[^\]]*\]")
+_COMMAND = re.compile(r"<command-name>\s*(.*?)\s*</command-name>", re.S)
+_COMMAND_ARGS = re.compile(r"<command-args>(.*?)</command-args>", re.S)
+# Claude Code's own commands change the session, not the work.
+_SETTINGS_COMMANDS = {"model", "clear", "compact", "config", "resume", "mcp", "plugin", "login",
+                      "logout", "effort", "fast", "permissions", "status", "cost", "context"}
+
+
+def clean_ask(text) -> str | None:
+    """A person's prompt on one line, or None when it is not one: a tool result,
+    a command's output, an injected notice, a one-word reply such as "ok"."""
+    if not isinstance(text, str):
+        return None
+    command = _COMMAND.search(text)
+    if command:
+        if command.group(1).lstrip("/") in _SETTINGS_COMMANDS:
+            return None
+        args = _COMMAND_ARGS.search(text)
+        text = command.group(1) + " " + (args.group(1) if args else "")
+    text = _IMAGE.sub(" ", _PASTED.sub(" [pasted] ", _DROPPED_BLOCKS.sub(" ", text)))
+    text = " ".join(text.split())
+    if (len(text.split()) < 2 or text.startswith(("<", "[Request interrupted", "Caveat:", "# AGENTS.md",
+                                                   "Context handoff ("))):
+        return None
+    return text
+
+
+def one_line(text) -> str:
+    return " ".join(text.split()) if isinstance(text, str) else ""
+
+
+def shorten(text: str, n: int) -> str:
+    return text if len(text) <= n else text[: n - 1].rstrip() + "…"
+
+
+def local_stamp(ts) -> str | None:
+    """'YYYY-MM-DD HH:MM' in local time, from an ISO timestamp or epoch milliseconds."""
+    try:
+        if isinstance(ts, (int, float)):
+            d = dt.datetime.fromtimestamp(ts / 1000)
+        else:
+            d = dt.datetime.fromisoformat(ts.replace("Z", "+00:00")).astimezone()
+        return d.strftime("%Y-%m-%d %H:%M")
+    except Exception:
+        return None
+
+
+def in_window(stamp: str | None, start: dt.date, end: dt.date) -> bool:
+    return bool(stamp) and start.isoformat() <= stamp[:10] <= end.isoformat()
+
+
+def is_standup_ask(ask: str) -> bool:
+    """A request for this report is not work to report."""
+    return ask.lstrip("/").split(" ")[0].split(":")[-1] == "standup"
+
+
+def new_session(agent: str, ncwd: str | None = None) -> dict:
+    return {"agent": agent, "ncwd": ncwd, "title": None, "turns": []}
+
+
+def read_claude_session(path: str, unit: dict, start: dt.date, end: dt.date,
+                        seen: set, agent: str = "Claude Code", place: str | None = None) -> dict:
+    """The asks and replies of one Claude Code transcript. `place` is the folder a
+    Cowork session mounted; Claude Code's own lines carry their folder and branch.
+    `seen` holds prompt ids already read, because a resumed or forked session
+    copies earlier lines into a new file."""
+    session = new_session(agent, place)
+    titles: dict = {}
+    turn = None
+    try:
+        fh = open(path)
+    except Exception:
+        return session
+    with fh:
+        for line in fh:
+            try:
+                o = json.loads(line)
+            except Exception:
+                continue
+            kind = o.get("type")
+            if kind in ("custom-title", "ai-title", "summary"):
+                titles[kind] = o.get("customTitle") or o.get("aiTitle") or o.get("summary")
+                continue
+            msg = o.get("message")
+            # A compaction summary repeats earlier asks; they were read where they happened.
+            if o.get("isSidechain") or o.get("isMeta") or o.get("isCompactSummary") \
+                    or not isinstance(msg, dict):
+                continue
+            content = msg.get("content")
+            if kind == "user":
+                if isinstance(content, list):
+                    if any(isinstance(b, dict) and b.get("type") == "tool_result" for b in content):
+                        continue  # a tool's output, inside the current turn
+                    content = " ".join(b.get("text", "") for b in content
+                                       if isinstance(b, dict) and b.get("type") == "text")
+                ask = clean_ask(content)
+                if ask is None:
+                    continue
+                turn = None
+                stamp = local_stamp(o.get("timestamp"))
+                if not in_window(stamp, start, end):
+                    continue
+                ncwd = place
+                if place is None:
+                    ncwd = normalize_cwd(o.get("cwd"), unit["dev_roots"])
+                    if not path_matches(ncwd, unit["path"]):
+                        continue
+                    if unit["branch"] and o.get("gitBranch") != unit["branch"]:
+                        continue
+                # Not the line's uuid: a forked session copies the line under a new one.
+                key = (o.get("timestamp"), ask)
+                if key in seen:
+                    continue
+                seen.add(key)
+                turn = {"at": stamp, "ask": ask, "reply": ""}
+                session["ncwd"] = session["ncwd"] or ncwd
+                # `claude -p` from a script or an orchestrator, not a person at a prompt.
+                session["scripted"] = str(o.get("entrypoint") or "").startswith("sdk-")
+                session["turns"].append(turn)
+            elif kind == "assistant" and turn is not None and isinstance(content, list):
+                for b in content:
+                    if not isinstance(b, dict):
+                        continue
+                    if b.get("type") == "text" and one_line(b.get("text")):
+                        turn["reply"] = one_line(b.get("text"))
+                    elif b.get("type") == "tool_use" and b.get("name") == "Skill" \
+                            and is_standup_ask(str((b.get("input") or {}).get("skill", ""))):
+                        turn["standup"] = True
+    session["title"] = titles.get("custom-title") or titles.get("ai-title") or titles.get("summary")
+    return session
+
+
+def changed_since(path: str, start: dt.date) -> bool:
+    """A file last written before the window holds nothing in it."""
+    try:
+        return dt.date.fromtimestamp(os.path.getmtime(path)) >= start
+    except OSError:
+        return False
+
+
+def claude_code_sessions(unit: dict, start: dt.date, end: dt.date) -> list:
+    seen: set = set()
+    files = glob.glob(os.path.join(PROJECTS_DIR, "**", "*.jsonl"), recursive=True)
+    return [read_claude_session(f, unit, start, end, seen)
+            for f in files if "/subagents/" not in f and changed_since(f, start)]
+
+
+def cowork_sessions(unit: dict, start: dt.date, end: dt.date) -> list:
+    seen: set = set()
+    cache: dict = {}
+    out = []
+    for root in COWORK_ROOTS:
+        for f in glob.glob(os.path.join(root, "**", ".claude", "projects", "**", "*.jsonl"), recursive=True):
+            if "/subagents/" in f or not changed_since(f, start):
+                continue
+            folders = cowork_session_folders(f, cache)
+            if not folders_match(folders, unit["path"]):
+                continue
+            place = next((normalize_cwd(ff, unit["dev_roots"]) for ff in folders
+                          if ff and folders_match([ff], unit["path"])), unit["path"])
+            out.append(read_claude_session(f, unit, start, end, seen, "Cowork", place))
+    return out
+
+
+def codex_sessions(unit: dict, start: dt.date, end: dt.date) -> list:
+    """Asks and replies from Codex rollouts. Older versions write `user_message`
+    and `agent_message` events, newer ones `item_completed` items; both are read."""
+    out = []
+    for root in ("sessions", "archived_sessions"):
+        for f in glob.glob(os.path.join(CODEX_DIR, root, "**", "rollout-*.jsonl"), recursive=True):
+            if not changed_since(f, start):
+                continue
+            session = new_session("Codex")
+            cwd = None
+            turn = None
+            try:
+                fh = open(f)
+            except Exception:
+                continue
+            with fh:
+                for line in fh:
+                    try:
+                        o = json.loads(line)
+                    except Exception:
+                        continue
+                    payload = o.get("payload")
+                    if not isinstance(payload, dict):
+                        continue
+                    if o.get("type") in ("session_meta", "turn_context"):
+                        cwd = payload.get("cwd") or cwd
+                        if o.get("type") == "session_meta":
+                            # `codex exec`, started by a script or another agent.
+                            session["scripted"] = payload.get("source") == "exec"
+                        continue
+                    if o.get("type") != "event_msg":
+                        continue
+                    ask = reply = None
+                    kind = payload.get("type")
+                    if kind == "user_message":
+                        ask = payload.get("message")
+                    elif kind == "agent_message":
+                        reply = payload.get("message")
+                    elif kind == "item_completed":
+                        item = payload.get("item") or {}
+                        text = " ".join(c.get("text", "") for c in item.get("content") or []
+                                        if isinstance(c, dict) and c.get("type") in ("text", "Text"))
+                        if item.get("type") == "UserMessage":
+                            ask = text
+                        elif item.get("type") == "AgentMessage":
+                            reply = text
+                    if ask is not None:
+                        ask = clean_ask(ask)
+                        if ask is None:
+                            continue
+                        if turn is not None and turn["ask"] == ask:
+                            continue  # the same prompt, written by both event kinds
+                        turn = None
+                        stamp = local_stamp(o.get("timestamp"))
+                        ncwd = normalize_cwd(cwd, unit["dev_roots"])
+                        if not in_window(stamp, start, end) or not path_matches(ncwd, unit["path"]):
+                            continue
+                        turn = {"at": stamp, "ask": ask, "reply": ""}
+                        session["ncwd"] = session["ncwd"] or ncwd
+                        session["turns"].append(turn)
+                    elif turn is not None and one_line(reply):
+                        turn["reply"] = one_line(reply)
+            out.append(session)
+    return out
+
+
+def opencode_sessions(unit: dict, start: dt.date, end: dt.date) -> list:
+    """Asks and replies from opencode's SQLite store: each message's text parts."""
+    db = _ro_db(OPENCODE_DB)
+    if db is None:
+        return []
+    since_ms = int(dt.datetime.combine(start, dt.time()).timestamp() * 1000)
+    try:
+        places = {sid: (directory, title) for sid, directory, title in
+                  db.execute("select id, directory, title from session")}
+        rows = db.execute(
+            "select p.session_id, p.message_id, p.time_created, m.data, p.data from part p "
+            "join message m on m.id = p.message_id where p.time_created >= ? "
+            "order by p.time_created", (since_ms,)).fetchall()
+    except Exception:
+        return []
+    finally:
+        db.close()
+    sessions: dict = {}
+    turns: dict = {}
+    for sid, mid, created, mdata, pdata in rows:
+        try:
+            role = json.loads(mdata).get("role")
+            part = json.loads(pdata)
+        except Exception:
+            continue
+        if part.get("type") != "text" or part.get("synthetic"):
+            continue
+        directory, title = places.get(sid, (None, None))
+        ncwd = normalize_cwd(directory, unit["dev_roots"])
+        stamp = local_stamp(created)
+        if not in_window(stamp, start, end) or not path_matches(ncwd, unit["path"]):
+            continue
+        session = sessions.setdefault(sid, new_session("opencode", ncwd))
+        session["title"] = title
+        if role == "user":
+            turn = turns.get(mid)
+            if turn is None:
+                turn = turns[mid] = {"at": stamp, "ask": "", "reply": "", "raw": ""}
+                session["turns"].append(turn)
+            turn["raw"] += " " + (part.get("text") or "")
+            turn["ask"] = clean_ask(turn["raw"]) or ""
+        elif role == "assistant" and session["turns"] and one_line(part.get("text")):
+            session["turns"][-1]["reply"] = one_line(part.get("text"))
+    for session in sessions.values():
+        session["turns"] = [{k: v for k, v in t.items() if k != "raw"} for t in session["turns"] if t["ask"]]
+    return list(sessions.values())
+
+
+def fit_session(row: dict, ask_n: int, reply_n: int, keep: int) -> dict:
+    """A session trimmed to `keep` asks (its first and its last ones) and to the
+    given lengths."""
+    turns = row["turns"]
+    if len(turns) > keep:
+        turns = turns[: keep - keep // 2] + turns[len(turns) - keep // 2:]
+    fitted = {**row, "turns": []}
+    for t in turns:
+        out = {"at": t["at"], "ask": shorten(t["ask"], ask_n)}
+        if reply_n and t["reply"]:
+            out["reply"] = shorten(t["reply"], reply_n)
+        fitted["turns"].append(out)
+    if len(row["turns"]) > len(turns):
+        fitted["more_asks"] = len(row["turns"]) - len(turns)
+    return fitted
+
+
+def text_size(rows: list) -> int:
+    """What the rows add to the report, keys and all."""
+    return len(json.dumps(rows, ensure_ascii=False))
+
+
+def merge_scripted(rows: list) -> list:
+    """One row per repo, agent and day for scripted runs, which come in dozens or
+    hundreds (a review fanned out, a batch of images). `sessions` says how many
+    runs it stands for; the first asks of the first three say what they were for."""
+    merged: dict = {}
+    out = []
+    for row in rows:
+        if not row.get("scripted"):
+            out.append(row)
+            continue
+        key = (row["repo"], row["agent"], row["days"][0], row.get("personal"), row.get("group"))
+        held = merged.get(key)
+        if held is None:
+            held = merged[key] = {**row, "title": None, "sessions": 0, "turns": []}
+            out.append(held)
+        held["sessions"] += 1
+        if len(held["turns"]) < 3:
+            held["turns"].append(row["turns"][0])
+    return out
+
+
+def collect_worked_on(unit: dict, start: dt.date, end: dt.date, agents: set) -> tuple:
+    """Every agent session in the window that had a person's ask, oldest first,
+    trimmed to WORKED_ON_BUDGET. Returns (rows, trimmed)."""
+    readers = (("claude", claude_code_sessions), ("cowork", cowork_sessions),
+               ("codex", codex_sessions), ("opencode", opencode_sessions))
+    rows = []
+    for name, read in readers:
+        if name not in agents:
+            continue
+        for s in read(unit, start, end):
+            turns = [t for t in s["turns"] if not t.get("standup") and not is_standup_ask(t["ask"])]
+            if not turns:
+                continue
+            if s.get("scripted"):
+                # A script can start dozens of these; its first ask says what they were for.
+                turns = turns[:1]
+            repo = repo_of(s["ncwd"], unit["dev_roots"]) or s["ncwd"] or ""
+            row = {"repo": os.path.basename(repo.rstrip("/")) or "(no folder)", "agent": s["agent"],
+                   "title": one_line(s["title"]) or None,
+                   "days": sorted({t["at"][:10] for t in turns}), "turns": turns}
+            if s.get("scripted"):
+                row["scripted"] = True
+            if not unit["unit_is_personal"] and is_personal(s["ncwd"], unit["personal"], unit["dev_roots"]):
+                row["personal"] = True
+            group = group_of(s["ncwd"], unit)
+            if group:
+                row["group"] = group
+            rows.append(row)
+    rows.sort(key=lambda r: r["turns"][0]["at"])
+    rows = merge_scripted(rows)
+    for rung, (ask_n, reply_n, keep) in enumerate(WORKED_ON_LADDER):
+        fitted = [fit_session(r, ask_n, reply_n, keep) for r in rows]
+        if text_size(fitted) <= WORKED_ON_BUDGET:
+            break
+    return fitted, rung > 0
+
+
+def worked_on_agents(args) -> set:
+    agents = {"claude"}
+    if not args.no_codex:
+        agents.add("codex")
+    if not args.no_cowork:
+        agents.add("cowork")
+    if "opencode" not in parse_skip(args.skip):
+        agents.add("opencode")
+    return agents
+
+
+def render_worked_on(lines: list, report: dict) -> None:
+    rows = report.get("worked_on") or []
+    if not rows:
+        return
+    lines.append(f"\nWORKED ON IN AGENT SESSIONS ({len(rows)})")
+    for r in rows:
+        tag = "(personal) " if r.get("personal") else f"({r['group']}) " if r.get("group") else ""
+        asks = len(r["turns"]) + r.get("more_asks", 0)
+        about = r["title"] or r["turns"][0]["ask"]
+        lines.append(f"  {r['turns'][0]['at']}  {tag}[{r['repo']}] {r['agent']}, {asks} ask(s): {shorten(about, 90)}")
+
+
 def collect_codex_tokens(unit: dict, start: dt.date, end: dt.date) -> dict:
     """Codex CLI rollouts -> same by_model shape as collect_tokens (folded in).
 
@@ -1362,6 +1756,7 @@ def render_text(report: dict) -> str:
 
     render_token_block(lines, report["tokens"], "TOKENS", sources_note(report))
     render_activity(lines, report)
+    render_worked_on(lines, report)
     render_groups(lines, report)
     render_sessions(lines, report)
     render_personal(lines, report)
@@ -1570,6 +1965,8 @@ def main() -> None:
         "sessions": sessions,
         "activity": summarize_activity(unit, commits, personal_commits, start, end),
     }
+    report["worked_on"], report["worked_on_trimmed"] = collect_worked_on(
+        unit, start, end, worked_on_agents(args))
     if by_group:
         report["by_group"] = by_group
 

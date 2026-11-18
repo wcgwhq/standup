@@ -14,6 +14,10 @@ Each report combines:
 1. **Commits** from `git log`, filtered by branch, author and date.
 2. **Agent usage** for the same work, read from each agent's local files. Work
    run in Superconductor or Conductor worktrees is attributed to its real repo.
+3. **What was worked on**: what you asked in each agent session and the agent's
+   last answer to it, from Claude Code, Cowork, Codex and opencode. This is how the
+   update covers research, decisions and work not committed yet. A long window is
+   trimmed to fit: fewer asks per session and shorter text.
 
 | Agent | What is read |
 | --- | --- |
@@ -81,7 +85,7 @@ report on the folder and branch you are in.
 | `units.json` | Named targets for `--unit <name>`: a repo, a branch, or a folder of repos. Start from `skills/standup/units.example.json`. |
 | `config.json` | `dev_roots` (where your repos live), `groups` (named sets of repos, each reported separately), `personal` (repo names kept out of the totals), `worktree_roots`, `oneshot_roots`. |
 | (first run) | `python3 plugin/skills/standup/standup.py --check` shows your code folders, the email commits are matched on and which agents have data. `--init` writes the three files below and never overwrites one. |
-| `style.md` | How the written report should look. Start from `skills/standup/style.example.md`, which pastes cleanly into Slack. |
+| `style.md` | How the written report should look. Start from `skills/standup/style.example.md`, which pastes cleanly into Slack. When you correct an update ("shorter", "never mention sign-ins"), the skill adds a dated line under `## Learned from feedback` and tells you; "forget that" removes it. |
 | (Slack markup) | Say "with Slack markup" for bold names, identifiers in inline code and, when you ask for the numbers, a code block. It needs Slack's "Format messages with markup" setting. To make it your default, start `style.md` from `skills/standup/style.slack-markup.example.md`. |
 | `voices/<name>.md` | Your own writing voices. Built in: `pirate`, `genz`, `corporate`, `one-liner`, `observational`. Ask for one ("eod in pirate voice") or set `"voice"` in `config.json`. Facts and numbers never change, only the wording. |
 | `pricing.json` | USD per 1M tokens, per model family. Overrides the built-in table. |
@@ -157,8 +161,9 @@ A key prices every model id that starts with it. Rates are USD per million token
 
 The scripts open no network connection. The report they print goes to your agent, which
 means it goes to your model provider like anything else in the conversation: folder
-paths, commit subjects, the names of changed files and, when a repo has commits by
-someone else, their email address.
+paths, commit subjects, the names of changed files, short excerpts of what you asked
+your agents and what they answered and, when a repo has commits by someone else, their
+email address.
 
 ## License
 

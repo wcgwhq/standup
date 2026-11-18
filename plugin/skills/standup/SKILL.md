@@ -16,7 +16,7 @@ allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/standup.py *), Bash(python3 ${CL
 When the request names no period, it is today. Do not ask. Everything below is the day
 report; `week.md` builds on it and says where it differs.
 
-Produces a standup report for a **work unit** by combining two sources:
+Produces a standup report for a **work unit** by combining three sources:
 
 1. **Commits** — `git log`, filtered by branch + author + date window. A bare
    container path (e.g. `~/development`) fans out to **every child git repo** so
@@ -55,6 +55,9 @@ Produces a standup report for a **work unit** by combining two sources:
    **Personal projects** (none by default; list repo names in `config.json`'s
    `personal`) are pulled OUT of the work totals and reported as a separate
    "personal" line; they're still reported in full when you target them directly.
+
+3. **What was worked on**: each agent session's asks and the agent's last answer to
+   each, from Claude Code, Cowork, Codex and opencode, trimmed to fit (`worked_on`).
 
 This is self-contained: it reads git + transcripts directly, so it works in a brand-new
 session or a separate agent with zero prior context.
@@ -130,6 +133,33 @@ no data, or none in 30 days, will add nothing to the report). Read any `PROBLEM:
 line out as written. If it ends "Not set up yet", ask whether to create the files,
 then run `--init`: it writes `config.json`, a `work` unit covering the first code
 folder, and `style.md`, and never overwrites a file that exists. Then run the report.
+
+## What was worked on
+
+The JSON has a `worked_on` list: one row per agent session in the window that has a
+person's ask in it, oldest first. Each row has `repo`, `agent`, `title` (the
+session's name, when the agent keeps one), `days`, and `turns`: each ask (`ask`) with
+the agent's last answer to it (`reply`), both trimmed. `more_asks` counts asks left
+out of the middle of a long session. `worked_on_trimmed` is true when the window held
+more text than fits, so a shorter window gives more detail.
+
+Commits say what shipped; these rows say what was worked on. Write the update from both.
+
+- **Account for every row.** Fold it into the theme its commits belong to, or give it
+  its own line. A session with no matching commit is work in progress, research or
+  a decision: say which, from its asks and replies.
+- **Bring out what the commits miss:** what was decided, what was found out, what
+  was tried and dropped, what is waiting on someone. The replies hold it.
+- **Write it in your own words.** Never paste an ask or a reply into the update:
+  asks are typed fast and can hold pasted text that was never meant for a channel.
+- **One piece of work, one line.** A Codex run started from a Claude Code session,
+  or a session picked up again later, is the same work. Do not count it twice.
+  Rows marked `scripted` were started by a script or another agent (`claude -p`,
+  `codex exec`). One such row stands for all of that day's runs in a repo, and
+  `sessions` says how many: describe them as the job they were part of.
+- Leave out turns that were only about driving the agent: a model switch, a
+  question about its settings.
+- Rows carry `personal` and `group` like the rest of the report, and the same rules apply.
 
 ## Work that left no commit
 
@@ -209,8 +239,9 @@ of them as before.
 
 After running the engine, produce a **succinct** standup the user can paste:
 
-- **Group commits into 4–6 user-facing themes**, not one bullet per commit. Lead with
-  features/fixes, fold refactors/docs into a smaller line.
+- **Group the commits and the `worked_on` sessions into 4–6 user-facing themes**, not
+  one bullet per commit or per session. Lead with features/fixes, fold
+  refactors/docs into a smaller line.
 - **Work that left no commit gets its own line**, marked in progress, as "Work that
   left no commit" above describes. A row tagged `personal` or with a `group` goes in
   that section of the update, never in the work lines.
@@ -291,6 +322,28 @@ Slack-paste-safe style to copy.
 follow it for this report: bold item names, identifiers in inline code, and the numbers in
 one code block when they are asked for. It needs a Slack setting, which that file names;
 say so in one line after the update the first time you use it in a conversation.
+
+## Remembering feedback
+
+`style.md` is also where the user's preferences build up. When the user corrects an
+update in a way that should hold next time, fix this update, then record it:
+
+- **What to save:** how to write the update or what belongs in it. "Shorter", "drop
+  the token numbers", "never mention sign-ins", "the Codex image runs are one line",
+  "call the site project Standup". Not a one-off choice of period, voice or unit,
+  unless the user says "always" or "from now on".
+- **Where:** the `## Learned from feedback` section at the end of
+  `~/.claude/standup/style.md`. Create the section, or the file, if it is missing. One
+  line per preference, in the user's terms, with the date:
+  `- 2026-11-18: Codex image runs are one line, not one per picture.`
+- **Keep it true:** when a new preference changes an old one, rewrite that line
+  instead of adding a second. When the user takes one back, delete its line.
+- **Never save** the content of the work, anything pasted, or a secret. The file
+  holds how to write, not what happened.
+- **Say so**, in one line after the update: `Saved to your style: <the line>. Say
+  "forget that" to undo.`
+
+Lines in `## Learned from feedback` win over the rest of `style.md` and over this file.
 
 ## Voices
 

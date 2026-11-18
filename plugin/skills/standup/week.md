@@ -112,8 +112,11 @@ month, title it `<Month Year>`, and name the weeks only where it helps. Claude C
 deletes transcripts after about 30 days, so a month older than that has commits
 and few or no tokens: say so.
 
-The JSON also carries `activity` (projects with sessions and no commits); handle
-it as `SKILL.md` describes under "Work that left no commit". For
+The JSON also carries `worked_on` (each session's asks and replies) and `activity`
+(projects with sessions and no commits); handle them as `SKILL.md` describes under
+"What was worked on" and "Work that left no commit". A `worked_on` row's `days` says
+where it falls in the window. Over a month the text is trimmed hardest; say so when
+`worked_on_trimmed` is true and the user wants more detail. For
 first-run setup, run `python3 ${CLAUDE_SKILL_DIR}/standup.py --check`;
 this script has no `--check` of its own.
 
@@ -135,8 +138,8 @@ ones, and never mix two groups in one update.
 
 After running the engine, produce a **succinct weekly recap** the user can paste:
 
-- **Group the week's commits into 4-6 user-facing themes**, not one bullet per
-  commit and not one bullet per day. A week has many commits — synthesize across
+- **Group the week's commits and `worked_on` sessions into 4-6 user-facing themes**,
+  not one bullet per commit and not one bullet per day. A week has many commits — synthesize across
   days into themes (features shipped, fixes, refactors/infra). The per-day
   breakdown in the output is your evidence, not the output format.
 - Lead with the headline outcomes of the week; fold refactors/docs/chores into a
@@ -179,7 +182,8 @@ If `~/.claude/standup/style.md` exists, read it before writing the report and
 follow it: it overrides the generic formatting guidance above. No file means the
 generic guidance applies. `style.example.md` in this skill is a ready
 Slack-paste-safe style to copy. For Slack markup (bold names, inline code, a code block
-of numbers), see "Slack markup" in `SKILL.md`.
+of numbers), see "Slack markup" in `SKILL.md`. When the user corrects a recap, save the
+preference as "Remembering feedback" in `SKILL.md` describes.
 
 ## Voices
 

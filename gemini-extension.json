@@ -1,5 +1,5 @@
 {
   "name": "standup",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Standup updates for a day, a week or a month, written from your git commits and your agents' sessions."
 }

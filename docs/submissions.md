@@ -100,7 +100,7 @@ For questionnaires. Answer each question as the form asks it; these are the fact
 | Does it make network requests? | No. Its scripts open no network connection. |
 | What does it read? | Local files only: git history of the repositories you point it at, and the session files that coding agents write on your disk (Claude Code, Codex, Grok, Gemini CLI, opencode, Cowork, Cursor, Antigravity). |
 | What does it write? | Nothing outside its own settings folder, `~/.claude/standup/`, which holds your groups, style and pricing. |
-| What reaches the model provider? | The report the script prints becomes part of your conversation with your agent, so it reaches your model provider like anything else you say: folder paths, commit subjects, names of changed files, token counts and, when a repository has commits by someone else, their email address. No file contents and no session transcripts. |
+| What reaches the model provider? | The report the script prints becomes part of your conversation with your agent, so it reaches your model provider like anything else you say: folder paths, commit subjects, names of changed files, token counts, short excerpts of what was asked in each agent session and the agent's answer and, when a repository has commits by someone else, their email address. No file contents and never a whole session transcript. |
 | Does it run code? | Yes, two Python scripts in the skill's folder, run by the agent when you ask for an update. No lifecycle hooks, no background process, no MCP server. |
 | Does it need credentials? | No. No API keys, tokens or logins. |
 | Third-party services | None. |
@@ -108,13 +108,13 @@ For questionnaires. Answer each question as the form asks it; these are the fact
 
 **One-paragraph version**
 
-> Standup runs on your machine and has no server, account or telemetry. Its two Python scripts read your local git history and the session files your coding agents keep on your disk, and they open no network connection. The report they print is handed to your agent, so it reaches your model provider as part of your conversation: folder paths, commit subjects, names of changed files and token counts. Nothing is sent to What Could Go Wrong.
+> Standup runs on your machine and has no server, account or telemetry. Its two Python scripts read your local git history and the session files your coding agents keep on your disk, and they open no network connection. The report they print is handed to your agent, so it reaches your model provider as part of your conversation: folder paths, commit subjects, names of changed files, token counts and short excerpts of what you asked your agents. Nothing is sent to What Could Go Wrong.
 
 ## Privacy policy
 
 OpenAI's catalog needs an HTTPS privacy-policy URL: **https://standup.wcgw.fun/privacy/**. The page is the full text; this is its summary, for a form that wants the policy pasted.
 
-> **The plugin.** Standup runs on your computer. It has no server and no account, and its scripts open no network connection. It reads your local git history and the session files your coding agents keep on your disk. The report it prints is given to your agent, so it reaches your model provider as part of your conversation, under that provider's terms: folder paths, commit subjects, names of changed files and token counts. What Could Go Wrong receives none of it.
+> **The plugin.** Standup runs on your computer. It has no server and no account, and its scripts open no network connection. It reads your local git history and the session files your coding agents keep on your disk. The report it prints is given to your agent, so it reaches your model provider as part of your conversation, under that provider's terms: folder paths, commit subjects, names of changed files, token counts and short excerpts of what you asked your agents. What Could Go Wrong receives none of it.
 >
 > **This website.** standup.wcgw.fun uses Microsoft Clarity to see how its pages are used. It sets a cookie only if you say yes to the question on your first visit, and you can change your answer on the About page. The site is served by Cloudflare, which keeps standard request logs.
 >

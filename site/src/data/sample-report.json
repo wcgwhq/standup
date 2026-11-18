@@ -1,5 +1,5 @@
 {
-  "_note": "Radu's own runs, read on Tuesday 17 November 2026 at about 3:30pm with plugin 0.6.0 (--unit work): the standup for that day, for the full week of 9 to 15 November, and for 1 to 17 November. Real commits and real token counts, shown on the homepage at his request. The day was chosen because it shows the most: commits, merged pull requests, and work with no commit yet. Cost is at Anthropic's list prices of 2026-11-03, one price per model; the Codex model has no price row and is shown as unpriced. Each update follows his style file and is also written in the five built-in voices, turned up at his request. Four Romanian project names are shown in English so the example reads the same for everyone: My Pension (cat-vine-pensia), pension-meter (pensiometru), Jungle Cards (cartile-pe-fata) and Cotroceni Conference (conferinta-de-la-cotroceni). vibe-check is listed as personal in his settings and is left out. Nothing else is changed. Identifiers in backticks are shown as inline code, as the Slack markup style writes them.",
+  "_note": "Radu's own runs, read on Wednesday 18 November 2026 at about 10am with plugin 0.7.0 (--unit work): the standup for Tuesday 17 November, for the full week of 9 to 15 November, and for 1 to 18 November. 0.7.0 also reads what was asked in each agent session, so work with no commit (the card game going live, the pension calculator, the review runs behind Switchboard's fixes) is described, not only counted. Real commits and real token counts, shown on the homepage at his request. The day was chosen because it shows the most: commits, merged pull requests, and work with no commit yet. Cost is at Anthropic's list prices of 2026-11-03, one price per model; the Codex model has no price row and is shown as unpriced. Each update follows his style file and is also written in the five built-in voices, turned up at his request. Four Romanian project names are shown in English so the example reads the same for everyone: My Pension (cat-vine-pensia), pension-meter (pensiometru), Jungle Cards (cartile-pe-fata) and Cotroceni Conference (conferinta-de-la-cotroceni). vibe-check is listed as personal in his settings and is left out. Nothing else is changed. Identifiers in backticks are shown as inline code, as the Slack markup style writes them.",
   "periods": [
     {
       "id": "day",
@@ -9,12 +9,48 @@
           "title": "Standup Site",
           "status": "✅",
           "text": {
-            "plain": "a sun dial across the window with a sky behind the page, voice characters, a page per agent, and it deploys itself on every push",
-            "pirate": "Arr, a sun now sails clear across the window with a sky behind the page, six odd characters speak for the crew, every agent has its own page, and the ship launches herself at every push",
-            "genz": "woke up and chose weather. there is a whole sun going across the window now and a sky behind the page. six little guys for the voices. it deploys itself. the site has more atmosphere than my entire personality",
-            "corporate": "delivered a window-wide sun dial with supporting sky, six voice characters and a page per agent, and automated deployment on every push. Weather is now a core competency",
-            "oneliner": "built a sky for a website about status updates. The forecast is commits",
-            "observational": "I spent today moving a sun across a web page. Then I gave it clouds. It is a site for people who lost track of their day, and I lost a day making it. I am both the product and the warning"
+            "plain": "went public: the repo is open, the site deploys on every push, the plugin is one skill with a Slack markup style and sharper voices, plus a sun dial, hourly stories and a page per agent",
+            "pirate": "hoisted the colours: the repo be open to all, the site sets sail on every push, the plugin be one skill with a Slack markup style and sharper voices, and she took on a sun dial, hourly stories and a page for every agent in the fleet",
+            "genz": "the repo went public, the site redeploys on every push, the plugin is one skill now with slack markup and voices that finally have teeth. plus a sun dial and hourly stories. she ate and left no crumbs",
+            "corporate": "pleased to report a successful public listing: the repo is open, the site deploys on every push, and the plugin has been consolidated into one skill with a Slack markup style and sharper voices. Additional deliverables include a sun dial, hourly stories and a page per agent",
+            "oneliner": "repo public, deploys on every push, one skill, Slack markup, sharper voices, a sun dial and hourly stories. Eleven commits for a tool that tells you what you did",
+            "observational": "the repo is public now and the site deploys itself on every push. It has a sun dial, hourly stories, a page per agent, and a plugin that is one skill with sharper voices. All of it exists so a machine can tell me at night what I did. Because I can’t"
+          }
+        },
+        {
+          "title": "Jungle Cards",
+          "status": "🚧",
+          "text": {
+            "plain": "live on its own domain: cards drag on phones, one top bar, a monkey-hand cursor, a looping city soundtrack with sound bites, haptics and a new share picture. Name kept, serparia.ro dropped",
+            "pirate": "made landfall on her own domain: cards be dragged aboard on phones, one top bar, a monkey-hand cursor, a city shanty on loop with sound bites, haptics and a new share picture. Kept her name; serparia.ro walked the plank",
+            "genz": "live on its own domain. cards drag on phones now, one top bar, a monkey-hand cursor, a city soundtrack on loop with sound bites, haptics, a new share picture. kept the name, serparia.ro got ratioed. in prod with no commit, no proof and no alibi 💀",
+            "corporate": "completed market entry on a dedicated domain: cards now drag on phones, one top bar, a monkey-hand cursor, a looping city soundtrack with sound bites, haptics and a new share picture. Brand equity retained; serparia.ro has been divested",
+            "oneliner": "live on its own domain with cards that drag on phones, a monkey-hand cursor, a looping city soundtrack, sound bites, haptics and a new share picture. Name kept, serparia.ro dropped. In production, not in git",
+            "observational": "it is live on its own domain. Cards that drag on phones, a monkey-hand cursor, a looping city soundtrack with sound bites, haptics, a new share picture. Kept the name, dropped serparia.ro. None of it is committed. It exists the way a ghost exists: everyone can see it and there is no paperwork"
+          }
+        },
+        {
+          "title": "Jungle Cards About Page",
+          "status": "🚧",
+          "text": {
+            "plain": "rewritten in the game’s single voice, with a bigger, snarkier author card picked from three painted versions",
+            "pirate": "the captain’s log rewritten in one voice, and the captain’s portrait made bigger and snarkier, picked from three painted versions",
+            "genz": "rewritten in one voice because “we” was giving group project. my card is bigger and snarkier now, picked from three painted versions, because the first one had me looking like i was begging. be so for real",
+            "corporate": "messaging realigned to a single voice, and executive presence upgraded: a bigger, snarkier author card selected from three painted versions",
+            "oneliner": "rewritten in one voice, with a bigger, snarkier author card picked from three painted versions. Two of me were rejected. By me",
+            "observational": "rewrote it in one voice, then had my own card painted three times until I looked younger and less like I was asking for something. I picked the one that lies best"
+          }
+        },
+        {
+          "title": "WCGW Brand",
+          "status": "✅",
+          "text": {
+            "plain": "design system rebuilt on the real logo, with social and avatar sets, 43 picked renders, profile crops and a stop-motion loop",
+            "pirate": "raised a new flag on the real logo: social and avatar sets, 43 picked renders, profile crops and a stop-motion loop to wave from the crow’s nest",
+            "genz": "design system rebuilt on the real logo after the wrong one got drawn. social and avatar sets, 43 picked renders, profile crops, a stop-motion loop. aura restored",
+            "corporate": "brand architecture rebuilt on the real logo, with social and avatar sets, 43 picked renders, profile crops and a stop-motion loop, positioning us well going forward",
+            "oneliner": "design system rebuilt on the real logo, with social and avatar sets, 43 picked renders, profile crops and a stop-motion loop",
+            "observational": "rebuilt the design system on the real logo, with social and avatar sets, 43 picked renders, profile crops and a stop-motion loop. Forty-three pictures of a crashed UFO. I have never related to a logo more"
           }
         },
         {
@@ -28,75 +64,52 @@
             "oneliner": "merged four pull requests I did not write. Management is going well",
             "observational": "four pull requests merged today. Cursor wrote all four. I pressed a green button, four times, and I was tired after. My grandfather worked in a mine. He would have had questions"
           }
-        },
-        {
-          "title": "Standup Plugin",
-          "status": "🚧",
-          "text": {
-            "plain": "three skills folded into one called `standup`, a new title line, three things to try next; on disk, not committed",
-            "pirate": "the three skills be lashed into one called `standup`, with a new title on the log and three headings to try after every report. All of it still in the hold, uncommitted",
-            "genz": "three skills became one skill called `standup`. new title line. it tells you what to ask next. none of it is committed. no proof, no alibi, we are so cooked 💀",
-            "corporate": "consolidated three skills into a single offering named `standup`, with a refreshed title line and next-step suggestions. The release is pre-commit and tracking to plan",
-            "oneliner": "renamed the standup plugin's skill to `standup`. It took all afternoon to think of",
-            "observational": "the plugin is called Standup and the skill was called something else. Today I renamed the skill to `standup`. It took an afternoon and two machines. That is the whole achievement, and it is not even saved"
-          }
-        },
-        {
-          "title": "Jungle Cards",
-          "status": "🚧",
-          "text": {
-            "plain": "516 files changed over 416 agent turns, no commit yet",
-            "pirate": "516 planks changed in the Jungle Cards' hull over 416 turns of the capstan, and not one line in the log",
-            "genz": "516 files changed. 416 agent turns. commits: zero. be so for real. that is not a project, that is a secret",
-            "corporate": "516 files remain in a pre-commit state following 416 agent turns. We continue to see strong momentum that is not yet visible to shareholders",
-            "oneliner": "changed 516 files in Jungle Cards and committed none. It is a card game. I am bluffing",
-            "observational": "516 changed files and no commit. If the laptop dies tonight, none of this happened. Which is also, when you think about it, the plan for me"
-          }
         }
       ],
-      "footer": "Two projects have work on disk that is not committed yet. Read at 3:30pm, so the day is not over.",
+      "footer": "Jungle Cards went live with no commit that day. Read the next morning, so the day is complete.",
       "commits": {
-        "total": "15",
+        "total": "19",
         "repos": [
+          {
+            "name": "standup-site",
+            "count": "11"
+          },
           {
             "name": "wcgw-fun",
             "count": "8"
-          },
-          {
-            "name": "standup-site",
-            "count": "7"
           }
         ]
       },
       "uncommitted": [
         {
           "name": "jungle-cards",
-          "count": "516 files"
-        },
-        {
-          "name": "standup-site",
-          "count": "44 files"
+          "count": "12 files"
         }
       ],
       "tokens": {
-        "output": "1.05M",
-        "fresh": "2.80M",
-        "cache": "271.09M",
-        "total": "274.94M"
+        "output": "1.37M",
+        "fresh": "4.60M",
+        "cache": "379.07M",
+        "total": "385.04M"
       },
       "models": [
         {
           "model": "fable-5-2",
-          "output": "892k",
-          "cost": "$119"
+          "output": "1.20M",
+          "cost": "$176"
         },
         {
           "model": "opus-5-5",
-          "output": "158k",
-          "cost": "$14"
+          "output": "168k",
+          "cost": "$16"
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "output": "6k",
+          "cost": "unpriced"
         }
       ],
-      "cost": "≈ $133"
+      "cost": "≈ $192"
     },
     {
       "id": "week",
@@ -106,12 +119,12 @@
           "title": "Switchboard (E-077 to E-080)",
           "status": "✅",
           "text": {
-            "plain": "four plans shipped in three days, 112 commits, most of them review fixes",
-            "pirate": "four prizes taken in three days, E-077 to E-080, and 112 entries in the log, most of them the crew patching holes we shot in our own hull",
-            "genz": "four plans shipped in three days. 112 commits. most of them fix what the review found. i am not shipping, i am being corrected at scale. the review is undefeated and i am 0 and 112",
-            "corporate": "delivered four plans in three days across 112 commits, the majority of which reflect our deep and ongoing commitment to fixing what we had just delivered",
-            "oneliner": "shipped four plans in three days with 112 commits. Most were fixes. The plans were shorter",
-            "observational": "112 commits in three days. Most are fixes for things the review found. So I did not have a productive week. I had a public record of being wrong 112 times, with timestamps"
+            "plain": "four plans shipped in three days, 112 commits, most of them fixes for what 163 review runs by Claude Code and Codex found",
+            "pirate": "four prizes taken in three days, E-077 to E-080, and 112 entries in the log, most of them patching the holes 163 lookouts from Claude Code and Codex spotted in our own hull",
+            "genz": "four plans shipped in three days. 112 commits. most of them fix what 163 review runs found. claude code and codex took turns reading me for filth. i am 0 and 112",
+            "corporate": "delivered four plans in three days across 112 commits, the majority of which address findings from 163 independent reviews by Claude Code and Codex. We welcome the feedback",
+            "oneliner": "shipped four plans in three days, then 163 review runs found enough to fill 112 commits. The plans were shorter",
+            "observational": "163 review runs by two companies’ machines, looking for what I did wrong. They found it 112 times, and each time I said thank you and committed the fix. That is not engineering. That is a confession with timestamps"
           }
         },
         {
@@ -142,12 +155,12 @@
           "title": "Jungle Cards and Cotroceni Conference",
           "status": "✅",
           "text": {
-            "plain": "a card game with a daily hand, live votes and rooms, and a conference page with tape, a card deck and sound bites",
-            "pirate": "two new ships launched: a card game with a daily hand and rooms to play in, and a conference page with tape, a deck of cards and sound bites",
-            "genz": "two new sites. a card game with a daily hand and live rooms. a conference page with tape and sound bites. both have cards on them. it is not a phase, it is a cry for help",
-            "corporate": "launched two properties: a card game with a daily hand and live rooms, and a conference page featuring tape, a card deck and sound bites. Cards are a strategic priority",
-            "oneliner": "shipped a card game and a conference page with a card deck on it. I have one idea and it is cards",
-            "observational": "two sites this week and both have a deck of cards on them. Nobody asked for one. That is how it starts. First it is cards on a website, then your family is in a room, reading you letters"
+            "plain": "a card game with a daily hand, live votes and rooms, built on 103 cut sound bites and 560 card backs painted by Codex; and a conference page with tape, a card deck and sound bites",
+            "pirate": "a card game with a daily hand, live votes and rooms, built on 103 sound bites cut from the record and 560 card backs painted by Codex’s crew; and a conference page with tape, a deck and sound bites",
+            "genz": "made a card game with a daily hand and live rooms. cut 103 sound bites of politicians saying unwell things. codex painted 560 card backs. 560. plus a conference page with tape and a deck. i have a job, allegedly",
+            "corporate": "launched a card game with a daily hand, live votes and rooms, backed by 103 verified sound bites and 560 card backs produced by Codex, alongside a conference page with tape, a card deck and sound bites. Content velocity remains strong",
+            "oneliner": "a card game with live rooms, 103 sound bites and 560 card backs painted by Codex. Codex did the art. I did the picking",
+            "observational": "a card game made of real things politicians said, 103 of them, cut and checked. Codex painted 560 card backs to go with them. 560 paintings in two days, and nobody paid it, thanked it or bought it lunch. And a conference page, because one place to laugh at them was not enough"
           }
         },
         {
@@ -166,12 +179,12 @@
           "title": "My Pension, wcgw.fun, wcgw Pipeline",
           "status": "🚧",
           "text": {
-            "plain": "about 2,200 agent turns between them, no commit yet",
-            "pirate": "three ships built in secret, some 2,200 turns of the capstan between them, and not one line in the log. If we sink, nobody will know we sailed",
-            "genz": "2,200 agent turns across three projects. commits: zero. that is not work, that is talking to yourself with a subscription. be so for real",
-            "corporate": "three initiatives representing approximately 2,200 agent turns remain pre-commit. We view this as upside",
-            "oneliner": "about 2,200 agent turns on three projects and no commits. Schrödinger's work week",
-            "observational": "three projects, 2,200 agent turns, zero commits. That is not development. That is a man talking to a computer for a week, and only the computer kept notes"
+            "plain": "a pension calculator designed in Paper with its maths tested and a 3D hero, a wcgw.fun redesign where “wrong?” falls apart, and a headline-to-site pipeline tried on its first story; about 2,200 agent turns, no commit yet",
+            "pirate": "a pension reckoner charted in Paper with its sums tested and a 3D figurehead, a wcgw.fun refit where “wrong?” falls to pieces, and a headline-to-site route sailed on its first story. Some 2,200 turns of the capstan and not one line in the log",
+            "genz": "a pension calculator with tested maths and a 3d hero, a wcgw.fun redesign where “wrong?” falls apart on purpose, a pipeline that turns a headline into a site. about 2,200 agent turns. commits: zero. no proof, no alibi, we are so cooked 💀",
+            "corporate": "advanced three initiatives (a pension calculator with tested maths and a 3D hero, a wcgw.fun redesign, and a headline-to-site pipeline piloted on its first story) across about 2,200 agent turns. All three remain pre-commit and on track",
+            "oneliner": "a pension calculator, a redesign where “wrong?” falls apart, and a pipeline that turns headlines into sites. 2,200 agent turns, no commits. The pension one is the most realistic",
+            "observational": "a pension calculator whose maths passes every test, which is more than the pension does. A redesign where the word “wrong?” falls apart on screen. About 2,200 agent turns and not one commit. If the laptop dies, the pension calculator was right about everything"
           }
         }
       ],
@@ -211,12 +224,16 @@
           "count": "31 files"
         },
         {
+          "name": "wcgw-pipeline",
+          "count": "6 files"
+        },
+        {
           "name": "pension-meter",
           "count": "8 files"
         },
         {
-          "name": "wcgw-pipeline",
-          "count": "6 files"
+          "name": "agentstack",
+          "count": "9 files"
         }
       ],
       "tokens": {
@@ -237,6 +254,11 @@
           "cost": "$214"
         },
         {
+          "model": "gpt-6.1-sol",
+          "output": "939k",
+          "cost": "unpriced"
+        },
+        {
           "model": "sonnet-5-5",
           "output": "126k",
           "cost": "$22"
@@ -245,11 +267,6 @@
           "model": "fable-5-1",
           "output": "14k",
           "cost": "$9"
-        },
-        {
-          "model": "gpt-6.1-sol",
-          "output": "939k",
-          "cost": "unpriced"
         }
       ],
       "cost": "≈ $1,200"
@@ -262,12 +279,12 @@
           "title": "Switchboard",
           "status": "✅",
           "text": {
-            "plain": "four plans shipped (E-077 to E-080), 112 of the month's 220 commits",
-            "pirate": "four prizes taken, E-077 to E-080, and 112 of the month's 220 log entries be hers alone. The other ships have filed a complaint",
-            "genz": "four plans shipped. 112 of 220 commits this month are switchboard. she is the main character. the other projects are extras who think they have lines",
-            "corporate": "four plans delivered, representing 112 of 220 commits, or 51% of total output. We are monitoring our concentration risk",
-            "oneliner": "112 of this month's 220 commits are one project. The others are what I call a portfolio",
-            "observational": "220 commits this month, and 112 of them are Switchboard. That is not a portfolio. That is one job and a lot of ways of avoiding it"
+            "plain": "four plans shipped (E-077 to E-080) after 163 review runs, 112 of the month’s 233 commits",
+            "pirate": "four prizes taken, E-077 to E-080, after 163 lookouts searched the hull, and 112 of the month’s 233 log entries be hers alone. The other ships have filed a complaint",
+            "genz": "four plans shipped after 163 review runs. 112 of 233 commits this month are switchboard. she is the main character. the other projects are extras who think they have lines",
+            "corporate": "four plans delivered following 163 reviews, representing 112 of 233 commits, or 48% of total output. We are monitoring our concentration risk",
+            "oneliner": "112 of this month’s 233 commits are one project. The others are what I call a portfolio",
+            "observational": "233 commits this month, and 112 of them are Switchboard. That is not a portfolio. That is one job and a lot of ways of avoiding it"
           }
         },
         {
@@ -298,42 +315,42 @@
           "title": "Standup",
           "status": "✅",
           "text": {
-            "plain": "site and plugin built on the 11th",
-            "pirate": "the Standup and her log, built stem to stern on the 11th, in a single tide",
-            "genz": "built the site and the plugin on the 11th. one day. the other ten days are unaccounted for and honestly so am i",
-            "corporate": "site and plugin delivered on the 11th, in a single business day, which we do not intend to set as a precedent",
-            "oneliner": "built a tool to remember what I did this month. On the 11th. The first ten days are hearsay",
-            "observational": "I built the thing that remembers my month on the 11th. So for the first ten days it is reading about a man it never met. It did not like him either"
+            "plain": "site and plugin built on the 11th, public on the 17th, and since the 18th it reads what you asked your agents",
+            "pirate": "the Standup and her log, built stem to stern on the 11th, flying public colours on the 17th, and since the 18th she reads what ye asked yer crew",
+            "genz": "built the site and the plugin on the 11th. public on the 17th. since the 18th it reads what i asked my agents, which means it has seen my prompts. i need to go offline",
+            "corporate": "site and plugin delivered on the 11th, publicly launched on the 17th, and since the 18th enhanced to capture what users ask their agents. Transparency is a core value",
+            "oneliner": "built a tool to remember what I did this month. Since the 18th it also reads what I asked. It has questions",
+            "observational": "I built the thing that remembers my month on the 11th. Since the 18th it reads what I ask my agents. So now there is a written record of me asking a computer for quotes that are more unhinged. It has the timestamps"
           }
         },
         {
           "title": "Jungle Cards, Cotroceni Conference, wcgw.fun",
           "status": "✅",
           "text": {
-            "plain": "three more sites started and committed",
-            "pirate": "three more hulls launched and logged this moon: a card game, a conference page and our own flagship's landing",
-            "genz": "three more sites started and actually committed this time. the bar was on the floor and i stepped over it. growth",
-            "corporate": "three additional sites were initiated and, notably, committed, a first for the portfolio",
-            "oneliner": "started three more sites and committed all of them. I do not know who I am any more",
-            "observational": "three more sites. Started and committed. Look at me, committing things. It took until the 14th, and I would like that on the headstone"
+            "plain": "three more sites started and committed; Jungle Cards went live on its own domain with 103 sound bites and 560 card backs painted by Codex",
+            "pirate": "three more hulls launched and logged this moon, and the card game made landfall on her own domain, with 103 sound bites and 560 card backs painted by Codex’s crew",
+            "genz": "three more sites started and actually committed this time. the card game is live with 103 sound bites and 560 card backs codex painted. the bar was on the floor and i stepped over it. growth",
+            "corporate": "three additional sites were initiated and, notably, committed. Jungle Cards reached production on a dedicated domain, supported by 103 sound bites and 560 card backs produced by Codex",
+            "oneliner": "started three more sites and committed all of them. One is live with 560 card backs. I do not know who I am any more",
+            "observational": "three more sites. Started and committed. One is live, with 560 card backs a machine painted while I slept. Look at me, committing things. It took until the 14th, and I would like that on the headstone"
           }
         },
         {
           "title": "My Pension, wcgw Pipeline",
           "status": "🚧",
           "text": {
-            "plain": "started, nothing committed",
-            "pirate": "two more hulls on the slip and not a line in the log. We call it stealth",
-            "genz": "started. not committed. this is not a private era, it is hoarding with a terminal 💀",
-            "corporate": "two initiatives are in a pre-commit phase and tracking to plan, in the sense that there is a plan",
-            "oneliner": "started two more projects and committed neither. Everyone needs a hobby they can deny",
-            "observational": "two more projects. Started. Nothing committed. You will have noticed a theme. So has everyone who ever lent me a book"
+            "plain": "a pension calculator with tested maths and a 3D hero, and a headline-to-site pipeline tried on its first story; nothing committed",
+            "pirate": "a pension reckoner with its sums tested and a 3D figurehead, and a route from headline to site sailed once. Two hulls on the slip and not a line in the log. We call it stealth",
+            "genz": "a pension calculator with tested maths and a 3d hero. a pipeline that turns headlines into sites. not committed. this is not a private era, it is hoarding with a terminal 💀",
+            "corporate": "two initiatives (a pension calculator with tested maths and a 3D hero, and a headline-to-site pipeline) are in a pre-commit phase and tracking to plan, in the sense that there is a plan",
+            "oneliner": "a pension calculator with tested maths and a pipeline that turns headlines into sites. Neither committed. Everyone needs a hobby they can deny",
+            "observational": "a pension calculator, with tests, and a pipeline that turns news into websites. Nothing committed. You will have noticed a theme. So has everyone who ever lent me a book"
           }
         }
       ],
-      "footer": "Seventeen days of thirty. Two projects are still only on disk.",
+      "footer": "Eighteen days of thirty. Two projects are still only on disk.",
       "commits": {
-        "total": "220",
+        "total": "233",
         "repos": [
           {
             "name": "switchboard",
@@ -345,19 +362,19 @@
           },
           {
             "name": "standup-site",
-            "count": "23"
+            "count": "31"
           },
           {
             "name": "wcgw-starter",
-            "count": "15"
+            "count": "16"
           },
           {
             "name": "wcgw-fun",
-            "count": "9"
+            "count": "12"
           },
           {
             "name": "jungle-cards",
-            "count": "8"
+            "count": "9"
           },
           {
             "name": "cotroceni-conference",
@@ -375,30 +392,39 @@
           "count": "31 files"
         },
         {
+          "name": "wcgw-pipeline",
+          "count": "6 files"
+        },
+        {
           "name": "pension-meter",
           "count": "8 files"
         },
         {
-          "name": "wcgw-pipeline",
-          "count": "6 files"
+          "name": "agentstack",
+          "count": "9 files"
         }
       ],
       "tokens": {
-        "output": "16.05M",
-        "fresh": "87.19M",
-        "cache": "4.13B",
-        "total": "4.23B"
+        "output": "17.01M",
+        "fresh": "92.94M",
+        "cache": "4.42B",
+        "total": "4.53B"
       },
       "models": [
         {
           "model": "opus-5-5",
-          "output": "11.43M",
-          "cost": "$1,165"
+          "output": "11.81M",
+          "cost": "$1,222"
         },
         {
           "model": "fable-5-2",
-          "output": "3.53M",
-          "cost": "$547"
+          "output": "4.10M",
+          "cost": "$643"
+        },
+        {
+          "model": "gpt-6.1-sol",
+          "output": "954k",
+          "cost": "unpriced"
         },
         {
           "model": "sonnet-5-5",
@@ -409,14 +435,9 @@
           "model": "fable-5-1",
           "output": "14k",
           "cost": "$9"
-        },
-        {
-          "model": "gpt-6.1-sol",
-          "output": "941k",
-          "cost": "unpriced"
         }
       ],
-      "cost": "≈ $1,744"
+      "cost": "≈ $1,897"
     }
   ],
   "week_days": [
@@ -451,8 +472,8 @@
   ],
   "token_split": {
     "_note": "The day's raw token counts, for the bar in the cost section.",
-    "output": 1049624,
-    "fresh": 2798751,
-    "cache": 271088602
+    "output": 1372556,
+    "fresh": 4596850,
+    "cache": 379070966
   }
 }

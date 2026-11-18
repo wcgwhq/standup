@@ -2,6 +2,18 @@
   "_note": "The plugin's release history, newest first, shown on /changelog/. One entry per version in the manifests; `date` is the day it reached main. Groups are added, changed and fixed, each a list of plain sentences; backticks become inline code. Add the entry in the same commit that bumps the version (CI checks the newest entry matches the manifests).",
   "releases": [
     {
+      "version": "0.7.0",
+      "date": "2026-11-18",
+      "added": [
+        "The update says what you worked on, not only what shipped. It reads what you asked in each agent session and the agent’s answer, from Claude Code, Cowork, Codex and opencode, so research, decisions and work not yet committed get a line.",
+        "It remembers your corrections. Say “shorter” or “never mention sign-ins” and it saves the preference to `style.md`, under “Learned from feedback”, and uses it next time. “Forget that” removes it."
+      ],
+      "changed": [
+        "What reaches your model provider now includes short excerpts of what you asked your agents and what they answered. The privacy page and the FAQ say so."
+      ],
+      "fixed": []
+    },
+    {
       "version": "0.6.1",
       "date": "2026-11-18",
       "added": [

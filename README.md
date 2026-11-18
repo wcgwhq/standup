@@ -49,12 +49,15 @@ Four to six lines you can say out loud. Paste them into Slack, say them at stand
 
 > **Standup EOD Tuesday, November 17th, 2026**
 >
-> - **Standup Site** ✅ → a sun dial across the window with a sky behind the page, voice characters, a page per agent, and it deploys itself on every push
+> - **Standup Site** ✅ → went public: the repo is open, the site deploys on every push, the plugin is one skill with a Slack markup style and sharper voices, plus a sun dial, hourly stories and a page per agent
+> - **Jungle Cards** 🚧 → live on its own domain: cards drag on phones, one top bar, a monkey-hand cursor, a looping city soundtrack with sound bites, haptics and a new share picture. Name kept, serparia.ro dropped
+> - **Jungle Cards About Page** 🚧 → rewritten in the game's single voice, with a bigger, snarkier author card picked from three painted versions
+> - **WCGW Brand** ✅ → design system rebuilt on the real logo, with social and avatar sets, 43 picked renders, profile crops and a stop-motion loop
 > - **wcgw.fun** 🔁 → four pull requests from Cursor merged: an Astro landing, an editorial manifesto, the WCGW mark in the masthead
-> - **Standup Plugin** 🚧 → three skills folded into one called standup, a new title line, three things to try next; on disk, not committed
-> - **Jungle Cards** 🚧 → 516 files changed over 416 agent turns, no commit yet
 >
-> Two projects have work on disk that is not committed yet. Read at 3:30pm, so the day is not over.
+> Jungle Cards went live with no commit that day. Read the next morning, so the day is complete.
+
+The Jungle Cards lines have no commit behind them: they come from what was asked in the agent sessions that day.
 
 🔁 marks a merge, ✅ work finished here and 🚧 work still in progress, so nobody reads a merge as new work.
 
@@ -63,7 +66,7 @@ Behind the update are the numbers: commits per repo, projects with work and no c
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/readme/receipt-dark.png">
-    <img src="docs/readme/receipt-light.png" width="520" alt="The numbers for 17 November 2026: 15 commits in two repos, two projects with work on disk, 274.94 million tokens, about $133 at API list prices.">
+    <img src="docs/readme/receipt-light.png" width="520" alt="The numbers for 17 November 2026: 19 commits in two repos, one project with work on disk, 385.04 million tokens, about $192 at API list prices.">
   </picture>
 </p>
 
@@ -73,9 +76,9 @@ Ask for "EOD in pirate voice". Facts, numbers and status marks stay as they are;
 
 | Voice | Line |
 | --- | --- |
-| `pirate` | Arr, a sun now sails clear across the window with a sky behind the page, six odd characters speak for the crew, every agent has its own page, and the ship launches herself at every push |
-| `corporate` | delivered a window-wide sun dial with supporting sky, six voice characters and a page per agent, and automated deployment on every push. Weather is now a core competency |
-| `one-liner` | built a sky for a website about status updates. The forecast is commits |
+| `pirate` | hoisted the colours: the repo be open to all, the site sets sail on every push, the plugin be one skill with a Slack markup style and sharper voices, and she took on a sun dial, hourly stories and a page for every agent in the fleet |
+| `corporate` | pleased to report a successful public listing: the repo is open, the site deploys on every push, and the plugin has been consolidated into one skill with a Slack markup style and sharper voices. Additional deliverables include a sun dial, hourly stories and a page per agent |
+| `one-liner` | repo public, deploys on every push, one skill, Slack markup, sharper voices, a sun dial and hourly stories. Eleven commits for a tool that tells you what you did |
 
 Also built in: `genz` and `observational`. You can add your own.
 
@@ -92,7 +95,7 @@ A week is covered Monday to Sunday, day by day, and a whole month the same way. 
 
 ## What it reads
 
-What shipped comes from git, whoever wrote it, you or an agent. Token counts come from the files each agent keeps on your disk.
+What shipped comes from git, whoever wrote it, you or an agent. What you worked on comes from what you asked your agents and what they answered. Token counts come from the files each agent keeps on your disk.
 
 <p align="center">
   <picture>
@@ -107,7 +110,7 @@ What shipped comes from git, whoever wrote it, you or an agent. Token counts com
 
 ## What leaves your machine
 
-The scripts open no network connection. The report they print goes to your agent, so it reaches your model provider like anything else in the conversation: folder paths, commit subjects and the names of changed files.
+The scripts open no network connection. The report they print goes to your agent, so it reaches your model provider like anything else in the conversation: folder paths, commit subjects, the names of changed files and short excerpts of what you asked your agents and what they answered.
 
 ## More
 

@@ -435,13 +435,13 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
                     <tbody>
                       {period.models.map((row) => (
                         <tr>
-                          <th scope="row" class="py-0.5 ps-4 text-start font-normal">
+                          <th scope="row" class="py-0.5 ps-4 text-start font-normal whitespace-nowrap">
                             {row.model}
                           </th>
-                          <td class="py-0.5 text-end text-[var(--color-muted)]">
+                          <td class="py-0.5 ps-2 text-end text-[var(--color-muted)]">
                             {row.output} {ui.receiptOutput}
                           </td>
-                          <td class="w-16 py-0.5 text-end">{row.cost}</td>
+                          <td class="w-16 py-0.5 ps-2 text-end whitespace-nowrap">{row.cost}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -504,6 +504,13 @@ const percent = (value: number) => (value >= 10 ? Math.round(value) : value.toFi
         </ul>
       </div>
       <p class="mt-6 max-w-prose text-sm text-pretty text-[var(--color-muted)]">{ui.sourcesNote}</p>
+    </section>
+
+    <section class="motion-enter mt-20" aria-labelledby="prompts-title">
+      <h2 id="prompts-title" class="text-lg text-balance">
+        {ui.promptsTitle}
+      </h2>
+      <p class="mt-4 max-w-prose text-pretty text-[var(--color-muted)]">{ui.promptsBody}</p>
     </section>
 
     <section class="motion-enter mt-24" aria-labelledby="week-title">

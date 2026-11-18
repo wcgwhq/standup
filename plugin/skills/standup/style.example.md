@@ -61,3 +61,8 @@ Slack's composer, which by DEFAULT does NOT re-parse markdown on paste:
   example `Standup EOW June 15th → June 21st, 2026`. A month is `Standup <Month> <year>`.
 - One line per theme, synthesized across days, not one per day.
 - Completeness pass covers every day of the week, including work early in the week.
+
+## Learned from feedback
+
+The skill adds a line here each time you correct an update in a way that should
+stick, and rewrites or deletes it when you change your mind. Edit it freely.
